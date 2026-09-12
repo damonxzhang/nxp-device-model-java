@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpCheckListItemMapper">
+    
+    <resultMap type="NxpCheckListItem" id="NxpCheckListItemResult">
+        <result property="id"    column="id"    />
+        <result property="checkListId"    column="check_list_id"    />
+        <result property="isCheck"    column="is_check"    />
+        <result property="checkProjectId"    column="check_project_id"    />
+        <result property="checkUserId"    column="check_user_id"    />
+        <result property="checkUserName"    column="check_user_name"    />
+        <result property="checkContent"    column="check_content"    />
+        <result property="files"    column="files"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="checkProjectName"    column="check_project_name"    />
+    </resultMap>
+
+    <sql id="selectNxpCheckListItemVo">
+        select id, check_list_id, is_check, check_project_id,check_project_name, check_user_id, check_user_name, check_content, files, create_time, update_time from nxp_check_list_item
+    </sql>
+
+    <select id="selectNxpCheckListItemList" parameterType="NxpCheckListItem" resultMap="NxpCheckListItemResult">
+        <include refid="selectNxpCheckListItemVo"/>
+        <where>  
+            <if test="checkListId != null "> and check_list_id = #{checkListId}</if>
+            <if test="isCheck != null  and isCheck != ''"> and is_check = #{isCheck}</if>
+            <if test="checkProjectId != null "> and check_project_id = #{checkProjectId}</if>
+            <if test="checkUserId != null "> and check_user_id = #{checkUserId}</if>
+            <if test="checkUserName != null  and checkUserName != ''"> and check_user_name like concat('%', #{checkUserName}, '%')</if>
+            <if test="checkContent != null  and checkContent != ''"> and check_content = #{checkContent}</if>
+            <if test="files != null  and files != ''"> and files = #{files}</if>
+            <if test="checkProjectName != null  and checkProjectName != ''"> and check_project_name = #{checkProjectName}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpCheckListItemById" parameterType="Long" resultMap="NxpCheckListItemResult">
+        <include refid="selectNxpCheckListItemVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectByCheckListId" parameterType="Long" resultMap="NxpCheckListItemResult">
+        <include refid="selectNxpCheckListItemVo"/>
+        where check_list_id = #{checkListId}
+    </select>
+        
+    <insert id="insertNxpCheckListItem" parameterType="NxpCheckListItem" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_check_list_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="checkListId != null">check_list_id,</if>
+            <if test="isCheck != null">is_check,</if>
+            <if test="checkProjectId != null">check_project_id,</if>
+            <if test="checkUserId != null">check_user_id,</if>
+            <if test="checkUserName != null">check_user_name,</if>
+            <if test="checkContent != null">check_content,</if>
+            <if test="files != null">files,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="checkProjectName != null">check_project_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="checkListId != null">#{checkListId},</if>
+            <if test="isCheck != null">#{isCheck},</if>
+            <if test="checkProjectId != null">#{checkProjectId},</if>
+            <if test="checkUserId != null">#{checkUserId},</if>
+            <if test="checkUserName != null">#{checkUserName},</if>
+            <if test="checkContent != null">#{checkContent},</if>
+            <if test="files != null">#{files},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="checkProjectName != null">#{checkProjectName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpCheckListItem" parameterType="NxpCheckListItem">
+        update nxp_check_list_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="checkListId != null">check_list_id = #{checkListId},</if>
+            <if test="isCheck != null">is_check = #{isCheck},</if>
+            <if test="checkProjectId != null">check_project_id = #{checkProjectId},</if>
+            <if test="checkUserId != null">check_user_id = #{checkUserId},</if>
+            <if test="checkUserName != null">check_user_name = #{checkUserName},</if>
+            <if test="checkContent != null">check_content = #{checkContent},</if>
+            <if test="files != null">files = #{files},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="checkProjectName != null">check_project_name = #{checkProjectName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpCheckListItemById" parameterType="Long">
+        delete from nxp_check_list_item where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpCheckListItemByIds" parameterType="String">
+        delete from nxp_check_list_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

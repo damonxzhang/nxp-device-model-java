@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionPmFacilityMapper">
+    
+    <resultMap type="NxpInspectionPmFacility" id="NxpInspectionPmFacilityResult">
+        <result property="id"    column="id"    />
+        <result property="facility_id"    column="facility_id"    />
+        <result property="group_id"    column="group_id"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionPmFacilityVo">
+        select id, facility_id, group_id from nxp_inspection_pm_facility
+    </sql>
+
+    <select id="selectNxpInspectionPmFacilityList" parameterType="NxpInspectionPmFacility" resultMap="NxpInspectionPmFacilityResult">
+        <include refid="selectNxpInspectionPmFacilityVo"/>
+        <where>  
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+            <if test="group_id != null "> and group_id = #{group_id}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpInspectionPmFacilityById" parameterType="Long" resultMap="NxpInspectionPmFacilityResult">
+        <include refid="selectNxpInspectionPmFacilityVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectNxpInspectionPmByFacilityId" parameterType="Long" resultMap="NxpInspectionPmFacilityResult">
+        <include refid="selectNxpInspectionPmFacilityVo"/>
+        where facility_id = #{facility_id}
+    </select>
+
+    <select id="selectNxpInspectionPmFacilityListByFacilityId" parameterType="NxpInspectionPmFacility" resultMap="NxpInspectionPmFacilityResult">
+        <include refid="selectNxpInspectionPmFacilityVo"/>
+        where facility_id = #{facility_id}
+    </select>
+
+    <insert id="insertNxpInspectionPmFacility" parameterType="NxpInspectionPmFacility" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_pm_facility
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="facility_id != null">facility_id,</if>
+            <if test="group_id != null">group_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="facility_id != null">#{facility_id},</if>
+            <if test="group_id != null">#{group_id},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionPmFacility" parameterType="NxpInspectionPmFacility">
+        update nxp_inspection_pm_facility
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="facility_id != null">facility_id = #{facility_id},</if>
+            <if test="group_id != null">group_id = #{group_id},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateNxpInspectionPmFacilityByFacility" parameterType="NxpInspectionPmFacility">
+        update nxp_inspection_pm_facility
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="group_id != null">group_id = #{group_id},</if>
+        </trim>
+        where facility_id = #{facility_id}
+    </update>
+
+    <delete id="deleteNxpInspectionPmFacilityById" parameterType="Long">
+        delete from nxp_inspection_pm_facility where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionPmFacilityByFacilityId" parameterType="Long">
+        delete from nxp_inspection_pm_facility where facility_id = #{facility_id}
+    </delete>
+
+    <delete id="deleteNxpInspectionPmFacilityByIds" parameterType="String">
+        delete from nxp_inspection_pm_facility where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

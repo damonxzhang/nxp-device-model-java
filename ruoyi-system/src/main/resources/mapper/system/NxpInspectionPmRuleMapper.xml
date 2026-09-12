@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionPmRuleMapper">
+    
+    <resultMap type="NxpInspectionPmRule" id="NxpInspectionPmRuleResult">
+        <result property="id"    column="id"    />
+        <result property="user_id"    column="user_id"    />
+        <result property="facility_id"    column="facility_id"    />
+        <result property="cycle"    column="cycle"    />
+        <result property="beginTime"    column="begin_time"    />
+        <result property="status"    column="status"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionPmRuleVo">
+        select id, user_id, facility_id, cycle, begin_time,status,type from nxp_inspection_pm_rule
+    </sql>
+
+    <select id="selectNxpInspectionPmRuleList" parameterType="NxpInspectionPmRule" resultMap="NxpInspectionPmRuleResult">
+        <include refid="selectNxpInspectionPmRuleVo"/>
+        <where>  
+            <if test="user_id != null "> and user_id = #{user_id}</if>
+            <if test="facility_id != null and facility_id != ''"> and facility_id = #{facility_id}</if>
+            <if test="cycle != null "> and cycle = #{cycle}</if>
+            <if test="beginTime != null "> and begin_time = #{beginTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectNxpInspectionPmRuleList1" parameterType="NxpInspectionPmRule" resultMap="NxpInspectionPmRuleResult">
+        select nipr.*
+        from nxp_inspection_pm_rule nipr
+        LEFT JOIN nxp_facility nf ON nipr.facility_id = nf.id
+        LEFT JOIN nxp_machine_process nmp ON nmp.id = nf.process
+        <where>
+            <if test="user_id != null "> and nipr.user_id = #{user_id}</if>
+            <if test="facility_id != null and facility_id != ''"> and nipr.facility_id = #{facility_id}</if>
+            <if test="cycle != null "> and nipr.cycle = #{cycle}</if>
+            <if test="beginTime != null "> and nipr.begin_time = #{beginTime}</if>
+            <if test="status != null "> and nipr.status = #{status}</if>
+            <if test="type != null "> and nipr.type = #{type}</if>
+            <if test="process != null and process != ''"> and nf.process = #{process}</if>
+        </where>
+        order by nipr.id desc
+    </select>
+
+    <select id="selectNxpInspectionPmRuleListByIds" parameterType="String" resultMap="NxpInspectionPmRuleResult">
+        <include refid="selectNxpInspectionPmRuleVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectNxpInspectionPmRuleListGroupBy" parameterType="NxpInspectionPmRule" resultMap="NxpInspectionPmRuleResult">
+        select facility_id from nxp_inspection_pm_rule
+        <where>
+            type = 1 and facility_id is not null and user_id is not null
+            <if test="user_id != null "> and user_id = #{user_id}</if>
+            <if test="facility_id != null and facility_id != ''"> and facility_id like concat('%', #{facility_id}, '%')</if>
+            <if test="cycle != null "> and cycle = #{cycle}</if>
+            <if test="beginTime != null "> and begin_time = #{beginTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+        group by facility_id
+        ORDER BY NEWID()
+    </select>
+
+    <select id="selectNxpInspectionPmRuleListNew" parameterType="NxpInspectionPmRule" resultMap="NxpInspectionPmRuleResult">
+        <include refid="selectNxpInspectionPmRuleVo"/>
+        <where>
+            <if test="user_id != null "> and user_id = #{user_id}</if>
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+            <if test="cycle != null "> and cycle = #{cycle}</if>
+            <if test="beginTime != null "> and begin_time = #{beginTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+             and facility_id is not null
+        </where>
+    </select>
+    
+    <select id="selectNxpInspectionPmRuleById" parameterType="Long" resultMap="NxpInspectionPmRuleResult">
+        <include refid="selectNxpInspectionPmRuleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpInspectionPmRule" parameterType="NxpInspectionPmRule" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_pm_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="user_id != null">user_id,</if>
+            <if test="facility_id != null">facility_id,</if>
+            <if test="cycle != null">cycle,</if>
+            <if test="beginTime != null">begin_time,</if>
+            <if test="status != null">status,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="user_id != null">#{user_id},</if>
+            <if test="facility_id != null">#{facility_id},</if>
+            <if test="cycle != null">#{cycle},</if>
+            <if test="beginTime != null">#{beginTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionPmRule" parameterType="NxpInspectionPmRule">
+        update nxp_inspection_pm_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="user_id != null">user_id = #{user_id},</if>
+            <if test="facility_id != null">facility_id = #{facility_id},</if>
+            <if test="cycle != null">cycle = #{cycle},</if>
+            <if test="beginTime != null">begin_time = #{beginTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionPmRuleById" parameterType="Long">
+        delete from nxp_inspection_pm_rule where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionPmRuleByIds" parameterType="String">
+        delete from nxp_inspection_pm_rule where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

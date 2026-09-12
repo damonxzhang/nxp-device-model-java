@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionPmGroupMapper">
+    
+    <resultMap type="NxpInspectionPmGroup" id="NxpInspectionPmGroupResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="create_user_id"    column="create_user_id"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <resultMap id="NxpInspectionPmGroupNxpInspectionPmGroupItemResult" type="NxpInspectionPmGroup" extends="NxpInspectionPmGroupResult">
+        <collection property="nxpInspectionPmGroupItemList" notNullColumn="id" javaType="java.util.List" resultMap="NxpInspectionPmGroupItemResult" />
+    </resultMap>
+
+    <resultMap type="NxpInspectionPmGroupItem" id="NxpInspectionPmGroupItemResult">
+        <result property="id"    column="id"    />
+        <result property="item_id"    column="item_id"    />
+        <result property="group_id"    column="group_id"    />
+        <result property="item_name"    column="item_name"    />
+        <result property="item_status"    column="item_status"    />
+        <result property="is_check"    column="is_check"    />
+        <result property="check_process_id"    column="check_process_id"    />
+        <result property="check_group_id"    column="check_group_id"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionPmGroupVo">
+        select id, name, create_user_id, status from nxp_inspection_pm_group
+    </sql>
+
+    <select id="selectNxpInspectionPmGroupList" parameterType="NxpInspectionPmGroup" resultMap="NxpInspectionPmGroupResult">
+        <include refid="selectNxpInspectionPmGroupVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="create_user_id != null "> and create_user_id = #{create_user_id}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+        order by id desc
+    </select>
+    
+    <select id="selectNxpInspectionPmGroupById" parameterType="Long" resultMap="NxpInspectionPmGroupNxpInspectionPmGroupItemResult">
+        select a.id, a.name, a.create_user_id, a.status,
+            b.id as item_id, b.group_id, b.item_name, b.item_status,b.is_check,b.check_process_id,b.check_group_id
+        from nxp_inspection_pm_group a
+        left join nxp_inspection_pm_group_item b on b.group_id = a.id
+        where a.id = #{id}
+    </select>
+
+    <select id="selectNxpInspectionPmGroupListById" parameterType="Long" resultMap="NxpInspectionPmGroupNxpInspectionPmGroupItemResult">
+        select a.id, a.name, a.create_user_id, a.status,
+            b.id as item_id, b.group_id, b.item_name, b.item_status
+        from nxp_inspection_pm_group a
+        left join nxp_inspection_pm_group_item b on b.group_id = a.id
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertNxpInspectionPmGroup" parameterType="NxpInspectionPmGroup" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_pm_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="create_user_id != null">create_user_id,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="create_user_id != null">#{create_user_id},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionPmGroup" parameterType="NxpInspectionPmGroup">
+        update nxp_inspection_pm_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="create_user_id != null">create_user_id = #{create_user_id},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionPmGroupById" parameterType="Long">
+        delete from nxp_inspection_pm_group where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionPmGroupByIds" parameterType="String">
+        delete from nxp_inspection_pm_group where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteNxpInspectionPmGroupItemByGroupIds" parameterType="String">
+        delete from nxp_inspection_pm_group_item where group_id in 
+        <foreach item="groupId" collection="array" open="(" separator="," close=")">
+            #{groupId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteNxpInspectionPmGroupItemByGroupId" parameterType="Long">
+        delete from nxp_inspection_pm_group_item where group_id = #{groupId}
+    </delete>
+
+    <insert id="batchNxpInspectionPmGroupItem">
+        insert into nxp_inspection_pm_group_item(group_id, item_name, item_status,is_check,check_group_id,check_process_id) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            (#{item.group_id}, #{item.item_name}, #{item.item_status},#{item.is_check},#{item.check_group_id},#{item.check_process_id})
+        </foreach>
+    </insert>
+
+</mapper>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpMachineModelMapper">
+    
+    <resultMap type="NxpMachineModel" id="NxpMachineModelResult">
+        <result property="name"    column="name"    />
+        <result property="status"    column="status"    />
+        <result property="create_by"    column="createby"    />
+        <result property="create_dt"    column="createdt"    />
+        <result property="update_dt"    column="updatedt"    />
+        <result property="id"    column="id"    />
+        <result property="processId"    column="process_id"    />
+        <result property="owner"    column="owner"    />
+    </resultMap>
+
+    <sql id="selectNxpMachineModelVo">
+        select name, status, createby, createdt, updatedt, id,inspection_position,process_id,owner from nxp_machine_model
+    </sql>
+
+    <select id="selectNxpMachineModelList" parameterType="NxpMachineModel" resultMap="NxpMachineModelResult">
+        select a.name, a.status, a.createby, a.createdt, a.updatedt, a.id as id,a.inspection_position,a.process_id,a.owner
+        from nxp_machine_model a
+        left join nxp_machine_model_vendor b on a.id = b.model_id
+        <where>  
+            <if test="name != null  and name != ''"> and a.name like concat('%', #{name}, '%')</if>
+            <if test="status != null "> and a.status = #{status}</if>
+            <if test="processId != null "> and a.process_id = #{processId}</if>
+            <if test="owner != null and owner != ''"> and a.owner = #{owner}</if>
+            <if test="vendorId != null and vendorId != ''"> and b.vendor_id = #{vendorId}</if>
+            <if test="id != null and id != ''"> and a.id = #{id}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpMachineModelByName" parameterType="String" resultMap="NxpMachineModelResult">
+        select top 1 id from nxp_machine_model where name = #{name} order by id desc
+    </select>
+
+    <select id="selectNxpMachineModelById" parameterType="Long" resultMap="NxpMachineModelResult">
+        <include refid="selectNxpMachineModelVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectNxpMachineModelByProcessId" parameterType="Long" resultMap="NxpMachineModelResult">
+        <include refid="selectNxpMachineModelVo"/>
+        where process_id = #{processId}
+    </select>
+
+    <insert id="insertNxpMachineModel" parameterType="NxpMachineModel" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_machine_model
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="status != null">status,</if>
+            <if test="create_by != null">createby,</if>
+            <if test="create_dt != null">createdt,</if>
+            <if test="update_dt != null">updatedt,</if>
+            <if test="inspection_position != null">inspection_position,</if>
+            <if test="processId != null">process_id,</if>
+            <if test="owner != null">owner,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="status != null">#{status},</if>
+            <if test="create_by != null">#{create_by},</if>
+            <if test="create_dt != null">#{create_dt},</if>
+            <if test="update_dt != null">#{update_dt},</if>
+            <if test="inspection_position != null">#{inspection_position},</if>
+            <if test="processId != null">#{processId},</if>
+            <if test="owner != null">#{owner},</if>
+        </trim>
+    </insert>
+
+    <update id="updateNxpMachineModel" parameterType="NxpMachineModel">
+        update nxp_machine_model
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="create_by != null">createby = #{create_by},</if>
+            <if test="processId != null">process_id = #{processId},</if>
+            <if test="create_dt != null">createdt = #{create_dt},</if>
+            <if test="update_dt != null">updatedt = #{update_dt},</if>
+            <if test="owner != null">owner = #{owner},</if>
+            inspection_position = #{inspection_position},
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpMachineModelById" parameterType="Long">
+        delete from nxp_machine_model where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpMachineModelByIds" parameterType="String">
+        delete from nxp_machine_model where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectBatchIds" resultMap="NxpMachineModelResult" parameterType="string">
+        <include refid="selectNxpMachineModelVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpAppMessageMapper">
+    
+    <resultMap type="NxpAppMessage" id="NxpAppMessageResult">
+        <result property="id"    column="id"    />
+        <result property="status"    column="status"    />
+        <result property="type"    column="type"    />
+        <result property="typeName"    column="typeName"    />
+        <result property="facility_id"    column="facility_id"    />
+        <result property="comment"    column="comment"    />
+        <result property="user_id"    column="user_id"    />
+        <result property="del"    column="del"    />
+        <result property="type_id"    column="type_id"    />
+        <result property="pm_id"    column="pm_id"    />
+        <result property="created_at"    column="created_at"    />
+        <result property="is_receive"    column="is_receive"    />
+        <result property="check_id"    column="check_id"    />
+    </resultMap>
+
+    <sql id="selectNxpAppMessageVo">
+        select id, status, type, facility_id, comment,typeName, user_id,  create_user_id,inspection_id,pm_id, del, type_id, created_at,is_receive,check_id from nxp_app_message
+    </sql>
+
+    <select id="selectNxpAppMessageList" parameterType="NxpAppMessage" resultMap="NxpAppMessageResult">
+        <include refid="selectNxpAppMessageVo"/>
+        <where>  
+            <if test="status != null "> and status = #{status}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="typeName != null "> and typeName = #{typeName}</if>
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+            <if test="comment != null  and comment != ''"> and comment = #{comment}</if>
+            <if test="user_id != null "> and user_id = #{user_id}</if>
+            <if test="del != null  and del != ''"> and del = #{del}</if>
+            <if test="type_id != null "> and type_id = #{type_id}</if>
+            <if test="created_at != null  and created_at != ''"> and created_at = #{created_at}</if>
+            <if test="is_receive != null"> and is_receive = #{is_receive}</if>
+            <if test="check_id != null"> and check_id = #{check_id}</if>
+        </where>
+        order by created_at desc
+    </select>
+    
+    <select id="selectNxpAppMessageById" parameterType="Long" resultMap="NxpAppMessageResult">
+        <include refid="selectNxpAppMessageVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpAppMessage" parameterType="NxpAppMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_app_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="status != null">status,</if>
+            <if test="type != null">type,</if>
+            <if test="facility_id != null">facility_id,</if>
+            <if test="comment != null">comment,</if>
+            <if test="user_id != null">user_id,</if>
+            <if test="create_user_id != null">create_user_id,</if>
+            <if test="inspection_id != null">inspection_id,</if>
+            <if test="pm_id != null">pm_id,</if>
+            <if test="del != null">del,</if>
+            <if test="type_id != null">type_id,</if>
+            <if test="created_at != null">created_at,</if>
+            <if test="is_receive != null">is_receive,</if>
+            <if test="typeName != null">typeName,</if>
+            <if test="check_id != null">check_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="status != null">#{status},</if>
+            <if test="type != null">#{type},</if>
+            <if test="facility_id != null">#{facility_id},</if>
+            <if test="comment != null">#{comment},</if>
+            <if test="user_id != null">#{user_id},</if>
+            <if test="create_user_id != null">#{create_user_id},</if>
+            <if test="inspection_id != null">#{inspection_id},</if>
+            <if test="pm_id != null">#{pm_id},</if>
+            <if test="del != null">#{del},</if>
+            <if test="type_id != null">#{type_id},</if>
+            <if test="created_at != null">#{created_at},</if>
+            <if test="is_receive != null">#{is_receive},</if>
+            <if test="typeName != null">#{typeName},</if>
+            <if test="check_id != null">#{check_id},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpAppMessage" parameterType="NxpAppMessage">
+        update nxp_app_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="status != null">status = #{status},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="facility_id != null">facility_id = #{facility_id},</if>
+            <if test="comment != null">comment = #{comment},</if>
+            <if test="user_id != null">user_id = #{user_id},</if>
+            <if test="del != null">del = #{del},</if>
+            <if test="type_id != null">type_id = #{type_id},</if>
+            <if test="created_at != null">created_at = #{created_at},</if>
+            <if test="is_receive != null">is_receive = #{is_receive},</if>
+            <if test="typeName != null">typeName = #{typeName},</if>
+            <if test="check_id != null">check_id = #{check_id},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateNxpAppMessageByInspectionId" parameterType="Long">
+        update nxp_app_message
+        SET status = 2 , is_receive = 0
+        where inspection_id = #{inspection_id}
+    </update>
+
+    <delete id="deleteNxpAppMessageById" parameterType="Long">
+        delete from nxp_app_message where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpAppMessageByIds" parameterType="String">
+        delete from nxp_app_message where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateBatch" parameterType="NxpAppMessage">
+        update nxp_app_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="status != null">status = #{status},</if>
+            <if test="del != null and del != ''">del = #{del},</if>
+        </trim>
+        <where>
+            <if test="user_id != null and user_id != ''">
+                and user_id = #{user_id}
+            </if>
+            <if test="idList != null and idList.size > 0">
+                and id in
+                <foreach item="id" collection="idList" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </update>
+</mapper>

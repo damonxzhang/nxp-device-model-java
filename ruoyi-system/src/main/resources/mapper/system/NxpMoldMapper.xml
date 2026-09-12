@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpMoldMapper">
+    
+    <resultMap type="NxpMold" id="NxpMoldResult">
+        <result property="id"    column="id"    />
+        <result property="moldName"    column="mold_name"    />
+        <result property="moldCode"    column="mold_code"    />
+        <result property="moldAddress"    column="mold_address"    />
+        <result property="status"    column="status"    />
+        <result property="moldRmsCode"    column="mold_rms_code"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="moldPwd"    column="mold_pwd"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="moldType"    column="mold_type"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="pkgType"    column="pkg_Type"    />
+        <result property="length"    column="length"    />
+        <result property="matrix"    column="matrix"    />
+        <result property="thin"    column="thin"    />
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="moldAddressId"    column="mold_address_id"    />
+        <result property="substrateLength"    column="substrate_length"    />
+        <result property="size"    column="size"    />
+        <result property="ioNumber"    column="io_number"    />
+        <result property="pitch"    column="pitch"    />
+        <result property="sphericalDiameter"    column="spherical_diameter"    />
+        <result property="baId"    column="ba_id"    />
+        <result property="facilityId"    column="facility_id"    />
+        <result property="pin"    column="pin"    />
+        <result property="bigOrSmall"    column="big_or_small"    />
+        <result property="machineModel"    column="machine_model"    />
+        <result property="isRecommend"    column="is_recommend"    />
+        <result property="productTypeId"    column="product_type_id"    />
+        <result property="productTypeName"    column="product_type_name"    />
+    </resultMap>
+
+    <sql id="selectNxpMoldVo">
+        select id, facility_id,mold_name, mold_code, mold_address, status, mold_rms_code, create_by, mold_pwd, create_time, mold_type, update_by, update_time, remark, pkg_Type, length, matrix, thin, serial_number, mold_address_id, substrate_length, size, io_number, pitch, spherical_diameter, ba_id, pin, big_or_small, machine_model, is_recommend, product_type_id, product_type_name from nxp_mold
+    </sql>
+
+    <select id="selectNxpMoldList" parameterType="NxpMold" resultMap="NxpMoldResult">
+        <include refid="selectNxpMoldVo"/>
+        <where>  
+            <if test="moldName != null  and moldName != ''"> and mold_name like concat('%', #{moldName}, '%')</if>
+            <if test="moldCode != null  and moldCode != ''"> and mold_code like concat('%', #{moldCode}, '%') OR mold_rms_code like concat('%', #{moldCode}, '%')</if>
+            <if test="moldAddress != null  and moldAddress != ''"> and mold_address = #{moldAddress}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="moldRmsCode != null  and moldRmsCode != ''"> and mold_rms_code = #{moldRmsCode}</if>
+            <if test="moldPwd != null  and moldPwd != ''"> and mold_pwd = #{moldPwd}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+            <if test="pkgType != null  and pkgType != ''"> and pkg_Type = #{pkgType}</if>
+            <if test="length != null  and length != ''"> and length = #{length}</if>
+            <if test="matrix != null  and matrix != ''"> and matrix = #{matrix}</if>
+            <if test="thin != null  and thin != ''"> and thin = #{thin}</if>
+            <if test="serialNumber != null  and serialNumber != ''"> and serial_number = #{serialNumber}</if>
+            <if test="moldAddressId != null "> and mold_address_id = #{moldAddressId}</if>
+            <if test="substrateLength != null  and substrateLength != ''"> and substrate_length = #{substrateLength}</if>
+            <if test="size != null  and size != ''"> and size = #{size}</if>
+            <if test="ioNumber != null  and ioNumber != ''"> and io_number = #{ioNumber}</if>
+            <if test="pitch != null  and pitch != ''"> and pitch = #{pitch}</if>
+            <if test="sphericalDiameter != null  and sphericalDiameter != ''"> and spherical_diameter = #{sphericalDiameter}</if>
+            <if test="baId != null  and baId != ''"> and ba_id = #{baId}</if>
+            <if test="facilityId != null  and facilityId != ''"> and facility_id = #{facilityId}</if>
+            <if test="pin != null  and pin != ''"> and pin = #{pin}</if>
+            <if test="bigOrSmall != null  and bigOrSmall != ''"> and big_or_small = #{bigOrSmall}</if>
+            <if test="machineModel != null and machineModel != ''"> and machine_model = #{machineModel}</if>
+            <if test="isRecommend != null"> and is_recommend = #{isRecommend}</if>
+            <if test="productTypeId != null "> and product_type_id = #{productTypeId}</if>
+            <if test="productTypeName != null  and productTypeName != ''"> and product_type_name like concat('%', #{productTypeName}, '%')</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectNxpMoldListByMachineModel" parameterType="NxpMold" resultMap="NxpMoldResult">
+        select id, facility_id,mold_name, mold_code, mold_address, status, mold_rms_code, create_by, mold_pwd, create_time, mold_type, update_by, update_time, remark, pkg_Type, length, matrix, thin, serial_number, mold_address_id, substrate_length, size, io_number, pitch, spherical_diameter, ba_id, pin, big_or_small, machine_model, is_recommend, product_type_id, product_type_name from nxp_mold
+        CROSS APPLY STRING_SPLIT (machine_model, ',') AS machine_values
+        CROSS APPLY STRING_SPLIT (product_type_id, ',') AS product_type_values
+        <where>
+            <if test="moldCode != null"> and mold_code != #{moldCode}</if>
+            <if test="machineModel != null and machineModel != ''"> and machine_values.value = #{machineModel}</if>
+            <if test="productTypeId != null"> and product_type_values.value = #{productTypeId}</if>
+            <if test="facilityId != null"> and facility_id != #{facilityId}</if>
+            AND product_type_values.value &lt;&gt; ''
+            AND machine_values.value &lt;&gt; ''
+            and status in (1,4,6)
+        </where>
+    </select>
+    
+    <select id="selectNxpMoldById" parameterType="Long" resultMap="NxpMoldResult">
+        <include refid="selectNxpMoldVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectNxpMoldByCode" parameterType="String" resultMap="NxpMoldResult">
+        <include refid="selectNxpMoldVo"/>
+        where mold_code = #{moldCode}
+    </select>
+
+    <select id="selectNxpMoldByFacility" parameterType="Long" resultMap="NxpMoldResult">
+        <include refid="selectNxpMoldVo"/>
+        where facility_id = #{facilityId}
+    </select>
+
+    <select id="selectNxpMoldByRMSCode" parameterType="String" resultMap="NxpMoldResult">
+        <include refid="selectNxpMoldVo"/>
+        where mold_rms_code = #{moldRmsCode}
+    </select>
+
+    <select id="recommendedMold" parameterType="String" resultType="com.ruoyi.system.domain.DTO.NxpMoldDTO">
+        SELECT
+            TOP 1 a.moldNums,
+            a.moldCode
+        FROM
+            (
+                SELECT
+                    COUNT (mold_code) AS moldNums,
+                    mold_code AS moldCode
+                FROM
+                    t_replaced_list
+                WHERE
+                    facility_number = #{number}
+                GROUP BY
+                    mold_code
+            ) a
+        ORDER BY
+            a.moldNums DESC
+    </select>
+        
+    <insert id="insertNxpMold" parameterType="NxpMold" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_mold
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="moldName != null">mold_name,</if>
+            <if test="moldCode != null">mold_code,</if>
+            <if test="moldAddress != null">mold_address,</if>
+            <if test="status != null">status,</if>
+            <if test="moldRmsCode != null">mold_rms_code,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="moldPwd != null">mold_pwd,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="moldType != null">mold_type,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="pkgType != null">pkg_Type,</if>
+            <if test="length != null">length,</if>
+            <if test="matrix != null">matrix,</if>
+            <if test="thin != null">thin,</if>
+            <if test="serialNumber != null">serial_number,</if>
+            <if test="moldAddressId != null">mold_address_id,</if>
+            <if test="substrateLength != null">substrate_length,</if>
+            <if test="size != null">size,</if>
+            <if test="ioNumber != null">io_number,</if>
+            <if test="pitch != null">pitch,</if>
+            <if test="sphericalDiameter != null">spherical_diameter,</if>
+            <if test="baId != null">ba_id,</if>
+            <if test="pin != null">pin,</if>
+            <if test="bigOrSmall != null">big_or_small,</if>
+            <if test="machineModel != null">machine_model,</if>
+            <if test="isRecommend != null">is_recommend,</if>
+            <if test="productTypeId != null">product_type_id,</if>
+            <if test="productTypeName != null">product_type_name,</if>
+            <if test="facilityId != null">facility_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="moldName != null">#{moldName},</if>
+            <if test="moldCode != null">#{moldCode},</if>
+            <if test="moldAddress != null">#{moldAddress},</if>
+            <if test="status != null">#{status},</if>
+            <if test="moldRmsCode != null">#{moldRmsCode},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="moldPwd != null">#{moldPwd},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="moldType != null">#{moldType},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="pkgType != null">#{pkgType},</if>
+            <if test="length != null">#{length},</if>
+            <if test="matrix != null">#{matrix},</if>
+            <if test="thin != null">#{thin},</if>
+            <if test="serialNumber != null">#{serialNumber},</if>
+            <if test="moldAddressId != null">#{moldAddressId},</if>
+            <if test="substrateLength != null">#{substrateLength},</if>
+            <if test="size != null">#{size},</if>
+            <if test="ioNumber != null">#{ioNumber},</if>
+            <if test="pitch != null">#{pitch},</if>
+            <if test="sphericalDiameter != null">#{sphericalDiameter},</if>
+            <if test="baId != null">#{baId},</if>
+            <if test="pin != null">#{pin},</if>
+            <if test="bigOrSmall != null">#{bigOrSmall},</if>
+            <if test="machineModel != null">#{machineModel},</if>
+            <if test="isRecommend != null">#{isRecommend},</if>
+            <if test="productTypeId != null">#{productTypeId},</if>
+            <if test="productTypeName != null">#{productTypeName},</if>
+            <if test="facilityId != null">#{facilityId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpMold" parameterType="NxpMold">
+        update nxp_mold
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="moldName != null">mold_name = #{moldName},</if>
+            <if test="moldCode != null">mold_code = #{moldCode},</if>
+            <if test="moldAddress != null">mold_address = #{moldAddress},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="moldRmsCode != null">mold_rms_code = #{moldRmsCode},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="moldPwd != null">mold_pwd = #{moldPwd},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="moldType != null">mold_type = #{moldType},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="pkgType != null">pkg_Type = #{pkgType},</if>
+            <if test="length != null">length = #{length},</if>
+            <if test="matrix != null">matrix = #{matrix},</if>
+            <if test="thin != null">thin = #{thin},</if>
+            <if test="serialNumber != null">serial_number = #{serialNumber},</if>
+            <if test="moldAddressId != null">mold_address_id = #{moldAddressId},</if>
+            <if test="substrateLength != null">substrate_length = #{substrateLength},</if>
+            <if test="size != null">size = #{size},</if>
+            <if test="ioNumber != null">io_number = #{ioNumber},</if>
+            <if test="pitch != null">pitch = #{pitch},</if>
+            <if test="sphericalDiameter != null">spherical_diameter = #{sphericalDiameter},</if>
+            <if test="baId != null">ba_id = #{baId},</if>
+            <if test="pin != null">pin = #{pin},</if>
+            <if test="bigOrSmall != null">big_or_small = #{bigOrSmall},</if>
+            <if test="machineModel != null">machine_model = #{machineModel},</if>
+            <if test="isRecommend != null">is_recommend = #{isRecommend},</if>
+            <if test="productTypeId != null and productTypeId != ''">product_type_id = #{productTypeId},</if>
+            <if test="productTypeId == null or productTypeId == ''">product_type_id = #{productTypeId},</if>
+            <if test="productTypeName != null and productTypeName != ''">product_type_name = #{productTypeName},</if>
+            <if test="productTypeName == null or productTypeName == ''">product_type_name = #{productTypeName},</if>
+            <if test="facilityId != null">facility_id = #{facilityId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateNxpMoldApi" parameterType="NxpMold">
+        update nxp_mold
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="moldName != null">mold_name = #{moldName},</if>
+            <if test="moldCode != null">mold_code = #{moldCode},</if>
+            <if test="moldAddress != null">mold_address = #{moldAddress},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="moldRmsCode != null">mold_rms_code = #{moldRmsCode},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="moldPwd != null">mold_pwd = #{moldPwd},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="moldType != null">mold_type = #{moldType},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="pkgType != null">pkg_Type = #{pkgType},</if>
+            <if test="length != null">length = #{length},</if>
+            <if test="matrix != null">matrix = #{matrix},</if>
+            <if test="thin != null">thin = #{thin},</if>
+            <if test="serialNumber != null">serial_number = #{serialNumber},</if>
+            <if test="moldAddressId != null">mold_address_id = #{moldAddressId},</if>
+            <if test="substrateLength != null">substrate_length = #{substrateLength},</if>
+            <if test="size != null">size = #{size},</if>
+            <if test="ioNumber != null">io_number = #{ioNumber},</if>
+            <if test="pitch != null">pitch = #{pitch},</if>
+            <if test="sphericalDiameter != null">spherical_diameter = #{sphericalDiameter},</if>
+            <if test="baId != null">ba_id = #{baId},</if>
+            <if test="pin != null">pin = #{pin},</if>
+            <if test="bigOrSmall != null">big_or_small = #{bigOrSmall},</if>
+            <if test="machineModel != null">machine_model = #{machineModel},</if>
+            <if test="isRecommend != null">is_recommend = #{isRecommend},</if>
+            <if test="productTypeId != null">product_type_id = #{productTypeId},</if>
+            <if test="productTypeName != null">product_type_name = #{productTypeName},</if>
+            <if test="facilityId != null">facility_id = #{facilityId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpMoldById" parameterType="Long">
+        delete from nxp_mold where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpMoldByIds" parameterType="String">
+        delete from nxp_mold where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectPkgType" resultType="java.lang.String">
+        SELECT DISTINCT
+            pkg_Type
+        FROM
+            nxp_mold
+        WHERE
+	        pkg_Type IS NOT NULL
+        AND pkg_Type != ''
+    </select>
+
+    <select id="selectLengths" resultType="java.lang.String">
+        SELECT DISTINCT
+            length
+        FROM
+            nxp_mold
+    </select>
+
+    <select id="selectMachineMode" resultType="java.lang.String">
+        SELECT DISTINCT
+            nm.machine_model
+        FROM
+            nxp_mold nm
+        WHERE
+            nm.machine_model is not null
+    </select>
+
+    <select id="selectByProductId" parameterType="string" resultMap="NxpMoldResult">
+        select id, facility_id,mold_name, mold_code, mold_address, status, mold_rms_code, create_by, mold_pwd, create_time, mold_type, update_by, update_time, remark, pkg_Type, length, matrix, thin, serial_number, mold_address_id, substrate_length, size, io_number, pitch, spherical_diameter, ba_id, pin, big_or_small, machine_model, is_recommend, product_type_id, product_type_name from nxp_mold
+        where
+        CHARINDEX(#{productTypeId}, product_type_id) > 0
+    </select>
+
+    <select id="selectByIdList" parameterType="list" resultMap="NxpMoldResult">
+        select id, facility_id,mold_name, mold_code, mold_address, status, mold_rms_code, create_by, mold_pwd, create_time, mold_type, update_by, update_time, remark, pkg_Type, length, matrix, thin, serial_number, mold_address_id, substrate_length, size, io_number, pitch, spherical_diameter, ba_id, pin, big_or_small, machine_model, is_recommend, product_type_id, product_type_name from nxp_mold
+        where
+        id in
+        <foreach item="id" index="index" collection="moldIdList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectMoldTypeIdByMoldId" parameterType="string" resultType="long">
+        SELECT
+            nmc.mold_type_id
+        FROM
+            nxp_mold nm
+        LEFT JOIN nxp_mold_component nmc ON nm.id = nmc.mold_id
+        WHERE
+            nmc.mold_id = #{moldIdStr}
+        GROUP BY
+            mold_type_id
+    </select>
+</mapper>

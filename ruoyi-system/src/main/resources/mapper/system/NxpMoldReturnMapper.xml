@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpMoldReturnMapper">
+    
+    <resultMap type="NxpMoldReturn" id="NxpMoldReturnResult">
+        <result property="id"    column="id"    />
+        <result property="moldId"    column="mold_id"    />
+        <result property="moldName"    column="mold_name"    />
+        <result property="moldCode"    column="mold_code"    />
+        <result property="facilityId"    column="facility_id"    />
+        <result property="processId"    column="process_id"    />
+        <result property="userInfoId"    column="user_info_id"    />
+        <result property="facilityNumber"    column="facility_number"    />
+        <result property="status"    column="status"    />
+        <result property="returnPosition"    column="return_position"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="moldRmsCode"    column="mold_rms_code"    />
+        <result property="moldType"    column="mold_type"    />
+    </resultMap>
+
+    <sql id="selectNxpMoldReturnVo">
+        select id, mold_id, mold_name, mold_code, facility_id, process_id, user_info_id, facility_number, status, return_position, create_by, create_time, update_by, update_time, remark, mold_rms_code, mold_type from nxp_mold_return
+    </sql>
+
+    <select id="selectNxpMoldReturnList" parameterType="NxpMoldReturn" resultMap="NxpMoldReturnResult">
+        <include refid="selectNxpMoldReturnVo"/>
+        <where>  
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldName != null  and moldName != ''"> and mold_name like concat('%', #{moldName}, '%')</if>
+            <if test="moldCode != null  and moldCode != ''"> and mold_code = #{moldCode}</if>
+            <if test="facilityId != null "> and facility_id = #{facilityId}</if>
+            <if test="processId != null  and processId != ''"> and process_id = #{processId}</if>
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="facilityNumber != null  and facilityNumber != ''"> and facility_number = #{facilityNumber}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="returnPosition != null "> and return_position = #{returnPosition}</if>
+            <if test="moldRmsCode != null "> and mold_rms_code = #{moldRmsCode}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+            <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">and update_time between #{params.beginTime} and #{params.endTime}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectNxpMoldReturnListNew" parameterType="NxpMoldReturn" resultMap="NxpMoldReturnResult">
+        SELECT
+            nmr.id,
+            nmr.mold_id,
+            nmr.mold_name,
+            nmr.mold_code,
+            nmr.facility_id,
+            nmr.process_id,
+            nmr.user_info_id,
+            nmr.facility_number,
+            nmr.status,
+            nmr.return_position,
+            nmr.create_by,
+            nmr.create_time,
+            nmr.update_by,
+            nmr.update_time,
+            nmr.remark,
+            nmr.mold_rms_code
+        FROM
+            nxp_mold_return nmr
+--         LEFT JOIN nxp_mold nm ON nm.id = nmr.mold_id
+        <where>
+            <if test="status != null">
+                and nmr.status = #{status}
+            </if>
+            <if test="moldType != null">
+                and nmr.mold_type = #{moldType}
+            </if>
+            <if test="moldCode != null and moldCode != ''">
+                and nmr.mold_code = #{moldCode}
+            </if>
+            and nmr.mold_id IN ( SELECT mold_id FROM nxp_mold_return GROUP BY mold_id )
+        </where>
+        order by nmr.create_time desc
+    </select>
+    
+    <select id="selectNxpMoldReturnById" parameterType="Long" resultMap="NxpMoldReturnResult">
+        <include refid="selectNxpMoldReturnVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpMoldReturn" parameterType="NxpMoldReturn" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_mold_return
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">mold_id,</if>
+            <if test="moldName != null">mold_name,</if>
+            <if test="moldCode != null">mold_code,</if>
+            <if test="facilityId != null">facility_id,</if>
+            <if test="processId != null">process_id,</if>
+            <if test="userInfoId != null">user_info_id,</if>
+            <if test="facilityNumber != null">facility_number,</if>
+            <if test="status != null">status,</if>
+            <if test="returnPosition != null">return_position,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="moldRmsCode != null">mold_rms_code,</if>
+            <if test="moldType != null">mold_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">#{moldId},</if>
+            <if test="moldName != null">#{moldName},</if>
+            <if test="moldCode != null">#{moldCode},</if>
+            <if test="facilityId != null">#{facilityId},</if>
+            <if test="processId != null">#{processId},</if>
+            <if test="userInfoId != null">#{userInfoId},</if>
+            <if test="facilityNumber != null">#{facilityNumber},</if>
+            <if test="status != null">#{status},</if>
+            <if test="returnPosition != null">#{returnPosition},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="moldRmsCode != null">#{moldRmsCode},</if>
+            <if test="moldType != null">#{moldType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpMoldReturn" parameterType="NxpMoldReturn">
+        update nxp_mold_return
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="moldId != null">mold_id = #{moldId},</if>
+            <if test="moldName != null">mold_name = #{moldName},</if>
+            <if test="moldCode != null">mold_code = #{moldCode},</if>
+            <if test="facilityId != null">facility_id = #{facilityId},</if>
+            <if test="processId != null">process_id = #{processId},</if>
+            <if test="userInfoId != null">user_info_id = #{userInfoId},</if>
+            <if test="facilityNumber != null">facility_number = #{facilityNumber},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="returnPosition != null">return_position = #{returnPosition},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="moldRmsCode != null">mold_rms_code = #{moldRmsCode},</if>
+            <if test="moldType != null">mold_type = #{moldType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpMoldReturnById" parameterType="Long">
+        delete from nxp_mold_return where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpMoldReturnByIds" parameterType="String">
+        delete from nxp_mold_return where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

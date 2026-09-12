@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改维修详情备件')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-inspectionServiceDetail-edit" th:object="${nxpInspectionServiceDetail}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">备件表id：</label>
+                <div class="col-sm-8">
+                    <input name="spare_id" th:field="*{spare_id}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">备件名称：</label>
+                <div class="col-sm-8">
+                    <input name="spare_explain" th:field="*{spare_explain}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">备件数量：</label>
+                <div class="col-sm-8">
+                    <input name="spare_number" th:field="*{spare_number}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">创建时间：</label>
+                <div class="col-sm-8">
+                    <input name="created_at" th:field="*{created_at}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">修改时间：</label>
+                <div class="col-sm-8">
+                    <input name="updated_at" th:field="*{updated_at}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修详情表id：</label>
+                <div class="col-sm-8">
+                    <input name="service_id" th:field="*{service_id}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/inspectionServiceDetail";
+        $("#form-inspectionServiceDetail-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-inspectionServiceDetail-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

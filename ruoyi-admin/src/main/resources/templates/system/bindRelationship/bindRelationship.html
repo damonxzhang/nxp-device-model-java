@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('绑定关系管理列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>检查组：</label>
+                                <select name="checkGroupId">
+                                    <option value="">所有</option>
+                                    <option th:each="nxpCheckContent:${nxpCheckGroups}" th:text="${nxpCheckContent.groupName}" th:value="${nxpCheckContent.id}"></option>
+                                </select>
+                            </li>
+                            <!--<li>
+                                <label>维修位置id：</label>
+                                <input type="text" name="positionId"/>
+                            </li>
+                            <li>
+                                <label>维修内容id：</label>
+                                <input type="text" name="inspectionContentId"/>
+                            </li>
+                            <li>
+                                <label>维修内容状态：</label>
+                                <select name="inspectionContentState" th:with="type=${@dict.getType('is_enable')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>pm分组id：</label>
+                                <input type="text" name="pmGroupId"/>
+                            </li>
+                            <li>
+                                <label>pm检查项id：</label>
+                                <input type="text" name="pmGroupItemId"/>
+                            </li>
+                            <li>
+                                <label>pm检查项状态：</label>
+                                <select name="pmGroupItemState" th:with="type=${@dict.getType('is_enable')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>作业内容id：</label>
+                                <input type="text" name="swcJobContentId"/>
+                            </li>
+                            <li>
+                                <label>swc作业内容状态：</label>
+                                <select name="swcJobContentState" th:with="type=${@dict.getType('is_enable')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>-->
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:bindRelationship:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:bindRelationship:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:bindRelationship:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:bindRelationship:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:bindRelationship:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bindRelationship:remove')}]];
+        var inspectionContentStateDatas = [[${@dict.getType('is_enable')}]];
+        var pmGroupItemStateDatas = [[${@dict.getType('is_enable')}]];
+        var swcJobContentStateDatas = [[${@dict.getType('is_enable')}]];
+        var prefix = ctx + "system/bindRelationship";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "绑定关系管理",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'id',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'checkGroupName',
+                    title: '检查组'
+                },
+                {
+                    field: 'positionName',
+                    title: '维修位置'
+                },
+                {
+                    field: 'inspectionContentName',
+                    title: '维修内容'
+                },
+                {
+                    field: 'inspectionContentState',
+                    title: '维修内容状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(inspectionContentStateDatas, value);
+                    }
+                },
+                {
+                    field: 'pmGroupName',
+                    title: 'pm分组'
+                },
+                {
+                    field: 'pmGroupItemName',
+                    title: 'pm检查项'
+                },
+                {
+                    field: 'pmGroupItemState',
+                    title: 'pm检查项状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(pmGroupItemStateDatas, value);
+                    }
+                },
+                {
+                    field: 'swcJobContentName',
+                    title: '作业内容'
+                },
+                {
+                    field: 'swcJobContentState',
+                    title: 'swc作业内容状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(swcJobContentStateDatas, value);
+                    }
+                },
+                {
+                    field: 'createTime',
+                    title: '创建时间'
+                },
+                {
+                    field: 'updateTime',
+                    title: '更新时间'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionServiceMapper">
+    
+    <resultMap type="NxpInspectionService" id="NxpInspectionServiceResult">
+        <result property="id"    column="id"    />
+        <result property="inspection_id"    column="inspection_id"    />
+        <result property="content_id"    column="content_id"    />
+        <result property="position_id"    column="position_id"    />
+        <result property="user_info_id"    column="user_info_id"    />
+        <result property="description"    column="description"    />
+        <result property="created_at"    column="created_at"    />
+        <result property="updated_at"    column="updated_at"    />
+        <result property="service_time"    column="service_time"    />
+        <result property="file_id"    column="file_id"    />
+        <result property="status"    column="status"    />
+        <result property="facility_id"    column="facility_id"    />
+        <result property="end_time"    column="end_time"    />
+        <result property="abort_reason_id"    column="abort_reason_id"    />
+        <result property="abort_reason_remark"    column="abort_reason_remark"    />
+        <result property="maintenance_reason_id"    column="maintenance_reason_id"    />
+        <result property="maintenance_reason_name"    column="maintenance_reason_name"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionServiceVo">
+        select id, inspection_id, content_id, position_id, user_info_id, description, created_at, updated_at, service_time, file_id, status, facility_id, end_time,abort_reason_id,abort_reason_remark,maintenance_reason_id,maintenance_reason_name from nxp_inspection_service
+    </sql>
+
+    <select id="selectNxpInspectionServiceList" parameterType="NxpInspectionService" resultMap="NxpInspectionServiceResult">
+        <include refid="selectNxpInspectionServiceVo"/>
+        <where>  
+            <if test="inspection_id != null "> and inspection_id = #{inspection_id}</if>
+            <if test="content_id != null "> and content_id = #{content_id}</if>
+            <if test="position_id != null "> and position_id = #{position_id}</if>
+            <if test="user_info_id != null "> and user_info_id = #{user_info_id}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="created_at != null "> and created_at = #{created_at}</if>
+            <if test="updated_at != null "> and updated_at = #{updated_at}</if>
+            <if test="service_time != null "> and service_time = #{service_time}</if>
+            <if test="file_id != null  and file_id != ''"> and file_id = #{file_id}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+            <if test="end_time != null "> and end_time = #{end_time}</if>
+            <if test="abort_reason_id != null "> and abort_reason_id = #{abort_reason_id}</if>
+            <if test="abort_reason_remark != null "> and abort_reason_remark = #{abort_reason_remark}</if>
+            <if test="maintenance_reason_id != null "> and maintenance_reason_id = #{maintenance_reason_id}</if>
+            <if test="maintenance_reason_name != null "> and maintenance_reason_name = #{maintenance_reason_name}</if>
+            <if test="repair_start_time != null and repair_start_time != '' and repair_end_time != null and repair_end_time != ''">and created_at between #{repair_start_time} and #{repair_end_time}</if>
+        </where>
+        order by service_time desc
+    </select>
+    
+
+    <select id="selectNxpInspectionServiceListNew" parameterType="NxpInspectionService" resultMap="NxpInspectionServiceResult">
+        SELECT
+        nis.*,nf.head_user
+        FROM
+        nxp_inspection_service nis
+        LEFT JOIN nxp_facility nf ON nis.facility_id = nf.id
+        LEFT JOIN nxp_machine_process nmp ON nf.process = nmp.id
+        <where>
+            <if test="inspection_id != null "> and inspection_id = #{inspection_id}</if>
+            <if test="process_id != null and process_id != '' "> and nmp.id = #{process_id}</if>
+            <if test="content_id != null "> and content_id = #{content_id}</if>
+            <if test="position_id != null "> and position_id = #{position_id}</if>
+            <if test="user_info_id != null "> and user_info_id = #{user_info_id}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="service_time != null "> and service_time = #{service_time}</if>
+            <if test="file_id != null  and file_id != ''"> and file_id = #{file_id}</if>
+            <if test="status != null "> and nis.status = #{status}</if>
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+            <if test="end_time != null "> and end_time = #{end_time}</if>
+            <if test="abort_reason_id != null "> and abort_reason_id = #{abort_reason_id}</if>
+            <if test="abort_reason_remark != null "> and abort_reason_remark = #{abort_reason_remark}</if>
+            <if test="maintenance_reason_id != null "> and maintenance_reason_id = #{maintenance_reason_id}</if>
+            <if test="maintenance_reason_name != null "> and maintenance_reason_name = #{maintenance_reason_name}</if>
+            <if test="params.repair_start_time != null and params.repair_start_time != '' and params.repair_end_time != null and params.repair_end_time != ''">and nis.service_time between #{params.repair_start_time} and #{params.repair_end_time}</if>
+        </where>
+        order by nis.id desc
+    </select>
+
+    <select id="selectNxpInspectionServiceById" parameterType="Long" resultMap="NxpInspectionServiceResult">
+        <include refid="selectNxpInspectionServiceVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectNxpInspectionServiceByIds" parameterType="string" resultMap="NxpInspectionServiceResult">
+        <include refid="selectNxpInspectionServiceVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+        
+    <insert id="insertNxpInspectionService" parameterType="NxpInspectionService" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_service
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="inspection_id != null">inspection_id,</if>
+            <if test="content_id != null">content_id,</if>
+            <if test="position_id != null">position_id,</if>
+            <if test="user_info_id != null">user_info_id,</if>
+            <if test="description != null">description,</if>
+            <if test="created_at != null">created_at,</if>
+            <if test="updated_at != null">updated_at,</if>
+            <if test="service_time != null">service_time,</if>
+            <if test="file_id != null">file_id,</if>
+            <if test="status != null">status,</if>
+            <if test="facility_id != null">facility_id,</if>
+            <if test="end_time != null">end_time,</if>
+            <if test="abort_reason_id != null">abort_reason_id,</if>
+            <if test="abort_reason_remark != null">abort_reason_remark,</if>
+            <if test="maintenance_reason_id != null">maintenance_reason_id,</if>
+            <if test="maintenance_reason_name != null">maintenance_reason_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="inspection_id != null">#{inspection_id},</if>
+            <if test="content_id != null">#{content_id},</if>
+            <if test="position_id != null">#{position_id},</if>
+            <if test="user_info_id != null">#{user_info_id},</if>
+            <if test="description != null">#{description},</if>
+            <if test="created_at != null">#{created_at},</if>
+            <if test="updated_at != null">#{updated_at},</if>
+            <if test="service_time != null">#{service_time},</if>
+            <if test="file_id != null">#{file_id},</if>
+            <if test="status != null">#{status},</if>
+            <if test="facility_id != null">#{facility_id},</if>
+            <if test="end_time != null">#{end_time},</if>
+            <if test="abort_reason_id != null">#{abort_reason_id},</if>
+            <if test="abort_reason_remark != null">#{abort_reason_remark},</if>
+            <if test="maintenance_reason_id != null">#{maintenance_reason_id},</if>
+            <if test="maintenance_reason_name != null">#{maintenance_reason_name},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionService" parameterType="NxpInspectionService">
+        update nxp_inspection_service
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inspection_id != null">inspection_id = #{inspection_id},</if>
+            <if test="content_id != null">content_id = #{content_id},</if>
+            <if test="position_id != null">position_id = #{position_id},</if>
+            <if test="user_info_id != null">user_info_id = #{user_info_id},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="created_at != null">created_at = #{created_at},</if>
+            <if test="updated_at != null">updated_at = #{updated_at},</if>
+            <if test="service_time != null">service_time = #{service_time},</if>
+            <if test="file_id != null">file_id = #{file_id},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="facility_id != null">facility_id = #{facility_id},</if>
+            <if test="end_time != null">end_time = #{end_time},</if>
+            <if test="abort_reason_id != null">abort_reason_id = #{abort_reason_id},</if>
+            <if test="abort_reason_remark != null">abort_reason_remark = #{abort_reason_remark},</if>
+            <if test="maintenance_reason_id != null">maintenance_reason_id = #{maintenance_reason_id},</if>
+            <if test="maintenance_reason_name != null">maintenance_reason_name = #{maintenance_reason_name},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionServiceById" parameterType="Long">
+        delete from nxp_inspection_service where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionServiceByIds" parameterType="String">
+        delete from nxp_inspection_service where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectNxpInspectionServiceListByIids" parameterType="NxpInspectionService" resultMap="NxpInspectionServiceResult">
+        <include refid="selectNxpInspectionServiceVo"/>
+        <where>
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+             <if test="iIds != null and iIds.size > 0">
+                 and inspection_id in
+                 <foreach item="inspection_id" collection="iIds" open="(" separator="," close=")">
+                     #{inspection_id}
+                 </foreach>
+             </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增设备相关人员')" />
+    <th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: bootstrap-select-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-facilityUser-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">筛选工序：</label>
+                <div class="col-sm-8">
+                    <select name="processId" id="processId" class="form-control m-b">
+                        <option value="">请选择工序</option>
+                        <option th:each="nxpMachineProcesses:${nxpMachineProcesses}" th:text="${nxpMachineProcesses.name}" th:value="${nxpMachineProcesses.id}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">设备名称：</label>
+                <div class="col-sm-8">
+                    <select name="facilityId" id="facilityId" class="form-control m-b">
+                        <option value="">请选择设备</option>
+                        <option th:each="facility:${nxpFacilities}" th:text="${facility.number}" th:value="${facility.id}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">筛选条件：</label>
+                <div class="col-sm-8">
+                    <select  style="width:40%" name="area" id="area" class="form-control m-b" th:with="type=${@dict.getType('area_arr')}">
+                        <option value="">请选择区域</option>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                    <select  style="width:40%" name="shift" id="shift" class="form-control m-b" th:with="type=${@dict.getType('shift_arr')}">
+                        <option value="">请选择班别</option>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">相关人：</label>
+                <div class="col-sm-8">
+                    <select name="userIds" id="userIds" class="form-control select2-multiple" data-none-selected-text="请先选择区域或者班别" multiple>
+                        <option value="">请先选择区域或者班别</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: select2-js" />
+    <th:block th:include="include :: bootstrap-select-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/facilityUser"
+        $("#form-facilityUser-add").validate({
+            focusCleanup: true
+        });
+
+        // 工序
+        $("#processId").change(function () {
+            let processId = $("#processId").val();
+            $.ajax({
+                url: prefix + "/getMathineByProcess",
+                type: "POST",
+                data: {"processId":processId},
+                success: function (result) {
+                    let str = "";
+                    $.each(result.msg, function(index, value){
+                        str += '<option value="' + value.id + '">' + value.number + '</option>';
+                    });
+                    //清空之前其他上级菜单遗留的子菜单，否则改变上级菜单后子菜单会包含多个上级菜单的全部子菜单
+                    $("#facilityId").empty();
+                    $("#facilityId").append('<option value="">---请选择工序---</option>' + str);
+                },
+                error: function(error) {
+                    $.modal.alertWarning("失败。");
+                }});
+        });
+
+        // 区域
+        $("#area").change(function () {
+            let area = $("#area").val();
+            let shift = $("#shift").val();
+            $.ajax({
+                url: prefix + "/getUserByAreaAndShift",
+                type: "POST",
+                data: {"area":area,"shift":shift},
+                success: function (result) {
+                    let str = "";
+                    $.each(result.msg, function(index, value){
+                        str += '<option value="' + value.id + '">' + value.chinese_name + '</option>';
+                    });
+                    //清空之前其他上级菜单遗留的子菜单，否则改变上级菜单后子菜单会包含多个上级菜单的全部子菜单
+                    $("#userIds").empty();
+                    $("#userIds").append('<option value="">---请选择相关人---</option>' + str);
+                },
+                error: function(error) {
+                    $.modal.alertWarning("失败。");
+                }});
+        });
+        // 班别
+        $("#shift").change(function () {
+            let area = $("#area").val();
+            let shift = $("#shift").val();
+            $.ajax({
+                url: prefix + "/getUserByAreaAndShift",
+                type: "POST",
+                data: {"area":area,"shift":shift},
+                success: function (result) {
+                    let str = "";
+                    $.each(result.msg, function(index, value){
+                        str += '<option value="' + value.id + '">' + value.chinese_name + '</option>';
+                    });
+                    //清空之前其他上级菜单遗留的子菜单，否则改变上级菜单后子菜单会包含多个上级菜单的全部子菜单
+                    $("#userIds").empty();
+                    $("#userIds").append('<option value="">---请选择相关人---</option>' + str);
+                },
+                error: function(error) {
+                    $.modal.alertWarning("失败。");
+                }});
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-facilityUser-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

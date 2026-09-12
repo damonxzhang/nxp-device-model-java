@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpSwcCheckSelfMapper">
+    
+    <resultMap type="NxpSwcCheckSelf" id="NxpSwcCheckSelfResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="checkTime"    column="check_time"    />
+        <result property="facilityId"    column="facility_id"    />
+        <result property="partNo"    column="part_no"    />
+        <result property="comment"    column="comment"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectNxpSwcCheckSelfVo">
+        select id, user_id, check_time, facility_id, part_no, comment, type from nxp_swc_check_self
+    </sql>
+
+    <select id="selectNxpSwcCheckSelfList" parameterType="NxpSwcCheckSelf" resultMap="NxpSwcCheckSelfResult">
+        <include refid="selectNxpSwcCheckSelfVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="checkTime != null "> and check_time = #{checkTime}</if>
+            <if test="facilityId != null  and facilityId != ''"> and facility_id = #{facilityId}</if>
+            <if test="partNo != null  and partNo != ''"> and part_no = #{partNo}</if>
+            <if test="comment != null  and comment != ''"> and comment = #{comment}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpSwcCheckSelfById" parameterType="Long" resultMap="NxpSwcCheckSelfResult">
+        <include refid="selectNxpSwcCheckSelfVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpSwcCheckSelf" parameterType="NxpSwcCheckSelf" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_swc_check_self
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="checkTime != null">check_time,</if>
+            <if test="facilityId != null">facility_id,</if>
+            <if test="partNo != null">part_no,</if>
+            <if test="comment != null">comment,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="checkTime != null">#{checkTime},</if>
+            <if test="facilityId != null">#{facilityId},</if>
+            <if test="partNo != null">#{partNo},</if>
+            <if test="comment != null">#{comment},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpSwcCheckSelf" parameterType="NxpSwcCheckSelf">
+        update nxp_swc_check_self
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="checkTime != null">check_time = #{checkTime},</if>
+            <if test="facilityId != null">facility_id = #{facilityId},</if>
+            <if test="partNo != null">part_no = #{partNo},</if>
+            <if test="comment != null">comment = #{comment},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpSwcCheckSelfById" parameterType="Long">
+        delete from nxp_swc_check_self where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpSwcCheckSelfByIds" parameterType="String">
+        delete from nxp_swc_check_self where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

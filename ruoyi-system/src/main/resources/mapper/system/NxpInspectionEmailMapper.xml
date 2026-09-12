@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionEmailMapper">
+    
+    <resultMap type="NxpInspectionEmail" id="NxpInspectionEmailResult">
+        <result property="id"    column="id"    />
+        <result property="email"    column="email"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionEmailVo">
+        select id, email, user_id from nxp_inspection_email
+    </sql>
+
+    <select id="selectNxpInspectionEmailList" parameterType="NxpInspectionEmail" resultMap="NxpInspectionEmailResult">
+        <include refid="selectNxpInspectionEmailVo"/>
+        <where>  
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpInspectionEmailById" parameterType="Long" resultMap="NxpInspectionEmailResult">
+        <include refid="selectNxpInspectionEmailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpInspectionEmail" parameterType="NxpInspectionEmail">
+        insert into nxp_inspection_email
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="email != null">email,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="email != null">#{email},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionEmail" parameterType="NxpInspectionEmail">
+        update nxp_inspection_email
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="email != null">email = #{email},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionEmailById" parameterType="Long">
+        delete from nxp_inspection_email where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionEmailByIds" parameterType="String">
+        delete from nxp_inspection_email where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

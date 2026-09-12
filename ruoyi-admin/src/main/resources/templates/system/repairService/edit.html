@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改维修详情')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-repairService-edit" th:object="${nxpInspectionService}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修内容：</label>
+                <div class="col-sm-8">
+                    <input name="content_id" th:field="*{contentName}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修位置：</label>
+                <div class="col-sm-8">
+                    <input name="position_id" th:field="*{positionName}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修人：</label>
+                <div class="col-sm-8">
+                    <input name="user_info_id" th:field="*{user_info_name}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">维修情况说明：</label>
+                <div class="col-sm-8">
+                    <input name="description" th:field="*{description}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">无需维修说明：</label>
+                <div class="col-sm-8">
+                    <input name="description" th:field="*{maintenance_reason_name}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+<!--            <div class="form-group">    -->
+<!--                <label class="col-sm-3 control-label">创建时间：</label>-->
+<!--                <div class="col-sm-8">-->
+<!--                    <input name="created_at" th:field="*{created_at}" class="form-control" type="text">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="form-group">    -->
+<!--                <label class="col-sm-3 control-label">修改时间：</label>-->
+<!--                <div class="col-sm-8">-->
+<!--                    <input name="updated_at" th:field="*{updated_at}" class="form-control" type="text">-->
+<!--                </div>-->
+<!--            </div>-->
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="service_time" th:value="${#dates.format(nxpInspectionService.service_time, 'yyyy-MM-dd hh:mm:ss')}" class="form-control" placeholder="yyyy-MM-dd" type="text" disabled>
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">维修照片：</label>
+                <div class="col-sm-8">
+                    <a th:each="nxpInspectionFile : ${nxpInspectionFile}" th:href="${nxpInspectionFile.file_path}" th:title="${nxpInspectionFile.file_path}" target="_blank">
+                        <img style="width: 20%;height: 20%" th:each="nxpInspectionFile : ${nxpInspectionFile}" th:src="${nxpInspectionFile.file_path}" class="form-control" ></a>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修状态：</label>
+                <div class="col-sm-8">
+                    <select name="status" class="form-control m-b" th:with="type=${@dict.getType('wx_status')}" disabled>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设备编号：</label>
+                <div class="col-sm-8">
+                    <input name="facility_id" th:field="*{facility_name}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修结束时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="end_time" th:value="${#dates.format(nxpInspectionService.end_time, 'yyyy-MM-dd hh:mm:ss')}" class="form-control" placeholder="yyyy-MM-dd" type="text" disabled>
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/repairService";
+        $("#form-repairService-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-repairService-edit').serialize());
+            }
+        }
+
+        $("input[name='service_time']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='end_time']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>

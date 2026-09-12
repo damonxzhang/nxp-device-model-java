@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改部件种类')" />
+    <th:block th:include="include :: select2-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-nxpMoldType-edit" th:object="${nxpMoldType}">
+            <h4 class="form-header h4">部件种类信息</h4>
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">模具种类名称：</label>
+                <div class="col-sm-8">
+                    <input name="moldTypeName" th:field="*{moldTypeName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+                    <select name="status" class="form-control m-b" th:with="type=${@dict.getType('is_enable')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label select2-multiple">适用机型：</label>
+                <div class="col-sm-8">
+                    <select name="moldType" class="form-control m-b" th:with="type=${machineModels}" multiple>
+                        <option th:each="dict : ${type}" th:text="${dict.name}" th:value="${dict.id}" th:selected="${dict.flag}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">模具类型：</label>
+                <div class="col-sm-8">
+                    <select name="moldType" class="form-control m-b" th:with="type=${@dict.getType('mold_type')}" disabled>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{moldType}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea name="remark" class="form-control">[[*{remark}]]</textarea>
+                </div>
+            </div>
+            <h4 class="form-header h4">模具部件信息</h4>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-white btn-sm" onclick="addColumn()"><i class="fa fa-plus"> 增加</i></button>
+                    <button type="button" class="btn btn-white btn-sm" onclick="sub.delColumn()"><i class="fa fa-minus"> 删除</i></button>
+                    <div class="col-sm-12 select-table table-striped">
+                        <table id="bootstrap-table"></table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: select2-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/nxpMoldType";
+        var statusDatas = [[${@dict.getType('is_enable')}]];
+        $("#form-nxpMoldType-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-nxpMoldType-edit').serialize());
+            }
+        }
+
+        $(function() {
+            var options = {
+                data: [[${nxpMoldType.nxpMoldTypeComponentList}]],
+                pagination: false,
+                showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                sidePagination: "client",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'componentId',
+                    align: 'center',
+                    title: "序号",
+                    formatter: function (value, row, index) {
+                    	var columnIndex = $.common.sprintf("<input type='hidden' name='nxpMoldTypeComponentList[%s].componentId' value='%s'>", index, value);
+                    	return columnIndex + $.table.serialNumber(index);
+                    }
+                },
+                {
+                    field: 'componentName',
+                    align: 'center',
+                    title: '部件名称',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='nxpMoldTypeComponentList[%s].componentName' value='%s'>", index, value);
+                        return html;
+                    }
+				},
+                {
+                    field: 'status',
+                    align: 'center',
+                    title: '状态',
+                    formatter: function(value, row, index) {
+                        var name = $.common.sprintf("nxpMoldTypeComponentList[%s].status", index);
+                        return $.common.dictToSelect(statusDatas, value, name);
+                    }
+                },
+                {
+                    field: 'remark',
+                    align: 'center',
+                    title: '备注',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='nxpMoldTypeComponentList[%s].remark' value='%s'>", index, value);
+                        return html;
+                    }
+				
+                }]
+            };
+            $.table.init(options);
+        });
+
+        function addColumn() {
+            var count = $("#" + table.options.id).bootstrapTable('getData').length;
+            sub.editColumn();
+        	
+            $("#" + table.options.id).bootstrapTable('insertRow', {
+                index: count,
+                row: {
+                    index: $.table.serialNumber(count),
+                    componentName: "",
+                    status: "",
+                    createBy: "",
+                    createTime: "",
+                    updateBy: "",
+                    updateTime: "",
+                    remark: ""
+        	    }
+            });
+        }
+    </script>
+</body>
+</html>

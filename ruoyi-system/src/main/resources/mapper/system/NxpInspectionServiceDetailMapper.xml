@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionServiceDetailMapper">
+    
+    <resultMap type="NxpInspectionServiceDetail" id="NxpInspectionServiceDetailResult">
+        <result property="id"    column="id"    />
+        <result property="spare_id"    column="spare_id"    />
+        <result property="spare_explain"    column="spare_explain"    />
+        <result property="spare_number"    column="spare_number"    />
+        <result property="created_at"    column="created_at"    />
+        <result property="updated_at"    column="updated_at"    />
+        <result property="service_id"    column="service_id"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionServiceDetailVo">
+        select id, spare_id, spare_explain, spare_number, created_at, updated_at, service_id from nxp_inspection_service_detail
+    </sql>
+
+    <select id="selectNxpInspectionServiceDetailList" parameterType="NxpInspectionServiceDetail" resultMap="NxpInspectionServiceDetailResult">
+        <include refid="selectNxpInspectionServiceDetailVo"/>
+        <where>  
+            <if test="spare_id != null "> and spare_id = #{spare_id}</if>
+            <if test="spare_explain != null  and spare_explain != ''"> and spare_explain = #{spare_explain}</if>
+            <if test="spare_number != null "> and spare_number = #{spare_number}</if>
+            <if test="created_at != null "> and created_at = #{created_at}</if>
+            <if test="updated_at != null "> and updated_at = #{updated_at}</if>
+            <if test="service_id != null "> and service_id = #{service_id}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpInspectionServiceDetailById" parameterType="Long" resultMap="NxpInspectionServiceDetailResult">
+        <include refid="selectNxpInspectionServiceDetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpInspectionServiceDetail" parameterType="NxpInspectionServiceDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_service_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="spare_id != null">spare_id,</if>
+            <if test="spare_explain != null">spare_explain,</if>
+            <if test="spare_number != null">spare_number,</if>
+            <if test="created_at != null">created_at,</if>
+            <if test="updated_at != null">updated_at,</if>
+            <if test="service_id != null">service_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="spare_id != null">#{spare_id},</if>
+            <if test="spare_explain != null">#{spare_explain},</if>
+            <if test="spare_number != null">#{spare_number},</if>
+            <if test="created_at != null">#{created_at},</if>
+            <if test="updated_at != null">#{updated_at},</if>
+            <if test="service_id != null">#{service_id},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionServiceDetail" parameterType="NxpInspectionServiceDetail">
+        update nxp_inspection_service_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="spare_id != null">spare_id = #{spare_id},</if>
+            <if test="spare_explain != null">spare_explain = #{spare_explain},</if>
+            <if test="spare_number != null">spare_number = #{spare_number},</if>
+            <if test="created_at != null">created_at = #{created_at},</if>
+            <if test="updated_at != null">updated_at = #{updated_at},</if>
+            <if test="service_id != null">service_id = #{service_id},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionServiceDetailById" parameterType="Long">
+        delete from nxp_inspection_service_detail where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionServiceDetailByIds" parameterType="String">
+        delete from nxp_inspection_service_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpCheckGroupMapper">
+    
+    <resultMap type="NxpCheckGroup" id="NxpCheckGroupResult">
+        <result property="id"    column="id"    />
+        <result property="groupName"    column="group_name"    />
+        <result property="processId"    column="process_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectNxpCheckGroupVo">
+        select id, group_name, process_id, create_time, update_time from nxp_check_group
+    </sql>
+
+    <select id="selectNxpCheckGroupList" parameterType="NxpCheckGroup" resultMap="NxpCheckGroupResult">
+        <include refid="selectNxpCheckGroupVo"/>
+        <where>  
+            <if test="groupName != null  and groupName != ''"> and group_name like concat('%', #{groupName}, '%')</if>
+            <if test="processId != null "> and process_id = #{processId}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpCheckGroupById" parameterType="Long" resultMap="NxpCheckGroupResult">
+        <include refid="selectNxpCheckGroupVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="getByProcessId" parameterType="Long" resultMap="NxpCheckGroupResult">
+        <include refid="selectNxpCheckGroupVo"/>
+        where process_id = #{processId}
+    </select>
+
+    <select id="selectListAndProcess" resultType="NxpCheckGroupDTO">
+        SELECT
+        ncg.id, ncg.group_name as groupName, ncg.process_id as processId, nmp.name
+        FROM
+            nxp_check_group ncg
+        LEFT JOIN nxp_machine_process nmp ON nmp.id = ncg.process_id
+    </select>
+        
+    <insert id="insertNxpCheckGroup" parameterType="NxpCheckGroup" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_check_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">group_name,</if>
+            <if test="processId != null">process_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">#{groupName},</if>
+            <if test="processId != null">#{processId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpCheckGroup" parameterType="NxpCheckGroup">
+        update nxp_check_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="groupName != null">group_name = #{groupName},</if>
+            <if test="processId != null">process_id = #{processId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpCheckGroupById" parameterType="Long">
+        delete from nxp_check_group where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpCheckGroupByIds" parameterType="String">
+        delete from nxp_check_group where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

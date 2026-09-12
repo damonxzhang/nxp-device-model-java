@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增作业内容管理')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-nxpSwcJobContent-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">作业内容：</label>
+                <div class="col-sm-8">
+                    <input name="jobContent" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">Production：</label>
+                <div class="col-sm-8">
+                    <select name="production" class="form-control" th:with="type=${@dict.getType('production')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+                    <select name="state" class="form-control m-b" th:with="type=${@dict.getType('is_enable')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <!--<div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <input name="remark" class="form-control" type="text">
+                </div>
+            </div>-->
+            <div class="form-group">
+                <label class="col-sm-3 control-label">检查组工序：</label>
+                <div class="col-sm-8">
+                    <select name="checkProcessId" id="processId"  class="form-control">
+                        <option value="">请选择检查组工序</option>
+                        <option th:each="process:${processes}" th:text="${process.name}" th:value="${process.id}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">检查组：</label>
+                <div class="col-sm-8">
+                    <select name="checkGroupId" id="checkGroupId"  class="form-control">
+                        <option value="">请先选择检查组工序</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/nxpSwcJobContent"
+        $("#form-nxpSwcJobContent-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-nxpSwcJobContent-add').serialize());
+            }
+        }
+
+        $("#processId").change(function () {
+            var processId = $("#processId").val();
+            if (processId == '' || processId == undefined){
+                //清空之前其他上级菜单遗留的子菜单，否则改变上级菜单后子菜单会包含多个上级菜单的全部子菜单
+                $("#checkGroupId").empty();
+                $("#checkGroupId").append('<option value="">---请先选择工序---</option>');
+            }else {
+                $.ajax({
+                    url: ctx + "system/checkGroup/getByProcessId/" + processId,
+                    type: "GET",
+                    success: function (result) {
+                        var str = "";
+                        $.each(result.data, function(index, value){
+                            str += '<option value="' + value.id + '">' + value.groupName + '</option>';
+                        });
+                        //清空之前其他上级菜单遗留的子菜单，否则改变上级菜单后子菜单会包含多个上级菜单的全部子菜单
+                        $("#checkGroupId").empty();
+                        $("#checkGroupId").append('<option value="">---请选择检查组---</option>' + str);
+                    },
+                    error: function(error) {
+                        $.modal.alertWarning("失败。");
+                    }});
+            }
+        });
+    </script>
+</body>
+</html>

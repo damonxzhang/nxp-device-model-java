@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改SWC互查问题')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-swcCheck-edit" th:object="${nxpSwcCheck}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">被检查人：</label>
+                <div class="col-sm-8">
+                    <input name="checkedUserId" th:field="*{checkedUserId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">检查时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="checkTime" th:value="${#dates.format(nxpSwcCheck.checkTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">工序：</label>
+                <div class="col-sm-8">
+                    <select name="processId" class="form-control m-b">
+                        <option th:each="processes : ${processes}" th:text="${processes.name}" th:value="${processes.id}" th:field="*{processId}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">检查组：</label>
+                <div class="col-sm-8">
+                    <select name="groupId" class="form-control m-b">
+                        <option th:each="groups:${groups}" th:text="${groups.groupName}" th:value="${groups.id}" th:field="*{groupId}"></option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/swcCheck";
+        $("#form-swcCheck-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-swcCheck-edit').serialize());
+            }
+        }
+
+        $("input[name='checkTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>

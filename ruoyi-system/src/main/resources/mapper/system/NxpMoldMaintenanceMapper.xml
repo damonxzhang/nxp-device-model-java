@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpMoldMaintenanceMapper">
+    
+    <resultMap type="NxpMoldMaintenance" id="NxpMoldMaintenanceResult">
+        <result property="id"    column="id"    />
+        <result property="moldId"    column="mold_id"    />
+        <result property="moldCode"    column="mold_code"    />
+        <result property="moldBoxCode"    column="mold_box_code"    />
+        <result property="checkTime"    column="check_time"    />
+        <result property="status"    column="status"    />
+        <result property="realCheckTime"    column="real_check_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="moldRmsCode"    column="mold_rms_code"    />
+        <result property="maintenanceUserId"    column="maintenance_user_id"    />
+        <result property="maintenanceType"    column="maintenance_type"    />
+        <result property="moldType"    column="mold_type"    />
+        <result property="ruleId"    column="rule_id"    />
+        <result property="overdueState"    column="overdue_state"    />
+    </resultMap>
+
+    <sql id="selectNxpMoldMaintenanceVo">
+        select id, mold_id, mold_code, mold_box_code, check_time, status, real_check_time, create_by, create_time, update_by, update_time, remark, mold_rms_code, maintenance_user_id, maintenance_type, mold_type, rule_id, overdue_state from nxp_mold_maintenance
+    </sql>
+
+    <select id="selectNxpMoldMaintenanceList" parameterType="NxpMoldMaintenance" resultMap="NxpMoldMaintenanceResult">
+        <include refid="selectNxpMoldMaintenanceVo"/>
+        <where>  
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldCode != null  and moldCode != ''"> and mold_code = #{moldCode}</if>
+            <if test="moldBoxCode != null  and moldBoxCode != ''"> and mold_box_code = #{moldBoxCode}</if>
+            <if test="checkTime != null "> and check_time = #{checkTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="realCheckTime != null "> and real_check_time = #{realCheckTime}</if>
+            <if test="moldRmsCode != null "> and mold_rms_code = #{moldRmsCode}</if>
+            <if test="maintenanceUserId != null "> and maintenance_user_id = #{maintenanceUserId}</if>
+            <if test="maintenanceType != null "> and maintenance_type = #{maintenanceType}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+            <if test="ruleId != null "> and rule_id = #{ruleId}</if>
+            <if test="overdueState != null "> and overdue_state = #{overdueState}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectNxpMoldMaintenanceListApi" parameterType="NxpMoldMaintenance" resultMap="NxpMoldMaintenanceResult">
+        <include refid="selectNxpMoldMaintenanceVo"/>
+        <where>
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldCode != null  and moldCode != ''"> and mold_code = #{moldCode}</if>
+            <if test="moldBoxCode != null  and moldBoxCode != ''"> and mold_box_code = #{moldBoxCode}</if>
+            <if test="checkTime != null "> and check_time = #{checkTime}</if>
+            <if test="realCheckTime != null "> and real_check_time = #{realCheckTime}</if>
+            <if test="moldRmsCode != null "> and mold_rms_code = #{moldRmsCode}</if>
+            <if test="maintenanceUserId != null "> and maintenance_user_id = #{maintenanceUserId}</if>
+            <if test="maintenanceType != null "> and maintenance_type = #{maintenanceType}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+            <if test="ruleId != null "> and rule_id = #{ruleId}</if>
+            <if test="overdueState != null "> and overdue_state = #{overdueState}</if>
+            and status != 2
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectNxpMoldMaintenanceListApiParams" parameterType="com.ruoyi.system.domain.VO.NxpMoldMaintenanceVO" resultMap="NxpMoldMaintenanceResult">
+        SELECT
+            nmm.id,
+            nmm.mold_id,
+            nmm.mold_code,
+            nmm.mold_box_code,
+            nmm.check_time,
+            nmm.status,
+            nmm.real_check_time,
+            nmm.create_by,
+            nmm.create_time,
+            nmm.update_by,
+            nmm.update_time,
+            nmm.remark,
+            nmm.mold_rms_code,
+            nmm.maintenance_user_id,
+            nmm.maintenance_type,
+            nmm.mold_type,
+            nmm.rule_id,
+            nmm.overdue_state
+        FROM
+            nxp_mold_maintenance nmm
+        LEFT JOIN nxp_mold nm ON nm.id = nmm.mold_id
+        <where>
+            <if test="moldType != null">
+                and nm.mold_type = #{moldType}
+            </if>
+            and nmm.status != 2
+            order by nmm.create_time desc
+        </where>
+    </select>
+    
+    <select id="selectNxpMoldMaintenanceById" parameterType="Long" resultMap="NxpMoldMaintenanceResult">
+        <include refid="selectNxpMoldMaintenanceVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectNxpMoldMaintenanceListTask" parameterType="NxpMoldMaintenance" resultMap="NxpMoldMaintenanceResult">
+        <include refid="selectNxpMoldMaintenanceVo"/>
+        <where>
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldCode != null  and moldCode != ''"> and mold_code = #{moldCode}</if>
+            <if test="moldBoxCode != null  and moldBoxCode != ''"> and mold_box_code = #{moldBoxCode}</if>
+            <if test="checkTime != null "> and check_time = #{checkTime}</if>
+            <if test="realCheckTime != null "> and real_check_time = #{realCheckTime}</if>
+            <if test="moldRmsCode != null "> and mold_rms_code = #{moldRmsCode}</if>
+            <if test="maintenanceUserId != null "> and maintenance_user_id = #{maintenanceUserId}</if>
+            <if test="maintenanceType != null "> and maintenance_type = #{maintenanceType}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+            <if test="ruleId != null "> and rule_id = #{ruleId}</if>
+            and overdue_state in (0,1)
+            and status in (2,3)
+        </where>
+        order by create_time desc
+    </select>
+
+    <insert id="insertNxpMoldMaintenance" parameterType="NxpMoldMaintenance" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_mold_maintenance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">mold_id,</if>
+            <if test="moldCode != null">mold_code,</if>
+            <if test="moldBoxCode != null">mold_box_code,</if>
+            <if test="checkTime != null">check_time,</if>
+            <if test="status != null">status,</if>
+            <if test="realCheckTime != null">real_check_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="moldRmsCode != null">mold_rms_code,</if>
+            <if test="maintenanceUserId != null">maintenance_user_id,</if>
+            <if test="maintenanceType != null">maintenance_type,</if>
+            <if test="moldType != null">mold_type,</if>
+            <if test="ruleId != null">rule_id,</if>
+            <if test="overdueState != null">overdue_state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">#{moldId},</if>
+            <if test="moldCode != null">#{moldCode},</if>
+            <if test="moldBoxCode != null">#{moldBoxCode},</if>
+            <if test="checkTime != null">#{checkTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="realCheckTime != null">#{realCheckTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="moldRmsCode != null">#{moldRmsCode},</if>
+            <if test="maintenanceUserId != null">#{maintenanceUserId},</if>
+            <if test="maintenanceType != null">#{maintenanceType},</if>
+            <if test="moldType != null">#{moldType},</if>
+            <if test="ruleId != null">#{ruleId},</if>
+            <if test="overdueState != null">#{overdueState},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpMoldMaintenance" parameterType="NxpMoldMaintenance">
+        update nxp_mold_maintenance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="moldId != null">mold_id = #{moldId},</if>
+            <if test="moldCode != null">mold_code = #{moldCode},</if>
+            <if test="moldBoxCode != null">mold_box_code = #{moldBoxCode},</if>
+            <if test="checkTime != null">check_time = #{checkTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="realCheckTime != null">real_check_time = #{realCheckTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="moldRmsCode != null">mold_rms_code = #{moldRmsCode},</if>
+            <if test="maintenanceUserId != null">maintenance_user_id = #{maintenanceUserId},</if>
+            <if test="maintenanceType != null">maintenance_type = #{maintenanceType},</if>
+            <if test="moldType != null">mold_type = #{moldType},</if>
+            <if test="ruleId != null">rule_id = #{ruleId},</if>
+            <if test="overdueState != null">overdue_state = #{overdueState},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpMoldMaintenanceById" parameterType="Long">
+        delete from nxp_mold_maintenance where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpMoldMaintenanceByIds" parameterType="String">
+        delete from nxp_mold_maintenance where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

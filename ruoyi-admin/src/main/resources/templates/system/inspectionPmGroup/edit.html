@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改周PM分组&检查项')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-inspectionPmGroup-edit" th:object="${nxpInspectionPmGroup}">
+            <h4 class="form-header h4">修改周PM分组&检查项</h4>
+            <input type="hidden" th:value="${checkGroups}" id="checkGroups"/>
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">分组名称：</label>
+                <div class="col-sm-8">
+                    <input name="name" th:field="*{name}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+                    <select name="status" class="form-control m-b" th:with="type=${@dict.getType('is_enable')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+                    </select>
+                </div>
+            </div>
+            <h4 class="form-header h4">周PM检查项</h4>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-white btn-sm" onclick="addColumn()"><i class="fa fa-plus"> 增加</i></button>
+                    <button type="button" class="btn btn-white btn-sm" onclick="sub.delColumn()"><i class="fa fa-minus"> 删除</i></button>
+                    <div class="col-sm-12 select-table table-striped">
+                        <table id="bootstrap-table"></table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/inspectionPmGroup";
+        var item_statusDatas = [[${@dict.getType('is_enable')}]];
+        var check_statusDatas = [[${@dict.getType('is_check')}]];
+        var checkGroups = JSON.parse($("#checkGroups").val());
+        $("#form-inspectionPmGroup-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-inspectionPmGroup-edit').serialize());
+            }
+        }
+
+        $(function() {
+            var options = {
+                data: [[${nxpInspectionPmGroup.nxpInspectionPmGroupItemList}]],
+                pagination: false,
+                showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                sidePagination: "client",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'index',
+                    align: 'center',
+                    title: "序号",
+                    formatter: function (value, row, index) {
+                    	var columnIndex = $.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                    	return columnIndex + $.table.serialNumber(index);
+                    }
+                },
+                {
+                    field: 'item_name',
+                    align: 'center',
+                    title: '检查项',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionPmGroupItemList[%s].item_name' value='%s'>", index, value);
+                        return html;
+                    }
+				},
+                {
+                    field: 'item_id',
+                    align: 'center',
+                    title: '检查项ID',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionPmGroupItemList[%s].item_id' value='%s'>", index, value);
+                        return html;
+                    }
+				},
+                {
+                    field: 'item_status',
+                    align: 'center',
+                    title: '状态',
+                    formatter: function(value, row, index) {
+                        var name = $.common.sprintf("nxpInspectionPmGroupItemList[%s].item_status", index);
+                        return $.common.dictToSelect(item_statusDatas, value, name);
+                    }
+                
+                },
+                {
+                    field: 'is_check',
+                    align: 'center',
+                    title: '是否检查',
+                    formatter: function(value, row, index) {
+                        var name = $.common.sprintf("nxpInspectionPmGroupItemList[%s].is_check", index);
+                        return $.common.dictToSelect(check_statusDatas, value, name);
+                    }
+
+                },
+                {
+                    field: 'check_group_id',
+                    align: 'center',
+                    title: '检查组',
+                    formatter: function(value, row, index) {
+                        var name = $.common.sprintf("nxpInspectionPmGroupItemList[%s].check_group_id", index);
+                        return $.common.checkGroupsToSelect(checkGroups, value, name);
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+
+        function addColumn() {
+            var count = $("#" + table.options.id).bootstrapTable('getData').length;
+            sub.editColumn();
+        	
+            $("#" + table.options.id).bootstrapTable('insertRow', {
+                index: count,
+                row: {
+                    index: $.table.serialNumber(count),
+                    group_id: "",
+                    item_name: "",
+                    item_status: "",
+                    is_check: "",
+                    check_process_id: "",
+                    check_group_id: ""
+        	    }
+            });
+        }
+    </script>
+</body>
+</html>

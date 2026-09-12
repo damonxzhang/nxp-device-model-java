@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改SWC自查问题')" />
+    <th:block th:include="include :: datetimepicker-css" />
+    <th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: bootstrap-select-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-swcCheckSelf-edit" th:object="${nxpSwcCheckSelf}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">检查人：</label>
+                <div class="col-sm-8">
+                    <input name="userName" class="form-control" type="text" th:value="${@permission.getPrincipalProperty('userName')}" readonly>
+                    <input type="hidden" name="userId"  th:value="*{userId}"   />
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">检查时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="checkTime" th:value="${#dates.format(nxpSwcCheckSelf.checkTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设备编号：</label>
+                <div class="col-sm-8">
+                    <select name="facilityId" class="form-control select2-multiple" data-none-selected-text="请选择设备型号" multiple>
+                        <option th:each="facilitiesList:${facilitiesList}" th:value="${facilitiesList.id}" th:text="${facilitiesList.number}" th:selected="${facilitiesList.flag}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">批号：</label>
+                <div class="col-sm-8">
+                    <input name="partNo" th:field="*{partNo}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <input name="comment" th:field="*{comment}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">问题类型：</label>
+                <div class="col-sm-8">
+                    <select name="type" class="form-control m-b" th:with="type=${@dict.getType('nxp_swc_self_question_type')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{type}"></option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <th:block th:include="include :: select2-js" />
+    <th:block th:include="include :: bootstrap-select-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/swcCheckSelf";
+        $("#form-swcCheckSelf-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-swcCheckSelf-edit').serialize());
+            }
+        }
+
+        $("input[name='checkTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>

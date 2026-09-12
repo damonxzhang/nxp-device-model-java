@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionRevelantPeopleMapper">
+    
+    <resultMap type="NxpInspectionRevelantPeople" id="NxpInspectionRevelantPeopleResult">
+        <result property="id"    column="id"    />
+        <result property="inspection_id"    column="inspection_id"    />
+        <result property="facility_id"    column="facility_id"    />
+        <result property="revelant_people"    column="revelant_people"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionRevelantPeopleVo">
+        select id, inspection_id, facility_id, revelant_people from nxp_inspection_revelant_people
+    </sql>
+
+    <select id="selectNxpInspectionRevelantPeopleList" parameterType="NxpInspectionRevelantPeople" resultMap="NxpInspectionRevelantPeopleResult">
+        <include refid="selectNxpInspectionRevelantPeopleVo"/>
+        <where>  
+            <if test="inspection_id != null "> and inspection_id = #{inspection_id}</if>
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+            <if test="revelant_people != null "> and revelant_people = #{revelant_people}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpInspectionRevelantPeopleById" parameterType="Long" resultMap="NxpInspectionRevelantPeopleResult">
+        <include refid="selectNxpInspectionRevelantPeopleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpInspectionRevelantPeople" parameterType="NxpInspectionRevelantPeople" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_revelant_people
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="inspection_id != null">inspection_id,</if>
+            <if test="facility_id != null">facility_id,</if>
+            <if test="revelant_people != null">revelant_people,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="inspection_id != null">#{inspection_id},</if>
+            <if test="facility_id != null">#{facility_id},</if>
+            <if test="revelant_people != null">#{revelant_people},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionRevelantPeople" parameterType="NxpInspectionRevelantPeople">
+        update nxp_inspection_revelant_people
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inspection_id != null">inspection_id = #{inspection_id},</if>
+            <if test="facility_id != null">facility_id = #{facility_id},</if>
+            <if test="revelant_people != null">revelant_people = #{revelant_people},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionRevelantPeopleById" parameterType="Long">
+        delete from nxp_inspection_revelant_people where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionRevelantPeopleByIds" parameterType="String">
+        delete from nxp_inspection_revelant_people where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

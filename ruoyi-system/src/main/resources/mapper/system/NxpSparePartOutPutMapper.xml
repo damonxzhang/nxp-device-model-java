@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpSparePartOutPutMapper">
+
+    <insert id="insertByOutPut" parameterType="com.ruoyi.system.domain.OutPut" useGeneratedKeys="true" keyProperty="o_id">
+        insert into [output]
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="s_id != null">s_id,</if>
+            <if test="o_amount != null">o_amount,</if>
+            <if test="o_time != null">o_time,</if>
+            <if test="p_id != null">p_id,</if>
+            <if test="e_id != null">e_id,</if>
+            pda
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="s_id != null">#{s_id},</if>
+            <if test="o_amount != null">#{o_amount},</if>
+            <if test="o_time != null">#{o_time},</if>
+            <if test="p_id != null">#{p_id},</if>
+            <if test="e_id != null">#{e_id},</if>
+            1
+        </trim>
+    </insert>
+
+    <select id="selectOutLastTimeBySid" parameterType="string" resultType="string">
+        SELECT
+            MAX(o_time) AS last_time
+        FROM
+            [output]
+        WHERE
+            s_id = #{sid}
+    </select>
+</mapper>

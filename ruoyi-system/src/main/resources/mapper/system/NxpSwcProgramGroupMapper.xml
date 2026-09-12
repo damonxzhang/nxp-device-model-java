@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpSwcProgramGroupMapper">
+    
+    <resultMap type="NxpSwcProgramGroup" id="NxpSwcProgramGroupResult">
+        <result property="id"    column="id"    />
+        <result property="groupName"    column="group_name"    />
+        <result property="status"    column="status"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="udpatedAt"    column="udpated_at"    />
+        <result property="processId"    column="process_id"    />
+    </resultMap>
+
+    <sql id="selectNxpSwcProgramGroupVo">
+        select id, group_name, status, created_at, udpated_at, process_id from nxp_swc_program_group
+    </sql>
+
+    <select id="selectNxpSwcProgramGroupList" parameterType="NxpSwcProgramGroup" resultMap="NxpSwcProgramGroupResult">
+        <include refid="selectNxpSwcProgramGroupVo"/>
+        <where>  
+            <if test="groupName != null  and groupName != ''"> and group_name like concat('%', #{groupName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="processId != null "> and process_id = #{processId}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpSwcProgramGroupById" parameterType="Long" resultMap="NxpSwcProgramGroupResult">
+        <include refid="selectNxpSwcProgramGroupVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpSwcProgramGroup" parameterType="NxpSwcProgramGroup">
+        insert into nxp_swc_program_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="groupName != null">group_name,</if>
+            <if test="status != null">status,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="udpatedAt != null">udpated_at,</if>
+            <if test="processId != null">process_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="groupName != null">#{groupName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="udpatedAt != null">#{udpatedAt},</if>
+            <if test="processId != null">#{processId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpSwcProgramGroup" parameterType="NxpSwcProgramGroup">
+        update nxp_swc_program_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="groupName != null">group_name = #{groupName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+            <if test="udpatedAt != null">udpated_at = #{udpatedAt},</if>
+            <if test="processId != null">process_id = #{processId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpSwcProgramGroupById" parameterType="Long">
+        delete from nxp_swc_program_group where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpSwcProgramGroupByIds" parameterType="String">
+        delete from nxp_swc_program_group where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectThreeMenu" parameterType="NxpSwcProgramGroup" resultType="com.ruoyi.system.domain.VO.NxpSwcProgramGroupVO">
+        SELECT
+            nspg.*,
+            nspt.id AS nsptId,
+            nspt.group_id AS nsptGroupId,
+            nspt.status AS nsptStatus,
+            nspt.type_name AS nsptTypeName,
+            nsp.id AS nspId,
+            nsp.type_id AS nspTypeId,
+            nsp.program AS nspProgram,
+            nsp.status AS nspStatus
+        FROM
+            nxp_swc_program_group nspg
+                LEFT JOIN nxp_swc_program_type nspt ON nspt.group_id = nspg.id
+                LEFT JOIN nxp_swc_program nsp ON nsp.type_id = nspt.id
+        WHERE
+            nspg.id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpMoldMaintenanceGroupBindMapper">
+    
+    <resultMap type="NxpMoldMaintenanceGroupBind" id="NxpMoldMaintenanceGroupBindResult">
+        <result property="id"    column="id"    />
+        <result property="moldId"    column="mold_id"    />
+        <result property="moldMaintenanceGroupId"    column="mold_maintenance_group_id"    />
+        <result property="moldType"    column="mold_type"    />
+    </resultMap>
+
+    <sql id="selectNxpMoldMaintenanceGroupBindVo">
+        select id, mold_id, mold_maintenance_group_id, mold_type from nxp_mold_maintenance_group_bind
+    </sql>
+
+    <select id="selectNxpMoldMaintenanceGroupBindList" parameterType="NxpMoldMaintenanceGroupBind" resultMap="NxpMoldMaintenanceGroupBindResult">
+        <include refid="selectNxpMoldMaintenanceGroupBindVo"/>
+        <where>  
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldMaintenanceGroupId != null "> and mold_maintenance_group_id = #{moldMaintenanceGroupId}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpMoldMaintenanceGroupBindById" parameterType="Long" resultMap="NxpMoldMaintenanceGroupBindResult">
+        <include refid="selectNxpMoldMaintenanceGroupBindVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectNxpMoldMaintenanceGroupBindByMoldId" parameterType="Long" resultMap="NxpMoldMaintenanceGroupBindResult">
+        <include refid="selectNxpMoldMaintenanceGroupBindVo"/>
+        where mold_id = #{moldId}
+    </select>
+        
+    <insert id="insertNxpMoldMaintenanceGroupBind" parameterType="NxpMoldMaintenanceGroupBind" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_mold_maintenance_group_bind
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">mold_id,</if>
+            <if test="moldMaintenanceGroupId != null">mold_maintenance_group_id,</if>
+            <if test="moldType != null">mold_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">#{moldId},</if>
+            <if test="moldMaintenanceGroupId != null">#{moldMaintenanceGroupId},</if>
+            <if test="moldType != null">#{moldType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpMoldMaintenanceGroupBind" parameterType="NxpMoldMaintenanceGroupBind">
+        update nxp_mold_maintenance_group_bind
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="moldId != null">mold_id = #{moldId},</if>
+            <if test="moldMaintenanceGroupId != null">mold_maintenance_group_id = #{moldMaintenanceGroupId},</if>
+            <if test="moldType != null">mold_type = #{moldType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpMoldMaintenanceGroupBindById" parameterType="Long">
+        delete from nxp_mold_maintenance_group_bind where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpMoldMaintenanceGroupBindByIds" parameterType="String">
+        delete from nxp_mold_maintenance_group_bind where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteNxpMoldMaintenanceGroupBindByParams" parameterType="NxpMoldMaintenanceGroupBind">
+        delete from nxp_mold_maintenance_group_bind
+        <where>
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldMaintenanceGroupId != null "> and mold_maintenance_group_id = #{moldMaintenanceGroupId}</if>
+            <if test="moldType != null">and mold_type = #{moldType},</if>
+        </where>
+    </delete>
+</mapper>

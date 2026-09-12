@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpSparePartSparePartMapper">
+
+    <select id="selectBySid" parameterType="string" resultType="com.ruoyi.system.domain.NxpSparePartSparePart">
+        SELECT
+            a.*,b.p_id,p.p_name
+        FROM
+            sparepart a
+            LEFT JOIN warehouse b ON a.w_id = b.w_id
+            LEFT JOIN person p ON b.p_id = p.p_id
+        where
+            a.s_id = #{s_id}
+    </select>
+
+    <select id="selectByNxpSparePartSparePart" parameterType="com.ruoyi.system.domain.NxpSparePartSparePart" resultType="com.ruoyi.system.domain.NxpSparePartSparePart">
+        SELECT * FROM sparepart WHERE s_id in (
+            SELECT
+            s.s_id
+            FROM
+            sparepart s
+            LEFT JOIN [use] u ON s.s_id = u.s_id
+            LEFT JOIN equipment e ON u.e_model = e.e_model
+            <where>
+                <if test="number != null and number != ''">
+                    and (s.s_id like concat('%', #{number}, '%') or
+                    s.s_brand like concat('%', #{number}, '%') or
+                    s.s_model like concat('%', #{number}, '%') or
+                    s.s_description like concat('%', #{number}, '%') or
+                    s.k_kind like concat('%', #{number}, '%') or
+                    s.s_vendor like concat('%', #{number}, '%') or
+                    e.e_model like concat('%', #{number}, '%') or
+                    e.e_brand like concat('%', #{number}, '%'))
+                </if>
+                <if test="process != null and process != ''">and e.r_process = #{process}</if>
+                <if test="e_model != null and e_model != ''">and e.e_model like concat('%', #{e_model}, '%')</if>
+            </where>
+            GROUP BY s.s_id
+        )
+        ORDER BY s_id
+
+    </select>
+
+    <select id="countByNxpSparePartSparePart" resultType="integer" parameterType="com.ruoyi.system.domain.NxpSparePartSparePart">
+        SELECT
+        count(*)
+        FROM
+        sparepart s
+        LEFT JOIN [use] u ON s.s_id = u.s_id
+        LEFT JOIN equipment e ON u.e_model = e.e_model
+        <where>
+            <if test="number != null and number != ''">
+                and (s.s_id like concat('%', #{number}, '%') or
+                s.s_brand like concat('%', #{number}, '%') or
+                s.s_model like concat('%', #{number}, '%') or
+                s.s_description like concat('%', #{number}, '%') or
+                s.k_kind like concat('%', #{number}, '%') or
+                s.s_vendor like concat('%', #{number}, '%') or
+                e.e_model like concat('%', #{number}, '%') or
+                e.e_brand like concat('%', #{number}, '%'))
+            </if>
+            <if test="process != null and process != ''">and e.r_process = #{process}</if>
+            <if test="e_model != null and e_model != ''">and e.e_model like concat('%', #{e_model}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectWareHouseByWid" parameterType="string" resultType="com.ruoyi.system.domain.WareHouse">
+        SELECT
+            *
+        FROM
+            warehouse
+        WHERE
+            w_id = #{w_id}
+    </select>
+
+    <select id="selectUseBySid" parameterType="string" resultType="com.ruoyi.system.domain.Use">
+        SELECT
+            *
+        FROM
+            [use]
+        WHERE
+            s_id = #{s_id}
+    </select>
+
+    <select id="getDeviceModel" parameterType="com.ruoyi.system.domain.Equipment" resultType="com.ruoyi.system.domain.Equipment">
+        SELECT
+            e_id,a.e_model as e_model
+        FROM
+            equipment a
+            LEFT JOIN equipmentNo b ON a.e_model = b.e_model
+        where
+            a.r_process = #{r_process} AND e_id is not null
+    </select>
+
+    <select id="getDeviceModel1" parameterType="com.ruoyi.system.domain.Equipment" resultType="com.ruoyi.system.domain.Equipment">
+        SELECT
+            e_model
+        FROM
+            equipment
+        where
+            r_process = #{r_process}
+        group by
+            e_model
+    </select>
+
+    <update id="update" parameterType="com.ruoyi.system.domain.NxpSparePartSparePart">
+        update sparepart
+        set
+        s_amount = #{s_amount}
+        <where>
+            <if test="s_id != null and s_id != ''">and s_id = #{s_id}</if>
+        </where>
+    </update>
+
+    <select id="selectPersonByPId" parameterType="string" resultType="com.ruoyi.system.domain.DTO.PersonDTO">
+        SELECT
+            *
+        FROM
+            person
+        WHERE
+            p_id = #{pid}
+    </select>
+
+    <insert id="insertMailList" parameterType="com.ruoyi.system.domain.DTO.MailListDTO" useGeneratedKeys="true" keyProperty="o_id">
+        INSERT INTO MailList
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="MailFrom != null">MailFrom,</if>
+            <if test="MailFromName != null">MailFromName,</if>
+            <if test="MailTo != null">MailTo,</if>
+            <if test="MailCC != null">MailCC,</if>
+            <if test="MailSubject != null">MailSubject,</if>
+            <if test="MailBody != null">MailBody,</if>
+            <if test="isBodyHtml != null">isBodyHtml,</if>
+            <if test="isPriorityHigh != null">isPriorityHigh,</if>
+            <if test="MailAttachFile1 != null">MailAttachFile1,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="MailFrom != null">#{MailFrom},</if>
+            <if test="MailFromName != null">#{MailFromName},</if>
+            <if test="MailTo != null">#{MailTo},</if>
+            <if test="MailCC != null">#{MailCC},</if>
+            <if test="MailSubject != null">#{MailSubject},</if>
+            <if test="MailBody != null">#{MailBody},</if>
+            <if test="isBodyHtml != null">#{isBodyHtml},</if>
+            <if test="isPriorityHigh != null">#{isPriorityHigh},</if>
+            <if test="MailAttachFile1 != null">#{MailAttachFile1},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertToBuy" parameterType="com.ruoyi.system.domain.DTO.ToBuyDTO" useGeneratedKeys="true" keyProperty="o_id">
+        INSERT INTO ToBuy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="partID != null">partID,</if>
+            <if test="description != null">description,</if>
+            <if test="model != null">model,</if>
+            <if test="userID != null">userID,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="vendor != null">vendor,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="partID != null">#{partID},</if>
+            <if test="description != null">#{description},</if>
+            <if test="model != null">#{model},</if>
+            <if test="userID != null">#{userID},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="vendor != null">#{vendor},</if>
+        </trim>
+    </insert>
+</mapper>

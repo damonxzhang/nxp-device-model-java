@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpMachineModelVendorMapper">
+    
+    <resultMap type="NxpMachineModelVendor" id="NxpMachineModelVendorResult">
+        <result property="id"    column="id"    />
+        <result property="modelId"    column="model_id"    />
+        <result property="vendorId"    column="vendor_id"    />
+    </resultMap>
+
+    <sql id="selectNxpMachineModelVendorVo">
+        select id, model_id, vendor_id from nxp_machine_model_vendor
+    </sql>
+
+    <select id="selectNxpMachineModelVendorList" parameterType="NxpMachineModelVendor" resultMap="NxpMachineModelVendorResult">
+        <include refid="selectNxpMachineModelVendorVo"/>
+        <where>  
+            <if test="modelId != null "> and model_id = #{modelId}</if>
+            <if test="vendorId != null "> and vendor_id = #{vendorId}</if>
+        </where>
+        order by vendor_id asc
+    </select>
+    
+
+    <select id="selectNxpMachineModelVendorListByName" parameterType="NxpMachineModelVendor" resultMap="NxpMachineModelVendorResult">
+        SELECT
+        mmv.id,mmv.model_id,mmv.vendor_id
+        FROM
+        nxp_machine_model_vendor AS mmv
+        LEFT JOIN nxp_machine_model AS mm ON mmv.model_id = mm.id
+        LEFT JOIN nxp_machine_vendor AS mv ON mmv.vendor_id = mv.id
+
+        <where>
+            <if test="modelName != null  and modelName != ''"> and mm.name like concat('%', #{modelName}, '%')</if>
+            <if test="vendorId != null  and vendorId != ''"> and mv.id = #{vendorId}</if>
+        </where>
+        order by mmv.vendor_id asc
+    </select>
+
+
+    <select id="selectNxpMachineModelVendorListByModelId" parameterType="Long" resultMap="NxpMachineModelVendorResult">
+        <include refid="selectNxpMachineModelVendorVo"/>
+        where model_id = #{model_id}
+    </select>
+
+    <select id="selectNxpMachineModelVendorListByVendorId" parameterType="Long" resultMap="NxpMachineModelVendorResult">
+        <include refid="selectNxpMachineModelVendorVo"/>
+        where vendor_id = #{vendor_id}
+    </select>
+
+    <select id="selectNxpMachineModelVendorById" parameterType="Long" resultMap="NxpMachineModelVendorResult">
+        <include refid="selectNxpMachineModelVendorVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpMachineModelVendor" parameterType="NxpMachineModelVendor">
+        insert into nxp_machine_model_vendor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="modelId != null">model_id,</if>
+            <if test="vendorId != null">vendor_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="modelId != null">#{modelId},</if>
+            <if test="vendorId != null">#{vendorId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpMachineModelVendor" parameterType="NxpMachineModelVendor">
+        update nxp_machine_model_vendor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="modelId != null">model_id = #{modelId},</if>
+            <if test="vendorId != null">vendor_id = #{vendorId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpMachineModelVendorById" parameterType="Long">
+        delete from nxp_machine_model_vendor where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpMachineModelVendorByModelId" parameterType="Long">
+        delete from nxp_machine_model_vendor where model_id = #{model_id}
+    </delete>
+
+    <delete id="deleteNxpMachineModelVendorByIds" parameterType="String">
+        delete from nxp_machine_model_vendor where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpSwcProgramTypeMapper">
+    
+    <resultMap type="NxpSwcProgramType" id="NxpSwcProgramTypeResult">
+        <result property="id"    column="id"    />
+        <result property="typeName"    column="type_name"    />
+        <result property="status"    column="status"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+        <result property="groupId"    column="group_id"    />
+    </resultMap>
+
+    <resultMap id="NxpSwcProgramTypeNxpSwcProgramResult" type="NxpSwcProgramType" extends="NxpSwcProgramTypeResult">
+        <collection property="nxpSwcProgramList" notNullColumn="id" javaType="java.util.List" resultMap="NxpSwcProgramResult" />
+    </resultMap>
+
+    <resultMap type="NxpSwcProgram" id="NxpSwcProgramResult">
+        <result property="id"    column="id"    />
+        <result property="program"    column="program"    />
+        <result property="status"    column="status"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+        <result property="typeId"    column="type_id"    />
+    </resultMap>
+
+    <sql id="selectNxpSwcProgramTypeVo">
+        select id, type_name, status, created_at, updated_at, group_id from nxp_swc_program_type
+    </sql>
+
+    <select id="selectNxpSwcProgramTypeList" parameterType="NxpSwcProgramType" resultMap="NxpSwcProgramTypeResult">
+        <include refid="selectNxpSwcProgramTypeVo"/>
+        <where>  
+            <if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="groupId != null "> and group_id = #{groupId}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpSwcProgramTypeById" parameterType="Long" resultMap="NxpSwcProgramTypeNxpSwcProgramResult">
+        select a.id, a.type_name, a.status, a.created_at, a.updated_at, a.group_id,
+            b.id, b.program, b.status, b.created_at, b.updated_at, b.type_id
+        from nxp_swc_program_type a
+        left join nxp_swc_program b on b.type_id = a.id
+        where a.id = #{id}
+    </select>
+
+    <select id="selectNxpSwcProgramTypeByParam" parameterType="NxpSwcProgramType" resultMap="NxpSwcProgramTypeNxpSwcProgramResult">
+        select a.id, a.type_name, a.status, a.created_at, a.updated_at, a.group_id,
+               b.id, b.program, b.status, b.created_at, b.updated_at, b.type_id
+        from nxp_swc_program_type a
+        left join nxp_swc_program b on b.type_id = a.id
+        <where>
+            <if test="id != null">
+                and a.id = #{id}
+            </if>
+            <if test="groupId != null">
+                and a.group_id = #{groupId}
+            </if>
+        </where>
+    </select>
+        
+    <insert id="insertNxpSwcProgramType" parameterType="NxpSwcProgramType" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_swc_program_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="typeName != null">type_name,</if>
+            <if test="status != null">status,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+            <if test="groupId != null">group_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="typeName != null">#{typeName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+            <if test="groupId != null">#{groupId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpSwcProgramType" parameterType="NxpSwcProgramType">
+        update nxp_swc_program_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeName != null">type_name = #{typeName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
+            <if test="groupId != null">group_id = #{groupId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpSwcProgramTypeById" parameterType="Long">
+        delete from nxp_swc_program_type where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpSwcProgramTypeByIds" parameterType="String">
+        delete from nxp_swc_program_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteNxpSwcProgramByTypeIds" parameterType="String">
+        delete from nxp_swc_program where type_id in 
+        <foreach item="typeId" collection="array" open="(" separator="," close=")">
+            #{typeId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteNxpSwcProgramByTypeId" parameterType="Long">
+        delete from nxp_swc_program where type_id = #{typeId}
+    </delete>
+
+    <insert id="batchNxpSwcProgram">
+        insert into nxp_swc_program(program, status, created_at, type_id) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            (#{item.program}, #{item.status}, #{item.createdAt}, #{item.typeId})
+        </foreach>
+    </insert>
+
+</mapper>

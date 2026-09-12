@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpBindRelationshipMapper">
+    
+    <resultMap type="NxpBindRelationship" id="NxpBindRelationshipResult">
+        <result property="id"    column="id"    />
+        <result property="checkContentId"    column="check_content_id"    />
+        <result property="positionId"    column="position_id"    />
+        <result property="inspectionContentId"    column="inspection_content_id"    />
+        <result property="inspectionContentState"    column="inspection_content_state"    />
+        <result property="pmGroupId"    column="pm_group_id"    />
+        <result property="pmGroupItemId"    column="pm_group_item_id"    />
+        <result property="pmGroupItemState"    column="pm_group_item_state"    />
+        <result property="swcJobContentId"    column="swc_job_content_id"    />
+        <result property="swcJobContentState"    column="swc_job_content_state"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="checkGroupId"    column="check_group_id"    />
+    </resultMap>
+
+    <sql id="selectNxpBindRelationshipVo">
+        select id,check_content_id, position_id, inspection_content_id, inspection_content_state, pm_group_id, pm_group_item_id, pm_group_item_state, swc_job_content_id, swc_job_content_state, create_time, update_time,check_group_id from nxp_bind_relationship
+    </sql>
+
+    <select id="selectNxpBindRelationshipList" parameterType="NxpBindRelationship" resultMap="NxpBindRelationshipResult">
+        <include refid="selectNxpBindRelationshipVo"/>
+        <where>  
+            <if test="checkContentId != null "> and check_content_id = #{checkContentId}</if>
+            <if test="positionId != null "> and position_id = #{positionId}</if>
+            <if test="inspectionContentId != null "> and inspection_content_id = #{inspectionContentId}</if>
+            <if test="inspectionContentState != null  and inspectionContentState != ''"> and inspection_content_state = #{inspectionContentState}</if>
+            <if test="pmGroupId != null "> and pm_group_id = #{pmGroupId}</if>
+            <if test="pmGroupItemId != null "> and pm_group_item_id = #{pmGroupItemId}</if>
+            <if test="pmGroupItemState != null  and pmGroupItemState != ''"> and pm_group_item_state = #{pmGroupItemState}</if>
+            <if test="swcJobContentId != null "> and swc_job_content_id = #{swcJobContentId}</if>
+            <if test="swcJobContentState != null  and swcJobContentState != ''"> and swc_job_content_state = #{swcJobContentState}</if>
+            <if test="checkGroupId != null "> and check_group_id = #{checkGroupId}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpBindRelationshipById" parameterType="Long" resultMap="NxpBindRelationshipResult">
+        <include refid="selectNxpBindRelationshipVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpBindRelationship" parameterType="NxpBindRelationship">
+        insert into nxp_bind_relationship
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="checkContentId != null">check_content_id,</if>
+            <if test="positionId != null">position_id,</if>
+            <if test="inspectionContentId != null">inspection_content_id,</if>
+            <if test="inspectionContentState != null">inspection_content_state,</if>
+            <if test="pmGroupId != null">pm_group_id,</if>
+            <if test="pmGroupItemId != null">pm_group_item_id,</if>
+            <if test="pmGroupItemState != null">pm_group_item_state,</if>
+            <if test="swcJobContentId != null">swc_job_content_id,</if>
+            <if test="swcJobContentState != null">swc_job_content_state,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="checkGroupId != null">check_group_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="checkContentId != null">#{checkContentId},</if>
+            <if test="positionId != null">#{positionId},</if>
+            <if test="inspectionContentId != null">#{inspectionContentId},</if>
+            <if test="inspectionContentState != null">#{inspectionContentState},</if>
+            <if test="pmGroupId != null">#{pmGroupId},</if>
+            <if test="pmGroupItemId != null">#{pmGroupItemId},</if>
+            <if test="pmGroupItemState != null">#{pmGroupItemState},</if>
+            <if test="swcJobContentId != null">#{swcJobContentId},</if>
+            <if test="swcJobContentState != null">#{swcJobContentState},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="checkGroupId != null">#{checkGroupId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpBindRelationship" parameterType="NxpBindRelationship">
+        update nxp_bind_relationship
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="checkContentId != null">check_content_id = #{checkContentId},</if>
+            <if test="positionId != null">position_id = #{positionId},</if>
+            <if test="inspectionContentId != null">inspection_content_id = #{inspectionContentId},</if>
+            <if test="inspectionContentState != null">inspection_content_state = #{inspectionContentState},</if>
+            <if test="pmGroupId != null">pm_group_id = #{pmGroupId},</if>
+            <if test="pmGroupItemId != null">pm_group_item_id = #{pmGroupItemId},</if>
+            <if test="pmGroupItemState != null">pm_group_item_state = #{pmGroupItemState},</if>
+            <if test="swcJobContentId != null">swc_job_content_id = #{swcJobContentId},</if>
+            <if test="swcJobContentState != null">swc_job_content_state = #{swcJobContentState},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="checkGroupId != null">check_group_id = #{checkGroupId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpBindRelationshipById" parameterType="Long">
+        delete from nxp_bind_relationship where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpBindRelationshipByIds" parameterType="String">
+        delete from nxp_bind_relationship where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

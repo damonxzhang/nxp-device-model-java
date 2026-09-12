@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionServiceSparepartMapper">
+    
+    <resultMap type="NxpInspectionServiceSparepart" id="NxpInspectionServiceSparepartResult">
+        <result property="id"    column="id"    />
+        <result property="inspection_service_id"    column="inspection_service_id"    />
+        <result property="s_id"    column="s_id"    />
+        <result property="e_id"    column="e_id"    />
+        <result property="o_amount"    column="o_amount"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionServiceSparepartVo">
+        select id, inspection_service_id, s_id, e_id, o_amount from nxp_inspection_service_sparepart
+    </sql>
+
+    <select id="selectNxpInspectionServiceSparepartList" parameterType="NxpInspectionServiceSparepart" resultMap="NxpInspectionServiceSparepartResult">
+        <include refid="selectNxpInspectionServiceSparepartVo"/>
+        <where>  
+            <if test="inspection_service_id != null "> and inspection_service_id = #{inspection_service_id}</if>
+            <if test="s_id != null  and s_id != ''"> and s_id = #{s_id}</if>
+            <if test="e_id != null  and e_id != ''"> and e_id = #{e_id}</if>
+            <if test="o_amount != null "> and o_amount = #{o_amount}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpInspectionServiceSparepartById" parameterType="Long" resultMap="NxpInspectionServiceSparepartResult">
+        <include refid="selectNxpInspectionServiceSparepartVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpInspectionServiceSparepart" parameterType="NxpInspectionServiceSparepart" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_service_sparepart
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="inspection_service_id != null">inspection_service_id,</if>
+            <if test="s_id != null">s_id,</if>
+            <if test="e_id != null">e_id,</if>
+            <if test="o_amount != null">o_amount,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="inspection_service_id != null">#{inspection_service_id},</if>
+            <if test="s_id != null">#{s_id},</if>
+            <if test="e_id != null">#{e_id},</if>
+            <if test="o_amount != null">#{o_amount},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionServiceSparepart" parameterType="NxpInspectionServiceSparepart">
+        update nxp_inspection_service_sparepart
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inspection_service_id != null">inspection_service_id = #{inspection_service_id},</if>
+            <if test="s_id != null">s_id = #{s_id},</if>
+            <if test="e_id != null">e_id = #{e_id},</if>
+            <if test="o_amount != null">o_amount = #{o_amount},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionServiceSparepartById" parameterType="Long">
+        delete from nxp_inspection_service_sparepart where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionServiceSparepartByIds" parameterType="String">
+        delete from nxp_inspection_service_sparepart where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

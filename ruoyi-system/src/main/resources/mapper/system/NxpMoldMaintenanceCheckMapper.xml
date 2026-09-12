@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpMoldMaintenanceCheckMapper">
+    
+    <resultMap type="NxpMoldMaintenanceCheck" id="NxpMoldMaintenanceCheckResult">
+        <result property="id"    column="id"    />
+        <result property="moldMaintenanceId"    column="mold_maintenance_id"    />
+        <result property="groupItemId"    column="group_item_id"    />
+        <result property="checkTime"    column="check_time"    />
+        <result property="userInfoId"    column="user_info_id"    />
+        <result property="groupItemResult"    column="group_item_result"    />
+        <result property="fileId"    column="file_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectNxpMoldMaintenanceCheckVo">
+        select id, mold_maintenance_id, group_item_id, check_time, user_info_id, group_item_result, file_id, create_by, create_time, update_by, update_time, remark from nxp_mold_maintenance_check
+    </sql>
+
+    <select id="selectNxpMoldMaintenanceCheckList" parameterType="NxpMoldMaintenanceCheck" resultMap="NxpMoldMaintenanceCheckResult">
+        <include refid="selectNxpMoldMaintenanceCheckVo"/>
+        <where>  
+            <if test="moldMaintenanceId != null "> and mold_maintenance_id = #{moldMaintenanceId}</if>
+            <if test="groupItemId != null "> and group_item_id = #{groupItemId}</if>
+            <if test="checkTime != null "> and check_time = #{checkTime}</if>
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="groupItemResult != null "> and group_item_result = #{groupItemResult}</if>
+            <if test="fileId != null "> and file_id = #{fileId}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpMoldMaintenanceCheckById" parameterType="Long" resultMap="NxpMoldMaintenanceCheckResult">
+        <include refid="selectNxpMoldMaintenanceCheckVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpMoldMaintenanceCheck" parameterType="NxpMoldMaintenanceCheck" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_mold_maintenance_check
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="moldMaintenanceId != null">mold_maintenance_id,</if>
+            <if test="groupItemId != null">group_item_id,</if>
+            <if test="checkTime != null">check_time,</if>
+            <if test="userInfoId != null">user_info_id,</if>
+            <if test="groupItemResult != null">group_item_result,</if>
+            <if test="fileId != null">file_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="moldMaintenanceId != null">#{moldMaintenanceId},</if>
+            <if test="groupItemId != null">#{groupItemId},</if>
+            <if test="checkTime != null">#{checkTime},</if>
+            <if test="userInfoId != null">#{userInfoId},</if>
+            <if test="groupItemResult != null">#{groupItemResult},</if>
+            <if test="fileId != null">#{fileId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpMoldMaintenanceCheck" parameterType="NxpMoldMaintenanceCheck">
+        update nxp_mold_maintenance_check
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="moldMaintenanceId != null">mold_maintenance_id = #{moldMaintenanceId},</if>
+            <if test="groupItemId != null">group_item_id = #{groupItemId},</if>
+            <if test="checkTime != null">check_time = #{checkTime},</if>
+            <if test="userInfoId != null">user_info_id = #{userInfoId},</if>
+            <if test="groupItemResult != null">group_item_result = #{groupItemResult},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpMoldMaintenanceCheckById" parameterType="Long">
+        delete from nxp_mold_maintenance_check where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpMoldMaintenanceCheckByIds" parameterType="String">
+        delete from nxp_mold_maintenance_check where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

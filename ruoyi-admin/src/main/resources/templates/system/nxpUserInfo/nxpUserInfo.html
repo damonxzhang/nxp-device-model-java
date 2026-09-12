@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('用户信息列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>角色id：</label>
+                                <input type="text" name="role_id"/>
+                            </li>
+                            <li>
+                                <label>状态：</label>
+                                <select name="status" th:with="type=${@dict.getType('is_enable')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>直属经理的用户的ID：</label>
+                                <input type="text" name="leader_uid"/>
+                            </li>
+                            <li>
+                                <label>PID唯一标识：</label>
+                                <input type="text" name="pid"/>
+                            </li>
+                            <li>
+                                <label>用户手机号：</label>
+                                <input type="text" name="tel"/>
+                            </li>
+                            <li>
+                                <label>性别：</label>
+                                <select name="sex" th:with="type=${@dict.getType('user_sex')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>职务  1操作员  2带班   3产品工程师   4 设备工程师  5PM技术员   6PM leader   7生产 leader   8 分部经理  9部门经理：</label>
+                                <select name="position">
+                                    <option value="">所有</option>
+                                    <option value="-1">代码生成请选择字典属性</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>班别   1: A班  2 : B班  3 : C班  4 : D班  5: R班  6 : AB班  7 : CD班：</label>
+                                <select name="shift">
+                                    <option value="">所有</option>
+                                    <option value="-1">代码生成请选择字典属性</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>区域  1 Non-lead   2 Leaded  3Plating：</label>
+                                <select name="area">
+                                    <option value="">所有</option>
+                                    <option value="-1">代码生成请选择字典属性</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>站别主键ID：</label>
+                                <input type="text" name="station_id"/>
+                            </li>
+                            <li>
+                                <label>SFC账号：</label>
+                                <input type="text" name="sfc_number"/>
+                            </li>
+                            <li>
+                                <label>FSL工号：</label>
+                                <input type="text" name="fsl_number"/>
+                            </li>
+                            <li>
+                                <label>餐卡后五位：</label>
+                                <input type="text" name="meal_card_code"/>
+                            </li>
+                            <li>
+                                <label>WBI code：</label>
+                                <input type="text" name="wbi_code"/>
+                            </li>
+                            <li>
+                                <label>识别证码：</label>
+                                <input type="text" name="badge_code"/>
+                            </li>
+                            <li>
+                                <label>多技能工位：</label>
+                                <input type="text" name="skill"/>
+                            </li>
+                            <li>
+                                <label>部门号：</label>
+                                <input type="text" name="department_number"/>
+                            </li>
+                            <li>
+                                <label>gemba权限：</label>
+                                <input type="text" name="gemba_role"/>
+                            </li>
+                            <li>
+                                <label>gemba小组：</label>
+                                <input type="text" name="team"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:nxpUserInfo:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:nxpUserInfo:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:nxpUserInfo:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:nxpUserInfo:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:nxpUserInfo:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:nxpUserInfo:remove')}]];
+        var statusDatas = [[${@dict.getType('is_enable')}]];
+        var sexDatas = [[${@dict.getType('user_sex')}]];
+        var prefix = ctx + "system/nxpUserInfo";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "用户信息",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'id',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'role_id',
+                    title: '角色id'
+                },
+                {
+                    field: 'status',
+                    title: '状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(statusDatas, value);
+                    }
+                },
+                {
+                    field: 'leader_uid',
+                    title: '直属经理的用户的ID'
+                },
+                {
+                    field: 'pid',
+                    title: 'PID唯一标识'
+                },
+                {
+                    field: 'tel',
+                    title: '用户手机号'
+                },
+                {
+                    field: 'chinese_name',
+                    title: '中文名称'
+                },
+                {
+                    field: 'english_name',
+                    title: '英文名称'
+                },
+                {
+                    field: 'sex',
+                    title: '性别',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(sexDatas, value);
+                    }
+                },
+                {
+                    field: 'email',
+                    title: '邮箱'
+                },
+                {
+                    field: 'position',
+                    title: '职务  1操作员  2带班   3产品工程师   4 设备工程师  5PM技术员   6PM leader   7生产 leader   8 分部经理  9部门经理'
+                },
+                {
+                    field: 'shift',
+                    title: '班别   1: A班  2 : B班  3 : C班  4 : D班  5: R班  6 : AB班  7 : CD班'
+                },
+                {
+                    field: 'area',
+                    title: '区域  1 Non-lead   2 Leaded  3Plating'
+                },
+                {
+                    field: 'station_id',
+                    title: '站别主键ID'
+                },
+                {
+                    field: 'sfc_number',
+                    title: 'SFC账号'
+                },
+                {
+                    field: 'fsl_number',
+                    title: 'FSL工号'
+                },
+                {
+                    field: 'meal_card_code',
+                    title: '餐卡后五位'
+                },
+                {
+                    field: 'wbi_code',
+                    title: 'WBI code'
+                },
+                {
+                    field: 'badge_code',
+                    title: '识别证码'
+                },
+                {
+                    field: 'skill',
+                    title: '多技能工位'
+                },
+                {
+                    field: 'department_number',
+                    title: '部门号'
+                },
+                {
+                    field: 'section',
+                    title: '所属分部  1 Non-lead   2 Leaded   3 PM     4 Plating'
+                },
+                {
+                    field: 'gemba_role',
+                    title: 'gemba权限'
+                },
+                {
+                    field: 'team',
+                    title: 'gemba小组'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpCheckListMapper">
+    
+    <resultMap type="NxpCheckList" id="NxpCheckListResult">
+        <result property="id"    column="id"    />
+        <result property="processId"    column="process_id"    />
+        <result property="facilityId"    column="facility_id"    />
+        <result property="submitterId"    column="submitter_id"    />
+        <result property="submitterName"    column="submitter_name"    />
+        <result property="type"    column="type"    />
+        <result property="state"    column="state"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="content"    column="content"    />
+        <result property="inspectionId"    column="inspection_id"    />
+        <result property="inspectionServiceId"    column="inspection_service_id"    />
+        <result property="inspectionContentId"    column="inspection_content_id"    />
+        <result property="pmId"    column="pm_id"    />
+        <result property="swcJobContentId"    column="swc_job_content_id"    />
+        <result property="swcJobContentStr"    column="swc_job_content_str"    />
+        <result property="pmGroupId"    column="pm_group_id"    />
+        <result property="pmGroupItemId"    column="pm_group_item_id"    />
+        <result property="inspectionContentStr"    column="inspection_content_str"    />
+        <result property="pmGroupItemStr"    column="pm_group_item_str"    />
+        <result property="isCheck"    column="is_check"    />
+        <result property="checkUserName"    column="check_user_name"    />
+        <result property="checkUserId"    column="check_user_id"    />
+        <result property="checkContent"    column="check_content"    />
+        <result property="files"    column="files"    />
+        <result property="checkProjectId"    column="check_project_id"    />
+        <result property="facilityNumber"    column="facility_number"    />
+    </resultMap>
+
+    <sql id="selectNxpCheckListVo">
+        select id, process_id, facility_id, submitter_id, submitter_name, type, state, create_time, content, inspection_id, inspection_service_id, inspection_content_id, pm_id,swc_job_content_id,swc_job_content_str,pm_group_id,pm_group_item_id,inspection_content_str,pm_group_item_str,is_check,check_user_name,check_user_id,update_time,check_content,files,check_project_id,facility_number from nxp_check_list
+    </sql>
+
+    <select id="selectCheckList" parameterType="NxpCheckList" resultMap="NxpCheckListResult">
+        SELECT
+            ncl.id,
+            ncl.process_id,
+            ncl.facility_id,
+            ncl.submitter_id,
+            ncl.submitter_name,
+            ncl.type,
+            ncl.state,
+            ncl.create_time,
+            ncl.content,
+            ncl.inspection_id,
+            ncl.inspection_service_id,
+            ncl.inspection_content_id,
+            ncl.pm_id,
+            ncl.swc_job_content_id,
+            ncl.swc_job_content_str,
+            ncl.pm_group_id,
+            ncl.pm_group_item_id,
+            ncl.inspection_content_str,
+            ncl.pm_group_item_str,
+            ncl.is_check,
+            ncl.check_user_name,
+            ncl.check_user_id,
+            ncl.check_content,
+            ncl.files,
+            ncl.check_project_id,
+            ncl.facility_number,
+            ncl.update_time
+        FROM
+            nxp_check_list ncl
+        LEFT JOIN nxp_user_info nui ON ncl.submitter_id = nui.id
+        <where>
+            <if test="processId != null "> and ncl.process_id = #{processId}</if>
+            <if test="facilityId != null "> and ncl.facility_id = #{facilityId}</if>
+            <if test="submitterId != null "> and ncl.submitter_id = #{submitterId}</if>
+            <if test="submitterName != null  and submitterName != ''"> and ncl.submitter_name = #{submitterName}</if>
+            <if test="type != null "> and ncl.type = #{type}</if>
+            <if test="state != null "> and ncl.state = #{state}</if>
+            <if test="content != null  and content != ''"> and ncl.content = #{content}</if>
+            <if test="inspectionId != null "> and ncl.inspection_id = #{inspectionId}</if>
+            <if test="inspectionServiceId != null "> and ncl.inspection_service_id = #{inspectionServiceId}</if>
+            <if test="inspectionContentId != null "> and ncl.inspection_content_id = #{inspectionContentId}</if>
+            <if test="pmId != null "> and ncl.pm_id = #{pmId}</if>
+            <if test="swcJobContentId != null "> and ncl.swc_job_content_id = #{swcJobContentId}</if>
+            <if test="swcJobContentStr != null and swcJobContentStr != ''"> and ncl.swc_job_content_str = #{swcJobContentStr}</if>
+            <if test="pmGroupId != null"> and ncl.pm_group_id = #{pmGroupId}</if>
+            <if test="pmGroupItemId != null"> and ncl.pm_group_item_id = #{pmGroupItemId}</if>
+            <if test="inspectionContentStr != null and inspectionContentStr != ''"> and ncl.inspection_content_str = #{inspectionContentStr}</if>
+            <if test="pmGroupItemStr != null and pmGroupItemStr != ''"> and ncl.pm_group_item_str = #{pmGroupItemStr}</if>
+            <if test="isCheck != null and isCheck != ''"> and ncl.is_check = #{isCheck}</if>
+            <if test="checkUserName != null and checkUserName != ''"> and ncl.check_user_name = #{checkUserName}</if>
+            <if test="checkUserId != null"> and ncl.check_user_id = #{checkUserId}</if>
+            <if test="checkContent != null"> and ncl.check_content = #{checkContent}</if>
+            <if test="files != null"> and ncl.files = #{files}</if>
+            <if test="checkProjectId != null"> and ncl.check_project_id = #{checkProjectId}</if>
+            <if test="facilityNumber != null and facilityNumber != ''"> and ncl.facility_number like concat('%', #{facilityNumber}, '%')</if>
+            <if test="params.startTime != null and params.startTime != '' and params.endTime != null and params.endTime != ''">
+                and ncl.create_time between #{params.startTime} and #{params.endTime}
+            </if>
+            <if test="shift != null">
+                and nui.shift = #{shift}
+            </if>
+        </where>
+        order by ncl.create_time desc
+    </select>
+
+    <select id="selectNxpCheckListList" parameterType="NxpCheckList" resultMap="NxpCheckListResult">
+        <include refid="selectNxpCheckListVo"/>
+        <where>  
+            <if test="processId != null "> and process_id = #{processId}</if>
+            <if test="facilityId != null "> and facility_id = #{facilityId}</if>
+            <if test="submitterId != null "> and submitter_id = #{submitterId}</if>
+            <if test="submitterName != null  and submitterName != ''"> and submitter_name = #{submitterName}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="state != null "> and state = #{state}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="inspectionId != null "> and inspection_id = #{inspectionId}</if>
+            <if test="inspectionServiceId != null "> and inspection_service_id = #{inspectionServiceId}</if>
+            <if test="inspectionContentId != null "> and inspection_content_id = #{inspectionContentId}</if>
+            <if test="pmId != null "> and pm_id = #{pmId}</if>
+            <if test="swcJobContentId != null "> and swc_job_content_id = #{swcJobContentId}</if>
+            <if test="swcJobContentStr != null and swcJobContentStr != ''"> and swc_job_content_str = #{swcJobContentStr}</if>
+            <if test="pmGroupId != null"> and pm_group_id = #{pmGroupId}</if>
+            <if test="pmGroupItemId != null"> and pm_group_item_id = #{pmGroupItemId}</if>
+            <if test="inspectionContentStr != null and inspectionContentStr != ''"> and inspection_content_str = #{inspectionContentStr}</if>
+            <if test="pmGroupItemStr != null and pmGroupItemStr != ''"> and pm_group_item_str = #{pmGroupItemStr}</if>
+            <if test="isCheck != null and isCheck != ''"> and is_check = #{isCheck}</if>
+            <if test="checkUserName != null and checkUserName != ''"> and check_user_name = #{checkUserName}</if>
+            <if test="checkUserId != null"> and check_user_id = #{checkUserId}</if>
+            <if test="checkContent != null"> and check_content = #{checkContent}</if>
+            <if test="files != null"> and files = #{files}</if>
+            <if test="checkProjectId != null"> and check_project_id = #{checkProjectId}</if>
+            <if test="facilityNumber != null and facilityNumber != ''"> and facility_number like concat('%', #{facilityNumber}, '%')</if>
+            <if test="params.startTime != null and params.startTime != '' and params.endTime != null and params.endTime != ''">
+                and create_time between #{params.startTime} and #{params.endTime}
+            </if>
+        </where>
+            order by create_time desc
+    </select>
+    
+    <select id="selectNxpCheckListById" parameterType="Long" resultMap="NxpCheckListResult">
+        <include refid="selectNxpCheckListVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpCheckList" parameterType="NxpCheckList" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_check_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="processId != null">process_id,</if>
+            <if test="facilityId != null">facility_id,</if>
+            <if test="submitterId != null">submitter_id,</if>
+            <if test="submitterName != null">submitter_name,</if>
+            <if test="type != null">type,</if>
+            <if test="state != null">state,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="content != null">content,</if>
+            <if test="inspectionId != null">inspection_id,</if>
+            <if test="inspectionServiceId != null">inspection_service_id,</if>
+            <if test="inspectionContentId != null">inspection_content_id,</if>
+            <if test="pmId != null">pm_id,</if>
+            <if test="swcJobContentId != null">swc_job_content_id,</if>
+            <if test="swcJobContentStr != null">swc_job_content_str,</if>
+            <if test="pmGroupId != null">pm_group_id,</if>
+            <if test="pmGroupItemId != null">pm_group_item_id,</if>
+            <if test="inspectionContentStr != null">inspection_content_str,</if>
+            <if test="pmGroupItemStr != null">pm_group_item_str,</if>
+            <if test="isCheck != null">is_check,</if>
+            <if test="checkUserName != null">check_user_name,</if>
+            <if test="checkUserId != null">check_user_id,</if>
+            <if test="checkContent != null">check_content,</if>
+            <if test="files != null">files,</if>
+            <if test="checkProjectId != null">check_project_id,</if>
+            <if test="facilityNumber != null">facility_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="processId != null">#{processId},</if>
+            <if test="facilityId != null">#{facilityId},</if>
+            <if test="submitterId != null">#{submitterId},</if>
+            <if test="submitterName != null">#{submitterName},</if>
+            <if test="type != null">#{type},</if>
+            <if test="state != null">#{state},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="content != null">#{content},</if>
+            <if test="inspectionId != null">#{inspectionId},</if>
+            <if test="inspectionServiceId != null">#{inspectionServiceId},</if>
+            <if test="inspectionContentId != null">#{inspectionContentId},</if>
+            <if test="pmId != null">#{pmId},</if>
+            <if test="swcJobContentId != null">#{swcJobContentId},</if>
+            <if test="swcJobContentStr != null">#{swcJobContentStr},</if>
+            <if test="pmGroupId != null">#{pmGroupId},</if>
+            <if test="pmGroupItemId != null">#{pmGroupItemId},</if>
+            <if test="inspectionContentStr != null">#{inspectionContentStr},</if>
+            <if test="pmGroupItemStr != null">#{pmGroupItemStr},</if>
+            <if test="isCheck != null">#{isCheck},</if>
+            <if test="checkUserName != null">#{checkUserName},</if>
+            <if test="checkUserId != null">#{checkUserId},</if>
+            <if test="checkContent != null">#{checkContent},</if>
+            <if test="files != null">#{files},</if>
+            <if test="checkProjectId != null">#{checkProjectId},</if>
+            <if test="facilityNumber != null">#{facilityNumber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpCheckList" parameterType="NxpCheckList">
+        update nxp_check_list
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="processId != null">process_id = #{processId},</if>
+            <if test="facilityId != null">facility_id = #{facilityId},</if>
+            <if test="submitterId != null">submitter_id = #{submitterId},</if>
+            <if test="submitterName != null">submitter_name = #{submitterName},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="inspectionId != null">inspection_id = #{inspectionId},</if>
+            <if test="inspectionServiceId != null">inspection_service_id = #{inspectionServiceId},</if>
+            <if test="inspectionContentId != null">inspection_content_id = #{inspectionContentId},</if>
+            <if test="pmId != null">pm_id = #{pmId},</if>
+            <if test="swcJobContentId != null">swc_job_content_id = #{swcJobContentId},</if>
+            <if test="swcJobContentStr != null">swc_job_content_str = #{swcJobContentStr},</if>
+            <if test="pmGroupId != null">pm_group_id = #{pmGroupId},</if>
+            <if test="pmGroupItemId != null">pm_group_item_id = #{pmGroupItemId},</if>
+            <if test="inspectionContentStr != null and inspectionContentStr != ''">inspection_content_str = #{inspectionContentStr},</if>
+            <if test="pmGroupItemStr != null and pmGroupItemStr != ''">pm_group_item_str = #{pmGroupItemStr},</if>
+            <if test="isCheck != null and isCheck != ''">is_check = #{isCheck},</if>
+            <if test="checkUserName != null and checkUserName != ''">check_user_name = #{checkUserName},</if>
+            <if test="checkUserId != null">check_user_id = #{checkUserId},</if>
+            <if test="checkContent != null">check_content = #{checkContent},</if>
+            <if test="files != null">files = #{files},</if>
+            <if test="checkProjectId != null">check_project_id = #{checkProjectId},</if>
+            <if test="facilityNumber != null">facility_number = #{facilityNumber},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpCheckListById" parameterType="Long">
+        delete from nxp_check_list where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpCheckListByIds" parameterType="String">
+        delete from nxp_check_list where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

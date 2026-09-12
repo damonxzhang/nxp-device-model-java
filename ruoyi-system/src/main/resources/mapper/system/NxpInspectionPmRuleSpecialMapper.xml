@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionPmRuleSpecialMapper">
+    
+    <resultMap type="NxpInspectionPmRuleSpecial" id="NxpInspectionPmRuleSpecialResult">
+        <result property="date"    column="date"    />
+        <result property="day"    column="day"    />
+        <result property="id"    column="id"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionPmRuleSpecialVo">
+        select date, day, id from nxp_inspection_pm_rule_special
+    </sql>
+
+    <select id="selectNxpInspectionPmRuleSpecialList" parameterType="NxpInspectionPmRuleSpecial" resultMap="NxpInspectionPmRuleSpecialResult">
+        <include refid="selectNxpInspectionPmRuleSpecialVo"/>
+        <where>  
+            <if test="date != null "> and date = #{date}</if>
+            <if test="day != null "> and day = #{day}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpInspectionPmRuleSpecialById" parameterType="Long" resultMap="NxpInspectionPmRuleSpecialResult">
+        <include refid="selectNxpInspectionPmRuleSpecialVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpInspectionPmRuleSpecial" parameterType="NxpInspectionPmRuleSpecial" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_pm_rule_special
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="date != null">date,</if>
+            <if test="day != null">day,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="date != null">#{date},</if>
+            <if test="day != null">#{day},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionPmRuleSpecial" parameterType="NxpInspectionPmRuleSpecial">
+        update nxp_inspection_pm_rule_special
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="date != null">date = #{date},</if>
+            <if test="day != null">day = #{day},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionPmRuleSpecialById" parameterType="Long">
+        delete from nxp_inspection_pm_rule_special where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionPmRuleSpecialByIds" parameterType="String">
+        delete from nxp_inspection_pm_rule_special where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

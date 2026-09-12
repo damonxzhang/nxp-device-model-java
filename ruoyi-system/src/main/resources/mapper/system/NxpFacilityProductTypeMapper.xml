@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpFacilityProductTypeMapper">
+    
+    <resultMap type="NxpFacilityProductType" id="NxpFacilityProductTypeResult">
+        <result property="facilityId"    column="facility_id"    />
+        <result property="facilityNumber"    column="facility_number"    />
+        <result property="productTypeId"    column="product_type_id"    />
+        <result property="productTypeName"    column="product_type_name"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectNxpFacilityProductTypeVo">
+        select facility_id, facility_number, product_type_id, product_type_name, create_time from nxp_facility_product_type
+    </sql>
+
+    <select id="selectNxpFacilityProductTypeList" parameterType="NxpFacilityProductType" resultMap="NxpFacilityProductTypeResult">
+        <include refid="selectNxpFacilityProductTypeVo"/>
+        <where>  
+            <if test="facilityId != null "> and facility_id = #{facilityId}</if>
+            <if test="facilityNumber != null  and facilityNumber != ''"> and facility_number = #{facilityNumber}</if>
+            <if test="productTypeId != null and productTypeId != ''"> and product_type_id = #{productTypeId}</if>
+            <if test="productTypeName != null  and productTypeName != ''"> and product_type_name like concat('%', #{productTypeName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpFacilityProductTypeById" parameterType="Long" resultMap="NxpFacilityProductTypeResult">
+        <include refid="selectNxpFacilityProductTypeVo"/>
+        where facility_id = #{facilityId}
+    </select>
+        
+    <insert id="insertNxpFacilityProductType" parameterType="NxpFacilityProductType">
+        insert into nxp_facility_product_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="facilityId != null">facility_id,</if>
+            <if test="facilityNumber != null">facility_number,</if>
+            <if test="productTypeId != null">product_type_id,</if>
+            <if test="productTypeName != null">product_type_name,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="facilityId != null">#{facilityId},</if>
+            <if test="facilityNumber != null">#{facilityNumber},</if>
+            <if test="productTypeId != null">#{productTypeId},</if>
+            <if test="productTypeName != null">#{productTypeName},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpFacilityProductType" parameterType="NxpFacilityProductType">
+        update nxp_facility_product_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="facilityNumber != null">facility_number = #{facilityNumber},</if>
+            <if test="productTypeId != null">product_type_id = #{productTypeId},</if>
+            <if test="productTypeName != null">product_type_name = #{productTypeName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where facility_id = #{facilityId}
+    </update>
+
+    <delete id="deleteNxpFacilityProductTypeById" parameterType="Long">
+        delete from nxp_facility_product_type where facility_id = #{facilityId}
+    </delete>
+
+    <delete id="deleteNxpFacilityProductTypeByIds" parameterType="String">
+        delete from nxp_facility_product_type where facility_id in 
+        <foreach item="facilityId" collection="array" open="(" separator="," close=")">
+            #{facilityId}
+        </foreach>
+    </delete>
+
+    <select id="selectByProductTypeId" parameterType="NxpFacilityProductType" resultMap="NxpFacilityProductTypeResult">
+        <include refid="selectNxpFacilityProductTypeVo"/>
+        CROSS APPLY STRING_SPLIT ( product_type_id, ',' ) AS product_type_values
+        <where>
+            <if test="productTypeId != null"> and product_type_values.value = #{productTypeId}</if>
+        </where>
+    </select>
+</mapper>

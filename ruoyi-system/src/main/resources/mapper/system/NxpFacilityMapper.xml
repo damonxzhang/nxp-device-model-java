@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpFacilityMapper">
+    
+    <resultMap type="NxpFacility" id="NxpFacilityResult">
+        <result property="name"    column="name"    />
+        <result property="number"    column="number"    />
+        <result property="create_user"    column="create_user"    />
+        <result property="model"    column="model"    />
+        <result property="area"    column="area"    />
+        <result property="shift"    column="shift"    />
+        <result property="serial_no"    column="serial_no"    />
+        <result property="vendor_id"    column="vendor_id"    />
+        <result property="asset_no"    column="ASSET_NO"    />
+        <result property="buy_off_date"    column="BUY_OFF_DATE"    />
+        <result property="cba_pass_date"    column="CBA_pass_date"    />
+        <result property="head_user"    column="head_user"    />
+        <result property="status"    column="status"    />
+        <result property="is_ok"    column="is_ok"    />
+        <result property="file"    column="file"    />
+        <result property="create_time"    column="create_time"    />
+        <result property="update_time"    column="update_time"    />
+        <result property="delete_time"    column="delete_time"    />
+        <result property="id"    column="id"    />
+        <result property="process"    column="process"    />
+        <result property="relevant_people"    column="relevant_people"    />
+        <result property="review_user"    column="review_user"    />
+        <result property="inspection_status"    column="inspection_status"    />
+        <result property="is_replace"    column="is_replace"    />
+    </resultMap>
+
+    <sql id="selectNxpFacilityVo">
+        select name, number,review_user, create_user, model, area, shift, serial_no, vendor_id, ASSET_NO, BUY_OFF_DATE, CBA_pass_date, head_user, status, is_ok, create_time, update_time, delete_time, id, process, relevant_people,inspection_status, is_replace from nxp_facility
+    </sql>
+
+    <select id="selectNxpFacilityList" parameterType="NxpFacility" resultMap="NxpFacilityResult">
+        <include refid="selectNxpFacilityVo"/>
+        <where>
+            <if test="id != null"> and id = #{id}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="number != null  and number != ''"> and number = #{number}</if>
+            <if test="create_user != null "> and create_user = #{create_user}</if>
+            <if test="model != null  and model != ''"> and model = #{model}</if>
+            <if test="area != null "> and area = #{area}</if>
+            <if test="shift != null "> and shift = #{shift}</if>
+            <if test="serial_no != null  and serial_no != ''"> and serial_no = #{serial_no}</if>
+            <if test="vendor_id != null "> and vendor_id = #{vendor_id}</if>
+            <if test="asset_no != null  and asset_no != ''"> and ASSET_NO = #{asset_no}</if>
+            <if test="buy_off_date != null "> and BUY_OFF_DATE = #{buy_off_date}</if>
+            <if test="cba_pass_date != null "> and CBA_pass_date = #{cba_pass_date}</if>
+            <if test="head_user != null "> and head_user = #{head_user}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="is_ok != null "> and is_ok = #{is_ok}</if>
+            <if test="delete_time != null "> and delete_time = #{delete_time}</if>
+            <if test="process != null  and process != ''"> and process = #{process}</if>
+            <if test="relevant_people != null  and relevant_people != ''"> and relevant_people = #{relevant_people}</if>
+            <if test="inspection_status != null  and inspection_status != ''"> and inspection_status = #{inspection_status}</if>
+            <if test="is_replace != null  and is_replace != ''"> and is_replace = #{is_replace}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpFacilityById" parameterType="Long" resultMap="NxpFacilityResult">
+        <include refid="selectNxpFacilityVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpFacility" parameterType="NxpFacility" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_facility
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="number != null">number,</if>
+            <if test="create_user != null">create_user,</if>
+            <if test="model != null">model,</if>
+            <if test="area != null">area,</if>
+            <if test="shift != null">shift,</if>
+            <if test="serial_no != null">serial_no,</if>
+            <if test="vendor_id != null">vendor_id,</if>
+            <if test="asset_no != null">ASSET_NO,</if>
+            <if test="buy_off_date != null">BUY_OFF_DATE,</if>
+            <if test="cba_pass_date != null">CBA_pass_date,</if>
+            <if test="head_user != null">head_user,</if>
+            <if test="status != null">status,</if>
+            <if test="is_ok != null">is_ok,</if>
+            <if test="file != null">file,</if>
+            <if test="create_time != null">create_time,</if>
+            <if test="update_time != null">update_time,</if>
+            <if test="delete_time != null">delete_time,</if>
+            <if test="process != null">process,</if>
+            <if test="relevant_people != null">relevant_people,</if>
+            <if test="inspection_status != null">inspection_status,</if>
+            <if test="is_replace != null">is_replace,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="number != null">#{number},</if>
+            <if test="create_user != null">#{create_user},</if>
+            <if test="model != null">#{model},</if>
+            <if test="area != null">#{area},</if>
+            <if test="shift != null">#{shift},</if>
+            <if test="serial_no != null">#{serial_no},</if>
+            <if test="vendor_id != null">#{vendor_id},</if>
+            <if test="asset_no != null">#{asset_no},</if>
+            <if test="buy_off_date != null">#{buy_off_date},</if>
+            <if test="cba_pass_date != null">#{cba_pass_date},</if>
+            <if test="head_user != null">#{head_user},</if>
+            <if test="status != null">#{status},</if>
+            <if test="is_ok != null">#{is_ok},</if>
+            <if test="file != null">#{file},</if>
+            <if test="create_time != null">#{create_time},</if>
+            <if test="update_time != null">#{update_time},</if>
+            <if test="delete_time != null">#{delete_time},</if>
+            <if test="process != null">#{process},</if>
+            <if test="relevant_people != null">#{relevant_people},</if>
+            <if test="inspection_status != null">#{inspection_status},</if>
+            <if test="is_replace != null">#{is_replace},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpFacility" parameterType="NxpFacility">
+        update nxp_facility
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="create_user != null">create_user = #{create_user},</if>
+            <if test="model != null">model = #{model},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="shift != null">shift = #{shift},</if>
+            <if test="serial_no != null">serial_no = #{serial_no},</if>
+            <if test="vendor_id != null">vendor_id = #{vendor_id},</if>
+            <if test="asset_no != null">ASSET_NO = #{asset_no},</if>
+            <if test="buy_off_date != null">BUY_OFF_DATE = #{buy_off_date},</if>
+            <if test="cba_pass_date != null">CBA_pass_date = #{cba_pass_date},</if>
+            <if test="head_user != null">head_user = #{head_user},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="is_ok != null">is_ok = #{is_ok},</if>
+            <if test="file != null">file = #{file},</if>
+            <if test="create_time != null">create_time = #{create_time},</if>
+            <if test="update_time != null">update_time = #{update_time},</if>
+            <if test="delete_time != null">delete_time = #{delete_time},</if>
+            <if test="process != null">process = #{process},</if>
+            <if test="relevant_people != null">relevant_people = #{relevant_people},</if>
+            <if test="inspection_status != null">inspection_status = #{inspection_status},</if>
+            <if test="review_user != null">review_user = #{review_user},</if>
+            <if test="is_replace != null">is_replace = #{is_replace},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpFacilityById" parameterType="Long">
+        delete from nxp_facility where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpFacilityByIds" parameterType="String">
+        delete from nxp_facility where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectNxpFacilityByIdOrNumber" parameterType="NxpFacility" resultMap="NxpFacilityResult">
+        <include refid="selectNxpFacilityVo"/>
+        <where>
+            <if test="facility_id != null and facility_id != ''">and id = #{facility_id}</if>
+            <if test="facility_number != null and facility_number != ''">and number = #{facility_number}</if>
+        </where>
+    </select>
+
+    <select id="pendingInspection" parameterType="com.ruoyi.system.domain.NxpInspection" resultType="com.ruoyi.system.domain.DTO.NxpFacilityDTO">
+        SELECT
+            nf.name AS name,
+            nf.number AS number,
+            nf.status AS status,
+            nf.is_ok AS is_ok,
+            nui.chinese_name AS head_user,
+            nf.id AS id,
+            ni.status AS i_status,
+            ni.repair_time AS i_repair_time,
+            niqt.name AS i_question_type,
+            ni.user_info_id AS user_info_id,
+            nf.id AS inspection_id,
+            ni.id AS i_id,
+            nmp.name AS process,
+            nmm.name AS model
+        FROM
+            nxp_inspection ni
+            LEFT JOIN nxp_facility nf ON ni.facility_id = nf.id
+            LEFT JOIN nxp_user_info nui ON nui.id = nf.head_user
+            LEFT JOIN nxp_inspection_question_type niqt ON ni.question_type = niqt.id
+            LEFT JOIN nxp_machine_process nmp ON nmp.id = nf.process
+            LEFT JOIN nxp_machine_model nmm ON nmm.id = nf.model
+        WHERE
+            ni.id IN (
+            SELECT --top 1
+                ni.id AS niid
+            FROM
+                nxp_inspection ni
+                LEFT JOIN nxp_facility_user nfu ON ni.facility_id = nfu.facility_id
+            WHERE
+                ( nfu.user_id = #{user_id} OR ni.user_info_id = #{user_id} )
+                AND ni.status IN ( 0, 2, 3 )
+            )
+        ORDER BY
+            ni.is_top ASC
+    </select>
+
+    <select id="selectFacilityList" parameterType="com.ruoyi.system.domain.NxpFacility" resultType="com.ruoyi.system.domain.DTO.NxpFacilityListDTO">
+         SELECT
+            nf.name AS name,
+            nf.vendor_id AS vendor_id,
+            nf.number AS number,
+            nf.status AS status,
+            nf.is_ok AS is_ok,
+            nf.id AS id,
+            nmp.name AS process,
+            nf.inspection_status AS i_status,
+            nui.chinese_name AS head_user
+        FROM
+            nxp_facility nf
+            LEFT JOIN nxp_machine_process nmp ON nmp.id = nf.process
+            LEFT JOIN nxp_user_info nui ON nui.id = nf.head_user
+        <where>
+            <if test="process != null and process != ''">
+                AND nf.process = #{process}
+            </if>
+            <if test="status != null and status == 4">
+                AND nf.inspection_status in (0,1,2,3)
+            </if>
+            <if test="status != null and status != '' and status != 4">
+                AND nf.inspection_status = #{status}
+            </if>
+            <if test="name != null and name != ''">
+                AND (nf.name like concat('%', #{name}, '%') or nf.number like concat('%', #{name}, '%'))
+            </if>
+            AND nf.status = 1
+
+            AND nf.id IN (
+                SELECT
+                    nfu.facility_id
+                FROM
+                    nxp_facility_user nfu
+                    LEFT JOIN nxp_inspection ni ON nfu.facility_id = ni.facility_id
+                <where>
+                    <if test="start_time != null and start_time != ''">
+                        AND ni.created_at > #{start_time}
+                    </if>
+                    <if test="relation != null and relation != '' and relation != 1">
+                        AND nfu.user_id = #{user_id}
+                    </if>
+                </where>
+                GROUP BY
+                    nfu.facility_id
+            )
+        </where>
+        ORDER BY
+            nf.number ASC
+    </select>
+
+<!--    <select id="selectFacilityList" parameterType="com.ruoyi.system.domain.NxpFacility" resultType="com.ruoyi.system.domain.DTO.NxpFacilityListDTO">-->
+<!--        SELECT-->
+<!--            nf.name AS name,-->
+<!--            nf.number AS number,-->
+<!--            nf.status AS status,-->
+<!--            nf.is_ok AS is_ok,-->
+<!--            nf.id AS id,-->
+<!--            nmp.name AS process,-->
+<!--            nf.inspection_status AS i_status,-->
+<!--            nui.chinese_name AS head_user-->
+<!--        FROM-->
+<!--            nxp_facility nf-->
+<!--        LEFT JOIN nxp_machine_process nmp ON nmp.id = nf.process-->
+<!--        LEFT JOIN nxp_user_info nui ON nui.id = nf.head_user-->
+<!--        <where>-->
+<!--            <if test="process != null and process != ''">-->
+<!--                AND nf.process = #{process}-->
+<!--            </if>-->
+<!--            <if test="status != null and status == 4">-->
+<!--                AND nf.inspection_status in (0,1,2,3)-->
+<!--            </if>-->
+<!--            <if test="status != null and status != '' and status != 4">-->
+<!--                AND nf.inspection_status = #{status}-->
+<!--            </if>-->
+<!--            <if test="name != null and name != ''">-->
+<!--                AND (nf.name like concat('%', #{name}, '%') or nf.number like concat('%', #{name}, '%'))-->
+<!--            </if>-->
+<!--                AND nf.status = 1-->
+<!--        </where>-->
+<!--        order by nf.number asc-->
+<!--    </select>-->
+
+    <select id="selectNxpFacilityByNotInIds" parameterType="com.ruoyi.system.domain.VO.NxpFacilityVO" resultMap="NxpFacilityResult">
+        <include refid="selectNxpFacilityVo"/>
+        <where>
+            <if test="ids != null and ids.size > 0">
+                and id not in
+                <foreach item="id" collection="ids" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectNxpFacilityByIds" parameterType="string" resultMap="NxpFacilityResult">
+        <include refid="selectNxpFacilityVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectNxpFacilityByNumber" parameterType="string" resultMap="NxpFacilityResult">
+        select top 1 name, number,review_user, create_user, model, area, shift, serial_no, vendor_id, ASSET_NO, BUY_OFF_DATE, CBA_pass_date, head_user, status, is_ok, create_time, update_time, delete_time, id, process, relevant_people,inspection_status from nxp_facility
+        where
+        number = #{number} and status = 1
+    </select>
+
+    <select id="selectNxpFacilityAndProcessByNumber" parameterType="string" resultType="com.ruoyi.system.domain.NxpFacility">
+        select nf.*,nmp.name as processName
+        from nxp_facility nf
+        LEFT JOIN nxp_machine_process nmp ON nmp.id = nf.process
+        where
+        nf.number = #{number} and nf.status = 1
+    </select>
+
+    <select id="selectNxpFacilityPmList" parameterType="NxpFacility" resultMap="NxpFacilityResult">
+        SELECT
+        nf.*,nip.status AS pm_status
+        FROM
+        nxp_facility nf
+        LEFT JOIN nxp_inspection_pm nip ON nip.facility_id = nf.id
+        <where>
+            <if test="id != null"> and nf.id = #{id}</if>
+            <if test="name != null  and name != ''"> and nf.name like concat('%', #{name}, '%')</if>
+            <if test="number != null  and number != ''"> and nf.number = #{number}</if>
+            <if test="model != null  and model != ''"> and nf.model = #{model}</if>
+            <if test="area != null "> and nf.area = #{area}</if>
+            <if test="shift != null "> and nf.shift = #{shift}</if>
+            <if test="serial_no != null  and serial_no != ''"> and nf.serial_no = #{serial_no}</if>
+            <if test="vendor_id != null "> and nf.vendor_id = #{vendor_id}</if>
+            <if test="asset_no != null  and asset_no != ''"> and nf.ASSET_NO = #{asset_no}</if>
+            <if test="buy_off_date != null "> and nf.BUY_OFF_DATE = #{buy_off_date}</if>
+            <if test="cba_pass_date != null "> and nf.CBA_pass_date = #{cba_pass_date}</if>
+            <if test="head_user != null "> and nf.head_user = #{head_user}</if>
+            <if test="status != null "> and nf.status = #{status}</if>
+            <if test="pm_status != null "> and nip.status = #{pm_status}</if>
+            <if test="is_ok != null "> and nf.is_ok = #{is_ok}</if>
+            <if test="delete_time != null "> and nf.delete_time = #{delete_time}</if>
+            <if test="process != null  and process != ''"> and nf.process = #{process}</if>
+            <if test="relevant_people != null  and relevant_people != ''"> and nf.relevant_people = #{relevant_people}</if>
+            <if test="inspection_status != null  and inspection_status != ''"> and nf.inspection_status = #{inspection_status}</if>
+        </where>
+    </select>
+
+    <select id="selectFacilityByModelAndProductTypeId" parameterType="NxpMold" resultMap="NxpFacilityResult">
+        SELECT
+        nf.*
+        FROM
+        nxp_facility nf
+        LEFT JOIN nxp_facility_product_type nfpt ON nf.id = nfpt.facility_id
+        LEFT JOIN nxp_machine_model nmm ON nf.model = nmm.id
+        CROSS APPLY STRING_SPLIT (nfpt.product_type_id, ',') AS product_type_values
+        <where>
+            <if test="machineModel != null and machineModel != ''">AND nmm.id = #{machineModel}</if>
+            <if test="productTypeId != null and productTypeId != ''">AND product_type_values.value = #{productTypeId}</if>
+            AND product_type_values.value &lt;&gt; ''
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('维修详情列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <input name="inspection_id" id="inspection_id" th:field="${id}" th:value="${id}" hidden>
+                    <div class="select-list">
+                        <ul>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:repairService:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:repairService:remove')}]];
+        var statusDatas = [[${@dict.getType('wx_status')}]];
+        var prefix = ctx + "system/inspection";
+        var inspection_id = [[${inspection_id}]];
+
+        $(function() {
+
+            var options = {
+                url: ctx + "system/repairService/list",
+                queryParams: queryParams,
+                modalName: "维修列表",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'facility_name',
+                    title: '设备编号'
+                },
+                {
+                    field: 'process_name',
+                    title: '工序'
+                },
+                {
+                    field: 'status',
+                    title: '维修状态',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(statusDatas, value);
+                    }
+                },
+                {
+                    field: 'head_user',
+                    title: '负责人'
+                },
+                {
+                    field: 'positionName',
+                    title: '维修位置'
+                },
+                {
+                    field: 'contentName',
+                    title: '维修内容'
+                },
+                {
+                    field: 'user_info_name',
+                    title: '维修人'
+                },
+                // {
+                //     field: 'service_time',
+                //     title: '使用备件'
+                // },
+                {
+                    field: 'service_time',
+                    title: '开始时间'
+                },
+                {
+                    field: 'end_time',
+                    title: '维修结束时间'
+                },
+                {
+                    field: 'repair_time',
+                    title: '维修时长'
+                },
+                {
+                    field: 'inspection_info',
+                    title: '相关报修'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="serviceShowInfo(\'' + row.id + '\')"><i class="fa fa-edit"></i>查看</a> ');
+                        // actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+
+        function serviceShowInfo(roleId) {
+            var url = prefix + '/serviceShowInfo/' + roleId;
+            $.modal.openTab("维修详情", url);
+        }
+
+        function queryParams(params) {
+            var search = $.table.queryParams(params);
+            search.inspection_id = inspection_id;
+            console.log(inspection_id);
+            return search;
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改绑定关系管理')" />
+    <th:block th:include="include :: select2-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bindRelationship-edit" th:object="${nxpBindRelationship}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">检查组：</label>
+                <div class="col-sm-8">
+                    <select name="checkGroupId" class="form-control m-b" th:with="type=${nxpCheckGroups}">
+                        <option value="">---请选择检查组---</option>
+                        <option th:each="dict : ${type}" th:text="${dict.groupName}" th:value="${dict.id}" th:field="*{checkGroupId}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修位置：</label>
+                <div class="col-sm-8">
+                    <select name="positionId" id="positionId" class="form-control m-b" th:with="type=${nxpInspectionPositions}">
+                        <option value="">---请选择维修位置---</option>
+                        <option th:each="dict : ${type}" th:text="${dict.position}" th:value="${dict.id}" th:field="*{positionId}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修内容：</label>
+                <div class="col-sm-8">
+                    <select name="inspectionContentId" id="inspectionContentId" class="form-control m-b" th:with="type=${nxpInspectionContents}">
+                        <option value="">---请先选择维修位置---</option>
+                        <option th:each="dict : ${type}" th:text="${dict.content}" th:value="${dict.id}" th:field="*{inspectionContentId}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修内容状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('is_enable')}">
+                        <input type="radio" th:id="${'inspectionContentState_' + dict.dictCode}" name="inspectionContentState" th:value="${dict.dictValue}" th:field="*{inspectionContentState}">
+                        <label th:for="${'inspectionContentState_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">pm分组：</label>
+                <div class="col-sm-8">
+                    <select name="pmGroupId" id="pmGroupId" class="form-control m-b" th:with="type=${nxpInspectionPmGroups}">
+                        <option value="">---请选择pm分组---</option>
+                        <option th:each="dict : ${type}" th:text="${dict.name}" th:value="${dict.id}" th:field="*{pmGroupId}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">pm检查项：</label>
+                <div class="col-sm-8">
+                    <select name="pmGroupItemId" id="pmGroupItemId" class="form-control m-b" th:with="type=${groupItems}">
+                        <option value="">---请选择pm检查项---</option>
+                        <option th:each="dict : ${type}" th:text="${dict.item_name}" th:value="${dict.id}" th:field="*{pmGroupItemId}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">pm检查项状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('is_enable')}">
+                        <input type="radio" th:id="${'pmGroupItemState_' + dict.dictCode}" name="pmGroupItemState" th:value="${dict.dictValue}" th:field="*{pmGroupItemState}">
+                        <label th:for="${'pmGroupItemState_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">作业内容：</label>
+                <div class="col-sm-8">
+                    <select name="swcJobContentId" class="form-control m-b" th:with="type=${nxpSwcJobContents}">
+                        <option value="">---请选择作业内容---</option>
+                        <option th:each="dict : ${type}" th:text="${dict.jobContent}" th:value="${dict.id}" th:field="*{swcJobContentId}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">swc作业内容状态：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('is_enable')}">
+                        <input type="radio" th:id="${'swcJobContentState_' + dict.dictCode}" name="swcJobContentState" th:value="${dict.dictValue}" th:field="*{swcJobContentState}">
+                        <label th:for="${'swcJobContentState_' + dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: select2-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/bindRelationship";
+        $("#form-bindRelationship-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-bindRelationship-edit').serialize());
+            }
+        }
+
+        // 维修内容
+        $("#positionId").change(function () {
+            let positionId = $("#positionId").val();
+            $.ajax({
+                url: prefix + "/getContent",
+                type: "POST",
+                data: {"position_id":positionId},
+                success: function (result) {
+                    let str = "";
+                    $.each(result.data, function(index, value){
+                        str += '<option value="' + value.id + '">' + value.content + '</option>';
+                    });
+                    //清空之前其他上级菜单遗留的子菜单，否则改变上级菜单后子菜单会包含多个上级菜单的全部子菜单
+                    $("#inspectionContentId").empty();
+                    $("#inspectionContentId").append('<option value="">---请选择维修内容---</option>' + str);
+                },
+                error: function(error) {
+                    $.modal.alertWarning("失败。");
+                }});
+        });
+
+        // pm检查项
+        $("#pmGroupId").change(function () {
+            let pmGroupId = $("#pmGroupId").val();
+            $.ajax({
+                url: prefix + "/getPmGroupItems",
+                type: "POST",
+                data: {"group_id":pmGroupId},
+                success: function (result) {
+                    let str = "";
+                    $.each(result.data, function(index, value){
+                        str += '<option value="' + value.id + '">' + value.item_name + '</option>';
+                    });
+                    //清空之前其他上级菜单遗留的子菜单，否则改变上级菜单后子菜单会包含多个上级菜单的全部子菜单
+                    $("#pmGroupItemId").empty();
+                    $("#pmGroupItemId").append('<option value="">---请选择pm检查项---</option>' + str);
+                },
+                error: function(error) {
+                    $.modal.alertWarning("失败。");
+                }});
+        });
+    </script>
+</body>
+</html>

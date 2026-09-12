@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增用户权限标签')" />
+    <th:block th:include="include :: select2-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-nxpUserLabel-add">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">用户：</label>
+                <div class="col-sm-8">
+                    <select name="userInfoId" class="form-control m-b" th:with="type=${userInfos}">
+                        <option value="">请选择用户</option>
+                        <option th:each="dict : ${type}" th:text="${dict.chinese_name}" th:value="${dict.id}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">人员类型：</label>
+                <div class="col-sm-8">
+                    <select name="isPm" class="form-control m-b" th:with="type=${@dict.getType('user_is_pm')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">所属模具类型：</label>
+                <div class="col-sm-8">
+                    <select name="moldType" class="form-control m-b" th:with="type=${@dict.getType('mold_type')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">职位：</label>
+                <div class="col-sm-8">
+                    <select name="position" class="form-control m-b" th:with="type=${@dict.getType('user_label_position')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea name="remark" class="form-control"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: select2-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/nxpUserLabel"
+        $("#form-nxpUserLabel-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-nxpUserLabel-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

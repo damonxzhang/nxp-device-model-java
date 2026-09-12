@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpMoldComponentMapper">
+    
+    <resultMap type="NxpMoldComponent" id="NxpMoldComponentResult">
+        <result property="id"    column="id"    />
+        <result property="moldId"    column="mold_id"    />
+        <result property="moldCode"    column="mold_code"    />
+        <result property="componentName"    column="component_name"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="moldTypeId"    column="mold_type_id"    />
+        <result property="moldRmsCode"    column="mold_rms_code"    />
+        <result property="componentId"    column="component_id"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="moldType"    column="mold_type"    />
+    </resultMap>
+
+    <sql id="selectNxpMoldComponentVo">
+        select id, mold_id, mold_code, component_name, status, create_by, create_time, update_by, update_time, remark, mold_type_id, mold_rms_code, component_id, del_flag, mold_type from nxp_mold_component
+    </sql>
+
+    <select id="selectNxpMoldComponentList" parameterType="NxpMoldComponent" resultMap="NxpMoldComponentResult">
+        <include refid="selectNxpMoldComponentVo"/>
+        <where>  
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldCode != null  and moldCode != ''"> and mold_code = #{moldCode}</if>
+            <if test="componentName != null  and componentName != ''"> and component_name like concat('%', #{componentName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="moldTypeId != null "> and mold_type_id = #{moldTypeId}</if>
+            <if test="moldRmsCode != null and moldRmsCode != ''"> and mold_rms_code = #{moldRmsCode}</if>
+            <if test="componentId != null"> and component_id = #{componentId}</if>
+            <if test="moldType != null"> and mold_type = #{moldType}</if>
+            and del_flag = '0'
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectNxpMoldComponentById" parameterType="Long" resultMap="NxpMoldComponentResult">
+        <include refid="selectNxpMoldComponentVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectNxpMoldComponentByMoldCode" parameterType="String" resultMap="NxpMoldComponentResult">
+        <include refid="selectNxpMoldComponentVo"/>
+        where mold_code = #{moldCode}
+    </select>
+
+    <select id="selectNxpMoldComponentByMoldId" parameterType="long" resultMap="NxpMoldComponentResult">
+        <include refid="selectNxpMoldComponentVo"/>
+        where mold_id = #{moldId}
+    </select>
+
+    <select id="selectNxpMoldComponentByComponentId" parameterType="long" resultMap="NxpMoldComponentResult">
+        <include refid="selectNxpMoldComponentVo"/>
+        where component_id = #{componentId}
+    </select>
+
+    <select id="selectNxpMoldComponentByMoldIdAndComponentId" parameterType="NxpMoldComponent" resultMap="NxpMoldComponentResult">
+        <include refid="selectNxpMoldComponentVo"/>
+        <where>
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="componentId != null"> and component_id = #{componentId}</if>
+        </where>
+    </select>
+        
+    <insert id="insertNxpMoldComponent" parameterType="NxpMoldComponent" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_mold_component
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">mold_id,</if>
+            <if test="moldCode != null">mold_code,</if>
+            <if test="componentName != null">component_name,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="moldTypeId != null">mold_type_id,</if>
+            <if test="componentId != null">component_id,</if>
+            <if test="moldRmsCode != null and moldRmsCode != ''">mold_rms_code,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="moldType != null">mold_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">#{moldId},</if>
+            <if test="moldCode != null">#{moldCode},</if>
+            <if test="componentName != null">#{componentName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="moldTypeId != null">#{moldTypeId},</if>
+            <if test="componentId != null">#{componentId},</if>
+            <if test="moldRmsCode != null and moldRmsCode != ''">#{moldRmsCode},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="moldType != null">#{moldType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpMoldComponent" parameterType="NxpMoldComponent">
+        update nxp_mold_component
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="moldId != null">mold_id = #{moldId},</if>
+            <if test="moldCode != null">mold_code = #{moldCode},</if>
+            <if test="componentName != null">component_name = #{componentName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="moldTypeId != null">mold_type_id = #{moldTypeId},</if>
+            <if test="componentId != null">component_id = #{componentId},</if>
+            <if test="moldRmsCode != null and moldRmsCode != ''">mold_rms_code = #{moldRmsCode},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="moldType != null">mold_type = #{moldType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateNxpMoldComponentByDel" parameterType="NxpMoldComponent">
+        update nxp_mold_component
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+        </trim>
+        where mold_id = #{moldId} and mold_type_id = #{moldTypeId}
+    </update>
+
+    <delete id="deleteNxpMoldComponentById" parameterType="Long">
+        delete from nxp_mold_component where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpMoldComponentByIds" parameterType="String">
+        update nxp_mold_component set del_flag = '2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteNxpMoldComponentByMoldId" parameterType="Long">
+        update nxp_mold_component set del_flag = '2' where mold_id = #{moldId}
+    </delete>
+</mapper>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改周PM检查')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-InspectionPm-edit" th:object="${nxpInspectionPm}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设备编号：</label>
+                <div class="col-sm-8">
+                    <input name="facility_id" th:field="*{facility_name}" class="form-control" type="text" readonly="readonly">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">类型：</label>
+                <div class="col-sm-8">
+                    <input name="userInfo_id" th:field="*{type_name}" class="form-control" type="text" readonly="readonly">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">周PM负责人：</label>
+                <div class="col-sm-8">
+                    <input name="userInfo_id" th:field="*{UserName}" class="form-control" type="text" readonly="readonly">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">周PM复查负责人：</label>
+                <div class="col-sm-8">
+                    <input name="userInfo_id" th:field="*{reviewUserName}" class="form-control" type="text" readonly="readonly">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">计划检查时间：</label>
+                <div class="col-sm-8">
+                    <input name="userInfo_id" th:field="*{checkTime}" class="form-control" type="text" readonly="readonly">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">实际检查时间：</label>
+                <div class="col-sm-8">
+                    <input name="userInfo_id" th:field="*{realCheckTime}" class="form-control" type="text" readonly="readonly">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">检查照片：</label>
+                <div class="col-sm-8">
+                    <a th:each="nxpInspectionPmFiles : ${nxpInspectionPmFiles}" th:href="${nxpInspectionPmFiles.file_path}" th:title="${nxpInspectionPmFiles.file_path}" target="_blank">
+                        <img style="width: 20%;height: 20%" th:each="nxpInspectionPmFiles : ${nxpInspectionPmFiles}" th:src="${nxpInspectionPmFiles.file_path}" class="form-control" ></a>
+                </div>
+            </div>
+            <h4 class="form-header h4">检查项</h4>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="col-sm-12 select-table table-striped">
+                        <table id="bootstrap-table"></table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/InspectionPm";
+        $("#form-InspectionPm-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-InspectionPm-edit').serialize());
+            }
+        }
+
+        $("input[name='check_time']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        //
+        $(function() {
+            var options = {
+                data: [[${nxpInspectionPm.nxpInspectionPmGroupItemList}]],
+                pagination: false,
+                showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                sidePagination: "client",
+                columns: [{
+                    checkbox: false
+                },
+                    {
+                        field: 'item_name',
+                        align: 'center',
+                        title: "内容",
+                        formatter: function (value, row, index) {
+                            /*var columnIndex = $.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                            return columnIndex + $.table.serialNumber(index);*/
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionPmGroupItemList[%s].item_name' value='%s' disabled='disabled'>", index, value);
+                            return html;
+                        }
+                    },
+                    {
+                        field: 'group_item_result',
+                        align: 'center',
+                        title: '结果',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionPmGroupItemList[%s].group_item_result' value='%s' disabled='disabled'>", index, value);
+                            return html;
+                        }
+                    },
+                    {
+                        field: 'filePath',
+                        align: 'center',
+                        title: '图片',
+                        formatter: function(value, row, index) {
+                            // var name = $.common.sprintf("nxpInspectionPmGroupItemList[%s].filePath", index);
+                            return $.table.imageView(value);
+                            // return $.common.dictToSelect(item_statusDatas, value, name);
+                        }
+
+                    }]
+            };
+            $.table.init(options);
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpSmartCabinetMapper">
+    
+    <resultMap type="NxpSmartCabinet" id="NxpSmartCabinetResult">
+        <result property="id"    column="id"    />
+        <result property="position"    column="position"    />
+        <result property="pwd"    column="pwd"    />
+        <result property="ipAddress"    column="ip_address"    />
+        <result property="port"    column="port"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="cabinetCode"    column="cabinet_code"    />
+        <result property="boxCode"    column="box_code"    />
+        <result property="type"    column="type"    />
+        <result property="moldType"    column="mold_type"    />
+    </resultMap>
+
+    <sql id="selectNxpSmartCabinetVo">
+        select id, position, pwd, ip_address, port, status, create_by, create_time, update_by, update_time, remark, cabinet_code, box_code, type, mold_type from nxp_smart_cabinet
+    </sql>
+
+    <select id="selectNxpSmartCabinetList" parameterType="NxpSmartCabinet" resultMap="NxpSmartCabinetResult">
+        <include refid="selectNxpSmartCabinetVo"/>
+        <where>  
+            <if test="position != null  and position != ''"> and position = #{position}</if>
+            <if test="pwd != null  and pwd != ''"> and pwd = #{pwd}</if>
+            <if test="ipAddress != null  and ipAddress != ''"> and ip_address = #{ipAddress}</if>
+            <if test="port != null  and port != ''"> and port = #{port}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="cabinetCode != null and cabinetCode != ''"> and cabinet_code = #{cabinetCode}</if>
+            <if test="boxCode != null and boxCode != ''"> and box_code = #{boxCode}</if>
+            <if test="type != null"> and type = #{type}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpSmartCabinetById" parameterType="Long" resultMap="NxpSmartCabinetResult">
+        <include refid="selectNxpSmartCabinetVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpSmartCabinet" parameterType="NxpSmartCabinet">
+        insert into nxp_smart_cabinet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="position != null">position,</if>
+            <if test="pwd != null">pwd,</if>
+            <if test="ipAddress != null">ip_address,</if>
+            <if test="port != null">port,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="cabinetCode != null">cabinet_code,</if>
+            <if test="boxCode != null">box_code,</if>
+            <if test="type != null">type,</if>
+            <if test="moldType != null">mold_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="position != null">#{position},</if>
+            <if test="pwd != null">#{pwd},</if>
+            <if test="ipAddress != null">#{ipAddress},</if>
+            <if test="port != null">#{port},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="cabinetCode != null">#{cabinetCode},</if>
+            <if test="boxCode != null">#{boxCode},</if>
+            <if test="type != null">#{type},</if>
+            <if test="moldType != null">#{moldType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpSmartCabinet" parameterType="NxpSmartCabinet">
+        update nxp_smart_cabinet
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="position != null">position = #{position},</if>
+            <if test="pwd != null">pwd = #{pwd},</if>
+            <if test="ipAddress != null">ip_address = #{ipAddress},</if>
+            <if test="port != null">port = #{port},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="cabinetCode != null">cabinet_code = #{cabinetCode},</if>
+            <if test="boxCode != null">box_code = #{boxCode},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="moldType != null">mold_type = #{moldType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpSmartCabinetById" parameterType="Long">
+        delete from nxp_smart_cabinet where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpSmartCabinetByIds" parameterType="String">
+        delete from nxp_smart_cabinet where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

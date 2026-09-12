@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionQuestionTypeMapper">
+    
+    <resultMap type="NxpInspectionQuestionType" id="NxpInspectionQuestionTypeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="status"    column="status"    />
+        <result property="create_time"    column="create_time"    />
+        <result property="process_id"    column="process_id"    />
+        <result property="count"    column="count"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionQuestionTypeVo">
+        select id, name, status, create_time,process_id,count,type from nxp_inspection_question_type
+    </sql>
+
+    <select id="selectNxpInspectionQuestionTypeList" parameterType="NxpInspectionQuestionType" resultMap="NxpInspectionQuestionTypeResult">
+        <include refid="selectNxpInspectionQuestionTypeVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="process_id != null "> and process_id = #{process_id}</if>
+            <if test="ids != null and ids.size > 0">
+                and id in
+                <foreach item="id" collection="ids" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        order by count desc
+    </select>
+    
+    <select id="selectNxpInspectionQuestionTypeById" parameterType="Long" resultMap="NxpInspectionQuestionTypeResult">
+        <include refid="selectNxpInspectionQuestionTypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpInspectionQuestionType" parameterType="NxpInspectionQuestionType" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_question_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="status != null">status,</if>
+            <if test="create_time != null">create_time,</if>
+            <if test="process_id != null">process_id,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="status != null">#{status},</if>
+            <if test="create_time != null">#{create_time},</if>
+            <if test="process_id != null">#{process_id},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionQuestionType" parameterType="NxpInspectionQuestionType">
+        update nxp_inspection_question_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="count != null">count = #{count},</if>
+            <if test="create_time != null">create_time = #{create_time},</if>
+            <if test="process_id != null">process_id = #{process_id},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionQuestionTypeById" parameterType="Long">
+        delete from nxp_inspection_question_type where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionQuestionTypeByIds" parameterType="String">
+        delete from nxp_inspection_question_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

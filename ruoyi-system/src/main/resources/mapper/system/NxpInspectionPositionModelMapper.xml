@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionPositionModelMapper">
+    
+    <resultMap type="NxpInspectionPositionModel" id="NxpInspectionPositionModelResult">
+        <result property="positionId"    column="position_id"    />
+        <result property="modelId"    column="model_id"    />
+        <result property="id"    column="id"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionPositionModelVo">
+        select position_id, model_id, id from nxp_inspection_position_model
+    </sql>
+
+    <select id="selectNxpInspectionPositionModelList" parameterType="NxpInspectionPositionModel" resultMap="NxpInspectionPositionModelResult">
+        <include refid="selectNxpInspectionPositionModelVo"/>
+        <where>  
+            <if test="positionId != null "> and position_id = #{positionId}</if>
+            <if test="modelId != null "> and model_id = #{modelId}</if>
+        </where>
+    </select>
+    
+
+    <select id="selectNxpInspectionPositionModelListByModelId" parameterType="NxpInspectionPositionModel" resultMap="NxpInspectionPositionModelResult">
+        SELECT
+        ip.id,ip.position
+        FROM
+        nxp_inspection_position AS ip
+        LEFT JOIN nxp_inspection_position_model AS ipm ON ipm.position_id = ip.id
+
+        <where>
+            <if test="modelId != null ">  ipm.model_id = #{modelId}</if>
+        </where>
+    </select>
+
+    <select id="selectNxpInspectionPositionModelById" parameterType="Long" resultMap="NxpInspectionPositionModelResult">
+        <include refid="selectNxpInspectionPositionModelVo"/>
+        where position_id = #{positionId}
+    </select>
+
+    <select id="selectNxpInspectionPositionModelBypositionId" parameterType="Long" resultMap="NxpInspectionPositionModelResult">
+        <include refid="selectNxpInspectionPositionModelVo"/>
+        where position_id = #{positionId}
+    </select>
+
+    <select id="selectNxpInspectionPositionModelBymodelId" parameterType="Long" resultMap="NxpInspectionPositionModelResult">
+        <include refid="selectNxpInspectionPositionModelVo"/>
+        where model_id = #{modelId}
+    </select>
+
+    <insert id="insertNxpInspectionPositionModel" parameterType="NxpInspectionPositionModel">
+        insert into nxp_inspection_position_model
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="positionId != null">position_id,</if>
+            <if test="modelId != null">model_id,</if>
+            <if test="id != null">id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="positionId != null">#{positionId},</if>
+            <if test="modelId != null">#{modelId},</if>
+            <if test="id != null">#{id},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionPositionModel" parameterType="NxpInspectionPositionModel">
+        update nxp_inspection_position_model
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="modelId != null">model_id = #{modelId},</if>
+            <if test="id != null">id = #{id},</if>
+        </trim>
+        where position_id = #{positionId}
+    </update>
+
+    <delete id="deleteNxpInspectionPositionModelById" parameterType="Long">
+        delete from nxp_inspection_position_model where position_id = #{positionId}
+    </delete>
+
+    <delete id="deleteNxpInspectionPositionModelByPositionId" parameterType="Long">
+        delete from nxp_inspection_position_model where position_id = #{positionId}
+    </delete>
+
+    <delete id="deleteNxpInspectionPositionModelByModelId" parameterType="Long">
+        delete from nxp_inspection_position_model where model_id = #{modelId}
+    </delete>
+
+    <delete id="deleteNxpInspectionPositionModelByIds" parameterType="String">
+        delete from nxp_inspection_position_model where position_id in 
+        <foreach item="positionId" collection="array" open="(" separator="," close=")">
+            #{positionId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpProductTypeMapper">
+    
+    <resultMap type="NxpProductType" id="NxpProductTypeResult">
+        <result property="id"    column="id"    />
+        <result property="productTypeName"    column="product_type_name"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="moldType"    column="mold_type"    />
+    </resultMap>
+
+    <sql id="selectNxpProductTypeVo">
+        select id, product_type_name, status, create_by, create_time, update_by, update_time, remark, mold_type from nxp_product_type
+    </sql>
+
+    <select id="selectNxpProductTypeList" parameterType="NxpProductType" resultMap="NxpProductTypeResult">
+        <include refid="selectNxpProductTypeVo"/>
+        <where>  
+            <if test="productTypeName != null  and productTypeName != ''"> and product_type_name like concat('%', #{productTypeName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpProductTypeById" parameterType="Long" resultMap="NxpProductTypeResult">
+        <include refid="selectNxpProductTypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpProductType" parameterType="NxpProductType" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_product_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productTypeName != null">product_type_name,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="moldType != null">mold_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productTypeName != null">#{productTypeName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="moldType != null">#{moldType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpProductType" parameterType="NxpProductType">
+        update nxp_product_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productTypeName != null">product_type_name = #{productTypeName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="moldType != null">mold_type = #{moldType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpProductTypeById" parameterType="Long">
+        delete from nxp_product_type where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpProductTypeByIds" parameterType="String">
+        delete from nxp_product_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

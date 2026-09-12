@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpSwcCarMapper">
+    
+    <resultMap type="NxpSwcCar" id="NxpSwcCarResult">
+        <result property="id"    column="id"    />
+        <result property="gembaGroupId"    column="gemba_group_id"    />
+        <result property="year"    column="year"    />
+        <result property="month"    column="month"    />
+        <result property="car"    column="car"    />
+        <result property="createdAt"    column="created_at"    />
+    </resultMap>
+
+    <sql id="selectNxpSwcCarVo">
+        select id, gemba_group_id, year, month, car, created_at from nxp_swc_car
+    </sql>
+
+    <select id="selectNxpSwcCarList" parameterType="NxpSwcCar" resultMap="NxpSwcCarResult">
+        <include refid="selectNxpSwcCarVo"/>
+        <where>  
+            <if test="gembaGroupId != null "> and gemba_group_id = #{gembaGroupId}</if>
+            <if test="year != null "> and year = #{year}</if>
+            <if test="month != null "> and month = #{month}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpSwcCarById" parameterType="Long" resultMap="NxpSwcCarResult">
+        <include refid="selectNxpSwcCarVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpSwcCar" parameterType="NxpSwcCar">
+        insert into nxp_swc_car
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="gembaGroupId != null">gemba_group_id,</if>
+            <if test="year != null">year,</if>
+            <if test="month != null">month,</if>
+            <if test="car != null">car,</if>
+            <if test="createdAt != null">created_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="gembaGroupId != null">#{gembaGroupId},</if>
+            <if test="year != null">#{year},</if>
+            <if test="month != null">#{month},</if>
+            <if test="car != null">#{car},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpSwcCar" parameterType="NxpSwcCar">
+        update nxp_swc_car
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gembaGroupId != null">gemba_group_id = #{gembaGroupId},</if>
+            <if test="year != null">year = #{year},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="car != null">car = #{car},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpSwcCarById" parameterType="Long">
+        delete from nxp_swc_car where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpSwcCarByIds" parameterType="String">
+        delete from nxp_swc_car where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

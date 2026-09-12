@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增SWC互查问题')" />
+    <th:block th:include="include :: datetimepicker-css" />
+    <th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: bootstrap-select-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-swcCheck-add">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">被检查人：</label>
+                <div class="col-sm-8">
+                    <select name="checkedUserId" class="form-control select2-multiple">
+                        <option value="">请选择被检查人</option>
+                        <option th:each="userInfo:${userInfos}" th:text="${userInfo.chinese_name}" th:value="${userInfo.id}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">检查时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="checkTime" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">工序：</label>
+                <div class="col-sm-8">
+                    <select name="processId" class="form-control m-b">
+                        <option value="">请选择检查组</option>
+                        <option th:each="process:${processes}" th:text="${process.name}" th:value="${process.id}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">检查组：</label>
+                <div class="col-sm-8">
+                    <select name="groupId" class="form-control m-b" onchange="refreshTable()">
+                        <option value="">请选择检查组</option>
+                        <option th:each="groups:${groups}" th:text="${groups.groupName}" th:value="${groups.id}"></option>
+                    </select>
+                </div>
+            </div>
+        </form>
+        <h4 class="form-header h4">检查项信息</h4>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-sm-12 select-table table-striped">
+                    <table id="bootstrap-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <th:block th:include="include :: jquery-cxselect-js" />
+    <th:block th:include="include :: select2-js" />
+    <th:block th:include="include :: bootstrap-select-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/swcCheck"
+        $("#form-swcCheck-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-swcCheck-add').serialize());
+            }
+        }
+        $("input[name='checkTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $(function groupChange() {
+            initTable();
+        });
+
+        function initTable(){
+            var options = {
+                url: ctx + "system/swcCheck/getProgramTypes",
+                pagination: false,
+                showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                queryParams: queryParams,
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    title: "序号",
+                    formatter: function (value, row, index) {
+                        return $.table.serialNumber(index);
+                    }
+                },
+                {
+                    field: 'nsptTypeName',
+                    title: '分类'
+                },
+                {
+                    field: 'nspProgram',
+                    title: '检查项'
+                }]
+            };
+            $.table.init(options);
+        }
+
+        function refreshTable(){
+            $.table.refresh();
+        }
+
+        //得到查询的参数
+        function queryParams(params) {
+            var nxpSwcProgramGroup = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                id: $("select[name='groupId']").val(),
+            };
+            return nxpSwcProgramGroup;
+        };
+    </script>
+</body>
+</html>

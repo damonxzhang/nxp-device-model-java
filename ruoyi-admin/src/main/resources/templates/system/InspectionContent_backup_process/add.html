@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增维修内容')" />
+    <th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: bootstrap-select-css" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-InspectionContent-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">工序：</label>
+            <div class="col-sm-8">
+                <select name="processId" id="processId"  class="form-control m-b">
+                    <option value="">请选择工序</option>
+                    <option th:each="process:${processes}" th:text="${process.name}" th:value="${process.id}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">维修位置：</label>
+            <div class="col-sm-8">
+                <select name="position_id" id="position_id" class="form-control m-b">
+                    <option value="">请先选择工序</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">维修内容：</label>
+            <div class="col-sm-8">
+                <textarea name="content" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="col-sm-8">
+                <select name="status" class="form-control m-b" th:with="type=${@dict.getType('is_enable')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">是否必须上传图片：</label>
+            <div class="col-sm-8">
+                <select name="pic_type" class="form-control m-b" th:with="type=${@dict.getType('is_pic')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">检查人：</label>
+            <div class="col-sm-8">
+                <input name="check_person" class="form-control" type="text">
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: select2-js" />
+<th:block th:include="include :: bootstrap-select-js" />
+<script th:inline="javascript">
+    var prefix = ctx + "system/InspectionContent"
+    $("#form-InspectionContent-add").validate({
+        focusCleanup: true
+    });
+
+    $("#processId").change(function () {
+        process_id = $("#processId").val();
+        console.log(process_id);
+        $.ajax({
+            url: ctx + "system/model/getPositionByProcess/"+process_id,
+            type: "GET",
+            success: function (result) {
+                var str = "";
+                $.each(result.msg, function(index, value){
+                    console.log(value);
+                    str += '<option value="' + value.id + '">' + value.position + '</option>';
+                });
+                console.log(str);
+                //清空之前其他上级菜单遗留的子菜单，否则改变上级菜单后子菜单会包含多个上级菜单的全部子菜单
+                $("#position_id").empty();
+                $("#position_id").append('<option value="">---请选择维修位置---</option>' + str);
+            },
+            error: function(error) {
+                $.modal.alertWarning("失败。");
+            }});
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-InspectionContent-add').serialize());
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionPmMapper">
+    
+    <resultMap type="NxpInspectionPm" id="NxpInspectionPmResult">
+        <result property="id"    column="id"    />
+        <result property="facility_id"    column="facility_id"    />
+        <result property="userInfo_id"    column="user_info_id"    />
+        <result property="review_user_info_id"    column="review_user_info_id"    />
+        <result property="check_time"    column="check_time"    />
+        <result property="real_check_time"    column="real_check_time"    />
+        <result property="status"    column="status"    />
+        <result property="type"    column="type"    />
+        <result property="created_at"    column="created_at"    />
+        <result property="updated_at"    column="updated_at"    />
+        <result property="deal_user_id"    column="deal_user_id"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionPmVo">
+        select id,type, facility_id,real_check_time, user_info_id, review_user_info_id, check_time, status, created_at, updated_at, deal_user_id from nxp_inspection_pm
+    </sql>
+
+    <select id="selectNxpInspectionPmList" parameterType="NxpInspectionPm" resultMap="NxpInspectionPmResult">
+        <include refid="selectNxpInspectionPmVo"/>
+        <where>  
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+            <if test="userInfo_id != null "> and user_info_id = #{userInfo_id}</if>
+            <if test="review_user_info_id != null "> and review_user_info_id = #{review_user_info_id}</if>
+            <if test="check_time != null "> and check_time = #{check_time}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="created_at != null "> and created_at = #{created_at}</if>
+            <if test="updated_at != null "> and updated_at = #{updated_at}</if>
+            <if test="deal_user_id != null "> and deal_user_id = #{deal_user_id}</if>
+        </where>
+    </select>
+    
+
+    <select id="selectNxpInspectionPmList2" parameterType="NxpInspectionPm" resultMap="NxpInspectionPmResult">
+        SELECT
+        nip.*
+        FROM
+        nxp_inspection_pm nip
+        LEFT JOIN nxp_facility nf ON nip.facility_id = nf.id
+        LEFT JOIN nxp_machine_process nmp ON nmp.id = nf.process
+        <where>
+            <if test="facility_id != null "> and nip.facility_id = #{facility_id}</if>
+            <if test="userInfo_id != null "> and nip.user_info_id = #{userInfo_id}</if>
+            <if test="review_user_info_id != null "> and nip.review_user_info_id = #{review_user_info_id}</if>
+            <if test="check_time != null "> and nip.check_time = #{check_time}</if>
+            <if test="status != null "> and nip.status = #{status}</if>
+            <if test="type != null "> and nip.type = #{type}</if>
+            <if test="process != null and process != ''"> and nf.process = #{process}</if>
+            <if test="deal_user_id != null "> and nip.deal_user_id = #{deal_user_id}</if>
+        </where>
+        order by nip.id desc
+    </select>
+
+
+    <select id="selectNxpInspectionPmList1" parameterType="NxpInspectionPm" resultMap="NxpInspectionPmResult">
+        <include refid="selectNxpInspectionPmVo"/>
+        <where>
+            status in (2,3)
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+        order by id desc
+    </select>
+
+
+    <select id="selectNxpInspectionPmOverDue" parameterType="NxpInspectionPm" resultMap="NxpInspectionPmResult">
+        <include refid="selectNxpInspectionPmVo"/>
+        <where>
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+            <if test="userInfo_id != null "> and user_info_id = #{userInfo_id}</if>
+            <if test="review_user_info_id != null "> and review_user_info_id = #{review_user_info_id}</if>
+            <if test="check_time != null "> and check_time = #{check_time}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="created_at != null "> and created_at = #{created_at}</if>
+            <if test="updated_at != null "> and updated_at = #{updated_at}</if>
+            <if test="deal_user_id != null "> and deal_user_id = #{deal_user_id}</if>
+        </where>
+    </select>
+
+    <select id="selectNxpInspectionPmById" parameterType="Long" resultMap="NxpInspectionPmResult">
+        <include refid="selectNxpInspectionPmVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectNxpInspectionPmLastOne" parameterType="Long" resultMap="NxpInspectionPmResult">
+        select top 1 id,status from nxp_inspection_pm where facility_id = #{facility_id} order by id desc
+    </select>
+
+    <insert id="insertNxpInspectionPm" parameterType="NxpInspectionPm" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_pm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="facility_id != null">facility_id,</if>
+            <if test="userInfo_id != null">user_info_id,</if>
+            <if test="review_user_info_id != null">review_user_info_id,</if>
+            <if test="check_time != null">check_time,</if>
+            <if test="status != null">status,</if>
+            <if test="created_at != null">created_at,</if>
+            <if test="updated_at != null">updated_at,</if>
+            <if test="deal_user_id != null">deal_user_id,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="facility_id != null">#{facility_id},</if>
+            <if test="userInfo_id != null">#{userInfo_id},</if>
+            <if test="review_user_info_id != null">#{review_user_info_id},</if>
+            <if test="check_time != null">#{check_time},</if>
+            <if test="status != null">#{status},</if>
+            <if test="created_at != null">#{created_at},</if>
+            <if test="updated_at != null">#{updated_at},</if>
+            <if test="deal_user_id != null">#{deal_user_id},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionPm" parameterType="NxpInspectionPm">
+        update nxp_inspection_pm
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="facility_id != null">facility_id = #{facility_id},</if>
+            <if test="userInfo_id != null">user_info_id = #{userInfo_id},</if>
+            <if test="review_user_info_id != null">review_user_info_id = #{review_user_info_id},</if>
+            <if test="check_time != null">check_time = #{check_time},</if>
+            <if test="real_check_time != null">real_check_time = #{real_check_time},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="created_at != null">created_at = #{created_at},</if>
+            <if test="updated_at != null">updated_at = #{updated_at},</if>
+            <if test="deal_user_id != null">deal_user_id = #{deal_user_id},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionPmById" parameterType="Long">
+        delete from nxp_inspection_pm where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionPmByIds" parameterType="String">
+        delete from nxp_inspection_pm where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectPmList" parameterType="NxpInspectionPm" resultMap="NxpInspectionPmResult">
+        SELECT
+            nip.*,
+            nf.name AS facility_name,
+            nf.number AS facility_number,
+            nmp.name AS process,
+            nui.chinese_name AS head_user
+        FROM
+            nxp_inspection_pm nip
+            LEFT JOIN nxp_facility nf ON nip.facility_id = nf.id
+            LEFT JOIN nxp_machine_process nmp ON nmp.id = nf.process
+            LEFT JOIN nxp_user_info nui ON nf.head_user = nui.id
+        <where>
+            <if test="userInfo_id != null and userInfo_id != ''">
+                and ( nip.user_info_id = #{userInfo_id} or nip.review_user_info_id = #{userInfo_id} )
+            </if>
+            <if test="process != null and process != ''">
+                and nf.process = #{process}
+            </if>
+            <if test="status != null and status == 4">
+                AND nip.status in (1,3)
+            </if>
+            <if test="facility_id != null and facility_id != ''">
+                AND nip.facility_id = #{facility_id}
+            </if>
+            <if test="name != null and name != ''">
+                and nf.number like concat('%', #{name}, '%')
+            </if>
+            <if test="type != null and type != ''">
+                and nip.type = #{type}
+            </if>
+            <if test="status != null and status != '' and status != 4">
+                AND nip.status = #{status}
+            </if>
+            <if test="status == null or status == '' ">
+                AND nip.status = 1
+            </if>
+            <if test="check_time != null ">
+                AND check_time between '' and #{check_time}
+            </if>
+
+        </where>
+        order by created_at desc
+    </select>
+
+    <select id="pmInfo" parameterType="NxpInspectionPm" resultType="com.ruoyi.system.domain.DTO.NxpInspectionPmDTO">
+        SELECT
+            nip.id AS pm_id,
+            nf.id AS facility_id,
+            nf.name AS facility_name,
+            nmp.name AS process,
+            nui.chinese_name AS head_user,
+            nip.status as pm_status
+        FROM
+            nxp_inspection_pm nip
+                LEFT JOIN nxp_facility nf ON nip.facility_id = nf.id
+                LEFT JOIN nxp_machine_process nmp ON nmp.id = nf.process
+                LEFT JOIN nxp_user_info nui ON nf.head_user = nui.id
+        WHERE
+            nip.facility_id = #{facility_id}
+        AND nip.id = #{id}
+        AND nip.status != 2
+    </select>
+
+    <select id="selectNxpInspectionPmByfacilityId" parameterType="long" resultMap="NxpInspectionPmResult">
+        <include refid="selectNxpInspectionPmVo"/>
+        where facility_id = #{facilityId}
+    </select>
+
+    <select id="selectByFacilityIdMaxCheckTime" parameterType="long" resultMap="NxpInspectionPmResult">
+        select * from nxp_inspection_pm A  where check_time=(select max(check_time) from nxp_inspection_pm B where B.facility_id = #{facilityId})
+    </select>
+</mapper>

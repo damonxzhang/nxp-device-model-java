@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ReplacedListMapper">
+    
+    <resultMap type="ReplacedList" id="ReplacedListResult">
+        <result property="replaceId"    column="replace_id"    />
+        <result property="moldId"    column="mold_id"    />
+        <result property="moldName"    column="mold_name"    />
+        <result property="moldCode"    column="mold_code"    />
+        <result property="facilityId"    column="facility_id"    />
+        <result property="processId"    column="process_id"    />
+        <result property="userInfoId"    column="user_info_id"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="type"    column="type"    />
+        <result property="facilityNumber"    column="facility_number"    />
+        <result property="productTypeId"    column="product_type_id"    />
+        <result property="productTypeName"    column="product_type_name"    />
+        <result property="executeUserId"    column="execute_user_id"    />
+        <result property="isReplace"    column="is_replace"    />
+        <result property="moldType"    column="mold_type"    />
+        <result property="newMoldId"    column="new_mold_id"    />
+        <result property="newMoldCode"    column="new_mold_code"    />
+    </resultMap>
+
+    <sql id="selectReplacedListVo">
+        select replace_id, mold_id, mold_name, mold_code, facility_id, process_id, user_info_id, status, create_by, create_time, update_by, update_time, remark, type, facility_number, product_type_id, product_type_name, execute_user_id, is_replace, mold_type, new_mold_id, new_mold_code from t_replaced_list
+    </sql>
+
+    <select id="selectReplacedListList" parameterType="ReplacedList" resultMap="ReplacedListResult">
+        <include refid="selectReplacedListVo"/>
+        <where>  
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldName != null  and moldName != ''"> and mold_name like concat('%', #{moldName}, '%')</if>
+            <if test="moldCode != null  and moldCode != ''"> and mold_code = #{moldCode}</if>
+            <if test="facilityId != null "> and facility_id = #{facilityId}</if>
+            <if test="processId != null  and processId != ''"> and process_id = #{processId}</if>
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="facilityNumber != null "> and facility_number = #{facilityNumber}</if>
+            <if test="productTypeId != null "> and product_type_id = #{productTypeId}</if>
+            <if test="productTypeName != null  and productTypeName != ''"> and product_type_name = #{productTypeName}</if>
+            <if test="executeUserId != null "> and execute_user_id = #{executeUserId}</if>
+            <if test="isReplace != null "> and is_replace = #{isReplace}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+            <if test="newMoldId != null "> and new_mold_id = #{newMoldId}</if>
+            <if test="newMoldCode != null and newMoldCode != ''"> and new_mold_code = #{newMoldCode}</if>
+            <if test="moldCodeParams != null and moldCodeParams != ''"> and mold_code like concat('%', #{moldCodeParams}, '%') OR new_mold_code like concat('%', #{moldCodeParams}, '%')</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectReplacedListListByParams" parameterType="com.ruoyi.system.domain.VO.ReplacedListVO" resultMap="ReplacedListResult">
+        SELECT
+            trl.replace_id,
+            trl.mold_id,
+            trl.mold_name,
+            trl.mold_code,
+            trl.facility_id,
+            trl.process_id,
+            trl.user_info_id,
+            trl.status,
+            trl.create_by,
+            trl.create_time,
+            trl.update_by,
+            trl.update_time,
+            trl.remark,
+            trl.type,
+            trl.facility_number,
+            trl.product_type_id,
+            trl.product_type_name,
+            trl.execute_user_id,
+            trl.is_replace,
+            trl.mold_type,
+            trl.new_mold_id,
+            trl.new_mold_code
+        FROM
+            t_replaced_list trl
+        LEFT JOIN nxp_facility nf ON trl.facility_id = nf.id
+--         LEFT JOIN nxp_mold nm ON nm.id = trl.mold_id
+        <where>
+            <if test="isReplace != null">
+                and nf.is_replace = #{isReplace}
+            </if>
+            <if test="process != null">
+                and nf.process = #{process}
+            </if>
+            <if test="userInfoId != null">
+                and trl.user_info_id = #{userInfoId}
+            </if>
+            <if test="moldType != null">
+                and trl.mold_type = #{moldType}
+            </if>
+            <if test="processList != null and processList.size > 0">
+                and nf.model in
+                <foreach item="processId" collection="processList" open="(" separator="," close=")">
+                    #{processId}
+                </foreach>
+            </if>
+            and trl.status != 4
+            order by trl.create_time desc
+        </where>
+    </select>
+
+    <select id="selectByFacilityIdAndProcessIdLimit1" parameterType="ReplacedList" resultMap="ReplacedListResult">
+        select top 1 replace_id, mold_id, mold_name, mold_code, facility_id, process_id, user_info_id, status, create_by, create_time, update_by, update_time, remark, type, facility_number,new_mold_id from t_replaced_list
+        <where>
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldName != null  and moldName != ''"> and mold_name like concat('%', #{moldName}, '%')</if>
+            <if test="moldCode != null  and moldCode != ''"> and mold_code = #{moldCode}</if>
+            <if test="facilityId != null "> and facility_id = #{facilityId}</if>
+            <if test="processId != null  and processId != ''"> and process_id = #{processId}</if>
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="facilityNumber != null "> and facility_number = #{facilityNumber}</if>
+            <if test="productTypeId != null "> and product_type_id = #{productTypeId}</if>
+            <if test="productTypeName != null  and productTypeName != ''"> and product_type_name = #{productTypeName}</if>
+            <if test="executeUserId != null "> and execute_user_id = #{executeUserId}</if>
+            <if test="isReplace != null "> and is_replace = #{isReplace}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+            <if test="newMoldId != null "> and new_mold_id = #{newMoldId}</if>
+            <if test="newMoldCode != null and newMoldCode != ''"> and new_mold_code = #{newMoldCode}</if>
+            and status = 2
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectByMoldCodeAndTypeLimit1" parameterType="ReplacedList" resultMap="ReplacedListResult">
+        select top 1 replace_id, mold_id, mold_name, mold_code, facility_id, process_id, user_info_id, status, create_by, create_time, update_by, update_time, remark, type, facility_number,new_mold_id from t_replaced_list
+        <where>
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldName != null  and moldName != ''"> and mold_name like concat('%', #{moldName}, '%')</if>
+            <if test="moldCode != null  and moldCode != ''"> and mold_code = #{moldCode}</if>
+            <if test="facilityId != null "> and facility_id = #{facilityId}</if>
+            <if test="processId != null  and processId != ''"> and process_id = #{processId}</if>
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="facilityNumber != null "> and facility_number = #{facilityNumber}</if>
+            <if test="productTypeId != null "> and product_type_id = #{productTypeId}</if>
+            <if test="productTypeName != null  and productTypeName != ''"> and product_type_name = #{productTypeName}</if>
+            <if test="executeUserId != null "> and execute_user_id = #{executeUserId}</if>
+            <if test="isReplace != null "> and is_replace = #{isReplace}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+            <if test="newMoldId != null "> and new_mold_id = #{newMoldId}</if>
+            <if test="newMoldCode != null and newMoldCode != ''"> and new_mold_code = #{newMoldCode}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectReplacedListById" parameterType="Long" resultMap="ReplacedListResult">
+        <include refid="selectReplacedListVo"/>
+        where replace_id = #{replaceId}
+    </select>
+        
+    <insert id="insertReplacedList" parameterType="ReplacedList" useGeneratedKeys="true" keyProperty="replaceId">
+        insert into t_replaced_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">mold_id,</if>
+            <if test="moldName != null">mold_name,</if>
+            <if test="moldCode != null">mold_code,</if>
+            <if test="facilityId != null">facility_id,</if>
+            <if test="processId != null">process_id,</if>
+            <if test="userInfoId != null">user_info_id,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="type != null">type,</if>
+            <if test="facilityNumber != null">facility_number,</if>
+            <if test="productTypeId != null">product_type_id,</if>
+            <if test="productTypeName != null">product_type_name,</if>
+            <if test="executeUserId != null">execute_user_id,</if>
+            <if test="isReplace != null">is_replace,</if>
+            <if test="moldType != null">mold_type,</if>
+            <if test="newMoldId != null">new_mold_id,</if>
+            <if test="newMoldCode != null">new_mold_code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">#{moldId},</if>
+            <if test="moldName != null">#{moldName},</if>
+            <if test="moldCode != null">#{moldCode},</if>
+            <if test="facilityId != null">#{facilityId},</if>
+            <if test="processId != null">#{processId},</if>
+            <if test="userInfoId != null">#{userInfoId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="type != null">#{type},</if>
+            <if test="facilityNumber != null">#{facilityNumber},</if>
+            <if test="productTypeId != null">#{productTypeId},</if>
+            <if test="productTypeName != null">#{productTypeName},</if>
+            <if test="executeUserId != null">#{productTypeName},</if>
+            <if test="isReplace != null">#{isReplace},</if>
+            <if test="moldType != null">#{moldType},</if>
+            <if test="newMoldId != null">#{newMoldId},</if>
+            <if test="newMoldCode != null">#{newMoldCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateReplacedList" parameterType="ReplacedList">
+        update t_replaced_list
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="moldId != null">mold_id = #{moldId},</if>
+            <if test="moldName != null">mold_name = #{moldName},</if>
+            <if test="moldCode != null">mold_code = #{moldCode},</if>
+            <if test="facilityId != null">facility_id = #{facilityId},</if>
+            <if test="processId != null">process_id = #{processId},</if>
+            <if test="userInfoId != null">user_info_id = #{userInfoId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="facilityNumber != null">facility_number = #{facilityNumber},</if>
+            <if test="productTypeId != null ">product_type_id = #{productTypeId},</if>
+            <if test="productTypeName != null  and productTypeName != ''">product_type_name = #{productTypeName},</if>
+            <if test="executeUserId != null ">execute_user_id = #{executeUserId},</if>
+            <if test="isReplace != null ">is_replace = #{isReplace},</if>
+            <if test="moldType != null">mold_type = #{moldType},</if>
+            <if test="newMoldId != null">new_mold_id = #{newMoldId},</if>
+            <if test="newMoldCode != null and newMoldCode != ''">new_mold_Code = #{newMoldCode},</if>
+        </trim>
+        where replace_id = #{replaceId}
+    </update>
+
+    <delete id="deleteReplacedListById" parameterType="Long">
+        delete from t_replaced_list where replace_id = #{replaceId}
+    </delete>
+
+    <delete id="deleteReplacedListByIds" parameterType="String">
+        delete from t_replaced_list where replace_id in 
+        <foreach item="replaceId" collection="array" open="(" separator="," close=")">
+            #{replaceId}
+        </foreach>
+    </delete>
+
+    <select id="selectReplacedListListQuartz" parameterType="ReplacedList" resultMap="ReplacedListResult">
+        <include refid="selectReplacedListVo"/>
+        <where>
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldName != null  and moldName != ''"> and mold_name like concat('%', #{moldName}, '%')</if>
+            <if test="moldCode != null  and moldCode != ''"> and mold_code = #{moldCode}</if>
+            <if test="facilityId != null "> and facility_id = #{facilityId}</if>
+            <if test="processId != null  and processId != ''"> and process_id = #{processId}</if>
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="facilityNumber != null "> and facility_number = #{facilityNumber}</if>
+            <if test="productTypeId != null "> and product_type_id = #{productTypeId}</if>
+            <if test="productTypeName != null  and productTypeName != ''"> and product_type_name = #{productTypeName}</if>
+            <if test="executeUserId != null "> and execute_user_id = #{executeUserId}</if>
+            <if test="isReplace != null "> and is_replace = #{isReplace}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+            <if test="newMoldId != null "> and new_mold_id = #{newMoldId}</if>
+            <if test="newMoldCode != null and newMoldCode != ''"> and new_mold_code = #{newMoldCode}</if>
+            <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">and update_time between #{params.beginTime} and #{params.endTime}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectByStatus" parameterType="ReplacedList" resultMap="ReplacedListResult">
+        select top 1 replace_id, mold_id, mold_name, mold_code, facility_id, process_id, user_info_id, status, create_by, create_time, update_by, update_time, remark, type, facility_number,new_mold_id from t_replaced_list
+        <where>
+            <if test="facilityNumber != null and facilityNumber != ''">and facility_number = #{facilityNumber}</if>
+            and status != 4
+        </where>
+    </select>
+</mapper>

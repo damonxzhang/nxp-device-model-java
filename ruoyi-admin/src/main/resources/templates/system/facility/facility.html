@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('设备管理列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>设备名称：</label>
+                                <input type="text" name="name"/>
+                            </li>
+                            <li>
+                                <label>设备编号：</label>
+                                <input type="text" name="number"/>
+                            </li>
+                            <li>
+                                <label>创建人：</label>
+                                <input type="text" name="create_user"/>
+                            </li>
+                            <li>
+                                <label>型号：</label>
+                                <input type="text" name="model"/>
+                            </li>
+                            <li>
+                                <label>区域：</label>
+                                <input type="text" name="area"/>
+                            </li>
+                            <li>
+                                <label>班别：</label>
+                                <input type="text" name="shift"/>
+                            </li>
+                            <li>
+                                <label>序列号：</label>
+                                <input type="text" name="serial_no"/>
+                            </li>
+                            <li>
+                                <label>设备厂家：</label>
+                                <input type="text" name="vendor_id"/>
+                            </li>
+                            <li>
+                                <label>资产号：</label>
+                                <input type="text" name="asset_no"/>
+                            </li>
+                            <li>
+                                <label>购买日期：</label>
+                                <input type="text" name="buy_off_date"/>
+                            </li>
+                            <li>
+                                <label>cba通过日期：</label>
+                                <input type="text" name="cba_pass_date"/>
+                            </li>
+                            <li>
+                                <label>负责人：</label>
+                                <input type="text" name="head_user"/>
+                            </li>
+                            <li>
+                                <label>状态：</label>
+                                <select name="status">
+                                    <option value="">所有</option>
+                                    <option value="-1">代码生成请选择字典属性</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>是否可用：</label>
+                                <input type="text" name="is_ok"/>
+                            </li>
+                            <li>
+                                <label>删除时间：</label>
+                                <input type="text" name="delete_time"/>
+                            </li>
+                            <li>
+                                <label>工序：</label>
+                                <input type="text" name="process"/>
+                            </li>
+                            <li>
+                                <label>设备相关人：</label>
+                                <input type="text" name="relevant_people"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:facility:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:facility:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:facility:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:facility:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:facility:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:facility:remove')}]];
+        var prefix = ctx + "system/facility";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "设备管理",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'name',
+                    title: '设备名称'
+                },
+                {
+                    field: 'number',
+                    title: '设备编号'
+                },
+                {
+                    field: 'create_user',
+                    title: '创建人'
+                },
+                {
+                    field: 'model',
+                    title: '型号'
+                },
+                {
+                    field: 'area',
+                    title: '区域'
+                },
+                {
+                    field: 'shift',
+                    title: '班别'
+                },
+                {
+                    field: 'serial_no',
+                    title: '序列号'
+                },
+                {
+                    field: 'vendor_id',
+                    title: '设备厂家'
+                },
+                {
+                    field: 'asset_no',
+                    title: '资产号'
+                },
+                {
+                    field: 'buy_off_date',
+                    title: '购买日期'
+                },
+                {
+                    field: 'cba_pass_date',
+                    title: 'cba通过日期'
+                },
+                {
+                    field: 'head_user',
+                    title: '负责人'
+                },
+                {
+                    field: 'status',
+                    title: '状态'
+                },
+                {
+                    field: 'is_ok',
+                    title: '是否可用'
+                },
+                {
+                    field: 'file',
+                    title: '附件'
+                },
+                {
+                    field: 'delete_time',
+                    title: '删除时间'
+                },
+                {
+                    field: 'id',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'process',
+                    title: '工序'
+                },
+                {
+                    field: 'relevant_people',
+                    title: '设备相关人'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

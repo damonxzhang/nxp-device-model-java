@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('维修详情')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-repairService-edit" th:object="${nxpInspectionService}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修内容：</label>
+                <div class="col-sm-8">
+                    <input name="content_id" th:field="*{contentName}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修位置：</label>
+                <div class="col-sm-8">
+                    <input name="position_id" th:field="*{positionName}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修人：</label>
+                <div class="col-sm-8">
+                    <input name="user_info_id" th:field="*{user_info_name}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修情况说明：</label>
+                <div class="col-sm-8">
+                    <input name="description" th:field="*{description}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+<!--            <div class="form-group">    -->
+<!--                <label class="col-sm-3 control-label">创建时间：</label>-->
+<!--                <div class="col-sm-8">-->
+<!--                    <input name="created_at" th:field="*{created_at}" class="form-control" type="text">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="form-group">    -->
+<!--                <label class="col-sm-3 control-label">修改时间：</label>-->
+<!--                <div class="col-sm-8">-->
+<!--                    <input name="updated_at" th:field="*{updated_at}" class="form-control" type="text">-->
+<!--                </div>-->
+<!--            </div>-->
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="service_time" th:value="${#dates.format(nxpInspectionService.service_time, 'yyyy-MM-dd hh:mm:ss')}" class="form-control" placeholder="yyyy-MM-dd" type="text" disabled>
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修照片：</label>
+                <div class="col-sm-8">
+                    <a th:each="nxpInspectionFile : ${nxpInspectionFile}" th:href="${nxpInspectionFile.file_path}" th:title="${nxpInspectionFile.file_path}" target="_blank">
+                        <img style="width: 20%;height: 20%" th:each="nxpInspectionFile : ${nxpInspectionFile}" th:src="${nxpInspectionFile.file_path}" class="form-control" ></a>
+                </div>
+            </div>
+<!--            <div id='big_div' style="display:none;position: relative;">&lt;!&ndash; 弹出层 &ndash;&gt;-->
+<!--                &lt;!&ndash; <p id="close">关闭</p> &ndash;&gt;-->
+<!--                <p id="aa"><img class="big_img" th:src="*{repair_file_path}" /></p>-->
+<!--            </div>-->
+<!--            <div class="form-group">    -->
+<!--                <label class="col-sm-3 control-label">维修拍照id：</label>-->
+<!--                <div class="col-sm-8">-->
+<!--                    <input name="file_id" th:field="*{file_id}" class="form-control" type="text" disabled>-->
+<!--                </div>-->
+<!--            </div>-->
+            <div class="form-group">
+                <label class="col-sm-3 control-label">维修状态：</label>
+                <div class="col-sm-8">
+                    <select name="status" class="form-control m-b" th:with="type=${@dict.getType('wx_status')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设备编号：</label>
+                <div class="col-sm-8">
+                    <input name="facility_id" th:field="*{facility_name}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修结束时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="end_time" th:value="${#dates.format(nxpInspectionService.end_time, 'yyyy-MM-dd hh:mm:ss')}" class="form-control" placeholder="yyyy-MM-dd" type="text" disabled>
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/repairService";
+        $("#form-repairService-edit").validate({
+            focusCleanup: true
+        });
+        $(document).ready(function () {
+            var small = $('.small_img'); //小图
+            var big_div = $('#big_div'); //大图弹出层
+            var small_size = $('#small_size'); //显示小图实际尺寸区域
+            var big_size = $('#big_size'); //显示大图实际尺寸区域
+            var smallWidth = small.width(); //小图宽度
+            var smallHeight = small.height(); //小图高度
+            var bigWidth = $('.big_img').width(); //大图宽度
+            var bigHeight = $('.big_img').height(); //大图高度
+            var small_str = smallWidth + ' X ' + smallHeight + ' 像素';
+            var big_str = bigWidth + ' X ' + bigHeight + ' 像素';
+            small_size.text(small_str);  //显示小图片实际尺寸
+            small.click(function () { //点击显示大图弹出层
+                big_div.show();//也可换做big_div.toggle();去除关闭按钮
+                big_size.text(big_str);
+                $('#bb').hide();
+            });
+
+            $('#aa').click(function () {
+                big_div.hide();
+                $('#bb').show();
+
+            });
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-repairService-edit').serialize());
+            }
+        }
+
+        $("input[name='service_time']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='end_time']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpUserInfoMapper">
+    
+    <resultMap type="NxpUserInfo" id="NxpUserInfoResult">
+        <result property="id"    column="id"    />
+        <result property="role_id"    column="role_id"    />
+        <result property="status"    column="status"    />
+        <result property="leader_uid"    column="leader_uid"    />
+        <result property="pid"    column="pid"    />
+        <result property="tel"    column="tel"    />
+        <result property="chinese_name"    column="chinese_name"    />
+        <result property="english_name"    column="english_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="email"    column="email"    />
+        <result property="position"    column="position"    />
+        <result property="shift"    column="shift"    />
+        <result property="area"    column="area"    />
+        <result property="station_id"    column="station_id"    />
+        <result property="sfc_number"    column="sfc_number"    />
+        <result property="fsl_number"    column="fsl_number"    />
+        <result property="meal_card_code"    column="meal_card_code"    />
+        <result property="wbi_code"    column="wbi_code"    />
+        <result property="badge_code"    column="badge_code"    />
+        <result property="skill"    column="skill"    />
+        <result property="department_number"    column="department_number"    />
+        <result property="section"    column="section"    />
+        <result property="create_time"    column="create_time"    />
+        <result property="update_time"    column="update_time"    />
+        <result property="gemba_role"    column="gemba_role"    />
+        <result property="team"    column="team"    />
+    </resultMap>
+
+    <sql id="selectNxpUserInfoVo">
+        select id, role_id, status, leader_uid, pid, tel, chinese_name, english_name, sex, email, [position], shift, area, station_id, sfc_number, fsl_number, meal_card_code, wbi_code, badge_code, skill, department_number, [section], create_time, update_time, gemba_role, team from nxp_user_info
+    </sql>
+
+    <select id="selectNxpUserInfoList" parameterType="NxpUserInfo" resultMap="NxpUserInfoResult">
+        <include refid="selectNxpUserInfoVo"/>
+        <where>  
+            <if test="role_id != null "> and role_id = #{role_id}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="leader_uid != null "> and leader_uid = #{leader_uid}</if>
+            <if test="pid != null  and pid != ''"> and pid = #{pid}</if>
+            <if test="tel != null  and tel != ''"> and tel = #{tel}</if>
+            <if test="chinese_name != null  and chinese_name != ''"> and chinese_name like concat('%', #{chinese_name}, '%')</if>
+            <if test="english_name != null  and english_name != ''"> and english_name like concat('%', #{english_name}, '%')</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="position != null "> and position = #{position}</if>
+            <if test="shift != null "> and shift = #{shift}</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="station_id != null "> and station_id = #{station_id}</if>
+            <if test="sfc_number != null  and sfc_number != ''"> and sfc_number = #{sfc_number}</if>
+            <if test="fsl_number != null  and fsl_number != ''"> and fsl_number = #{fsl_number}</if>
+            <if test="meal_card_code != null  and meal_card_code != ''"> and meal_card_code = #{meal_card_code}</if>
+            <if test="wbi_code != null  and wbi_code != ''"> and wbi_code = #{wbi_code}</if>
+            <if test="badge_code != null  and badge_code != ''"> and badge_code = #{badge_code}</if>
+            <if test="skill != null "> and skill = #{skill}</if>
+            <if test="department_number != null  and department_number != ''"> and department_number = #{department_number}</if>
+            <if test="section != null  and section != ''"> and section = #{section}</if>
+            <if test="gemba_role != null "> and gemba_role = #{gemba_role}</if>
+            <if test="team != null "> and team = #{team}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpUserInfoById" parameterType="Long" resultMap="NxpUserInfoResult">
+        <include refid="selectNxpUserInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpUserInfo" parameterType="NxpUserInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="role_id != null">role_id,</if>
+            <if test="status != null">status,</if>
+            <if test="leader_uid != null">leader_uid,</if>
+            <if test="pid != null">pid,</if>
+            <if test="tel != null">tel,</if>
+            <if test="chinese_name != null and chinese_name != ''">chinese_name,</if>
+            <if test="english_name != null">english_name,</if>
+            <if test="sex != null">sex,</if>
+            <if test="email != null">email,</if>
+            <if test="position != null">position,</if>
+            <if test="shift != null">shift,</if>
+            <if test="area != null">area,</if>
+            <if test="station_id != null">station_id,</if>
+            <if test="sfc_number != null">sfc_number,</if>
+            <if test="fsl_number != null">fsl_number,</if>
+            <if test="meal_card_code != null and meal_card_code != ''">meal_card_code,</if>
+            <if test="wbi_code != null">wbi_code,</if>
+            <if test="badge_code != null">badge_code,</if>
+            <if test="skill != null">skill,</if>
+            <if test="department_number != null">department_number,</if>
+            <if test="section != null and section != ''">section,</if>
+            <if test="create_time != null">create_time,</if>
+            <if test="update_time != null">update_time,</if>
+            <if test="gemba_role != null">gemba_role,</if>
+            <if test="team != null">team,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="role_id != null">#{role_id},</if>
+            <if test="status != null">#{status},</if>
+            <if test="leader_uid != null">#{leader_uid},</if>
+            <if test="pid != null">#{pid},</if>
+            <if test="tel != null">#{tel},</if>
+            <if test="chinese_name != null and chinese_name != ''">#{chinese_name},</if>
+            <if test="english_name != null">#{english_name},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="email != null">#{email},</if>
+            <if test="position != null">#{position},</if>
+            <if test="shift != null">#{shift},</if>
+            <if test="area != null">#{area},</if>
+            <if test="station_id != null">#{station_id},</if>
+            <if test="sfc_number != null">#{sfc_number},</if>
+            <if test="fsl_number != null">#{fsl_number},</if>
+            <if test="meal_card_code != null and meal_card_code != ''">#{meal_card_code},</if>
+            <if test="wbi_code != null">#{wbi_code},</if>
+            <if test="badge_code != null">#{badge_code},</if>
+            <if test="skill != null">#{skill},</if>
+            <if test="department_number != null">#{department_number},</if>
+            <if test="section != null and section != ''">#{section},</if>
+            <if test="create_time != null">#{create_time},</if>
+            <if test="update_time != null">#{update_time},</if>
+            <if test="gemba_role != null">#{gemba_role},</if>
+            <if test="team != null">#{team},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpUserInfo" parameterType="NxpUserInfo">
+        update nxp_user_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="role_id != null">role_id = #{role_id},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="leader_uid != null">leader_uid = #{leader_uid},</if>
+            <if test="pid != null">pid = #{pid},</if>
+            <if test="tel != null">tel = #{tel},</if>
+            <if test="chinese_name != null and chinese_name != ''">chinese_name = #{chinese_name},</if>
+            <if test="english_name != null">english_name = #{english_name},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="shift != null">shift = #{shift},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="station_id != null">station_id = #{station_id},</if>
+            <if test="sfc_number != null">sfc_number = #{sfc_number},</if>
+            <if test="fsl_number != null">fsl_number = #{fsl_number},</if>
+            <if test="meal_card_code != null and meal_card_code != ''">meal_card_code = #{meal_card_code},</if>
+            <if test="wbi_code != null">wbi_code = #{wbi_code},</if>
+            <if test="badge_code != null">badge_code = #{badge_code},</if>
+            <if test="skill != null">skill = #{skill},</if>
+            <if test="department_number != null">department_number = #{department_number},</if>
+            <if test="section != null and section != ''">section = #{section},</if>
+            <if test="create_time != null">create_time = #{create_time},</if>
+            <if test="update_time != null">update_time = #{update_time},</if>
+            <if test="gemba_role != null">gemba_role = #{gemba_role},</if>
+            <if test="team != null">team = #{team},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpUserInfoById" parameterType="Long">
+        delete from nxp_user_info where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpUserInfoByIds" parameterType="String">
+        delete from nxp_user_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectNxpUserInfoByIds" parameterType="string" resultMap="NxpUserInfoResult">
+        <include refid="selectNxpUserInfoVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

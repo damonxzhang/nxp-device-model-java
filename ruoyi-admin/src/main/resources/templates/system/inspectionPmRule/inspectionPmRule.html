@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('周PM检查规则列表')" />
+    <th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: bootstrap-select-css" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>工序：</label>
+                                <select name="process" id="process">
+                                    <option value="">所有</option>
+                                    <option th:each="process:${processes}" th:text="${process.name}" th:value="${process.id}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>周PM人：</label>
+                                <select class="form-control" name="user_id">
+                                    <option value="">所有</option>
+                                    <option th:each="nxpUserInfo : ${nxpUserInfos}" th:text="${nxpUserInfo.chinese_name}" th:value="${nxpUserInfo.id}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>设备：</label>
+                                <select class="form-control" name="facility_id">
+                                    <option value="">所有</option>
+                                    <option th:each="facility : ${facilityList}" th:text="${facility.number}" th:value="${facility.id}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>检查周期：</label>
+                                <input type="text" name="cycleShow" placeholder="请输入检查周期"/>
+                            </li>
+                            <li>
+                                <label>规则开始时间：</label>
+                                <input type="text" class="time-input" placeholder="请选择规则开始时间" name="beginTime" data-type="datetime" data-format="yyyy-MM-dd HH:mm:ss"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:inspectionPmRule:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:inspectionPmRule:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:inspectionPmRule:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+     <th:block th:include="include :: select2-js" />
+     <th:block th:include="include :: bootstrap-select-js" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:inspectionPmRule:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:inspectionPmRule:remove')}]];
+        var statusDatas = [[${@dict.getType('is_enable')}]];
+        var userId = [[${@permission.getPrincipalProperty('userId')}]];
+        var prefix = ctx + "system/inspectionPmRule";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "周PM检查规则",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'id',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'facilityNumber',
+                    title: '设备'
+                },
+                {
+                    field: 'userName',
+                    title: '周PM人'
+                },
+                {
+                    field: 'reviewUserName',
+                    title: '复查人'
+                },
+                {
+                    field: 'cycleShow',
+                    title: '检查周期(天)'
+                },
+                {
+                    field: 'groupName',
+                    title: '检查组'
+                },
+                {
+                    field: 'beginTime',
+                    title: '规则开始时间'
+                },
+                {
+                    field: 'status',
+                    title: '状态',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(statusDatas, value);
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        if (userId == row.processOwner || userId == 1) {
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        }
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

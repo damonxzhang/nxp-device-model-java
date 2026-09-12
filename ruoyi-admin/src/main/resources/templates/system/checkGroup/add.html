@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增检查组管理')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-checkGroup-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">检查组名称：</label>
+                <div class="col-sm-8">
+                    <input name="groupName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">工序：</label>
+                <div class="col-sm-8">
+                    <select name="processId" class="form-control m-b" th:with="type=${processes}">
+                        <option th:each="dict : ${type}" th:text="${dict.name}" th:value="${dict.id}"></option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/checkGroup"
+        $("#form-checkGroup-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-checkGroup-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

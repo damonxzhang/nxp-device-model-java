@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpMoldComponentAbnormalLogsMapper">
+    
+    <resultMap type="NxpMoldComponentAbnormalLogs" id="NxpMoldComponentAbnormalLogsResult">
+        <result property="id"    column="id"    />
+        <result property="moldId"    column="mold_id"    />
+        <result property="moldCode"    column="mold_code"    />
+        <result property="componentName"    column="component_name"    />
+        <result property="componentId"    column="component_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="logType"    column="log_type"    />
+        <result property="moldType"    column="mold_type"    />
+    </resultMap>
+
+    <sql id="selectNxpMoldComponentAbnormalLogsVo">
+        select id, mold_id, mold_code, component_name, component_id, create_by, create_time, update_by, update_time, remark, log_type, mold_type from nxp_mold_component_abnormal_logs
+    </sql>
+
+    <select id="selectNxpMoldComponentAbnormalLogsList" parameterType="NxpMoldComponentAbnormalLogs" resultMap="NxpMoldComponentAbnormalLogsResult">
+        <include refid="selectNxpMoldComponentAbnormalLogsVo"/>
+        <where>  
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldCode != null  and moldCode != ''"> and mold_code = #{moldCode}</if>
+            <if test="componentName != null  and componentName != ''"> and component_name like concat('%', #{componentName}, '%')</if>
+            <if test="componentId != null "> and component_id = #{componentId}</if>
+            <if test="logType != null "> and log_type = #{logType}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectNxpMoldComponentAbnormalLogsById" parameterType="Long" resultMap="NxpMoldComponentAbnormalLogsResult">
+        <include refid="selectNxpMoldComponentAbnormalLogsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpMoldComponentAbnormalLogs" parameterType="NxpMoldComponentAbnormalLogs" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_mold_component_abnormal_logs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">mold_id,</if>
+            <if test="moldCode != null">mold_code,</if>
+            <if test="componentName != null">component_name,</if>
+            <if test="componentId != null">component_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="logType != null">log_type,</if>
+            <if test="moldType != null">mold_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">#{moldId},</if>
+            <if test="moldCode != null">#{moldCode},</if>
+            <if test="componentName != null">#{componentName},</if>
+            <if test="componentId != null">#{componentId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="logType != null">#{logType},</if>
+            <if test="moldType != null">#{moldType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpMoldComponentAbnormalLogs" parameterType="NxpMoldComponentAbnormalLogs">
+        update nxp_mold_component_abnormal_logs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="moldId != null">mold_id = #{moldId},</if>
+            <if test="moldCode != null">mold_code = #{moldCode},</if>
+            <if test="componentName != null">component_name = #{componentName},</if>
+            <if test="componentId != null">component_id = #{componentId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="logType != null">log_type = #{logType},</if>
+            <if test="moldType != null">mold_type = #{moldType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpMoldComponentAbnormalLogsById" parameterType="Long">
+        delete from nxp_mold_component_abnormal_logs where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpMoldComponentAbnormalLogsByIds" parameterType="String">
+        delete from nxp_mold_component_abnormal_logs where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

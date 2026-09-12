@@ -1,0 +1,152 @@
+package com.ruoyi.web.controller.system;
+
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.domain.NxpMold;
+import com.ruoyi.system.domain.NxpMoldComponent;
+import com.ruoyi.system.domain.NxpMoldType;
+import com.ruoyi.system.service.INxpMoldComponentService;
+import com.ruoyi.system.service.INxpMoldService;
+import com.ruoyi.system.service.INxpMoldTypeService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * 模具部件管理Controller
+ * 
+ * @author YanCheng Liu
+ * @date 2023-06-28
+ */
+@Controller
+@RequestMapping("/system/baNxpMoldComponent")
+public class BaNxpMoldComponentController extends BaseController
+{
+    private String prefix = "system/baNxpMoldComponent";
+
+    @Autowired
+    private INxpMoldComponentService nxpMoldComponentService;
+    @Autowired
+    private INxpMoldService nxpMoldService;
+    @Autowired
+    private INxpMoldTypeService nxpMoldTypeService;
+
+    @RequiresPermissions("system:baNxpMoldComponent:view")
+    @GetMapping()
+    public String nxpMoldComponent(ModelMap mmap)
+    {
+        NxpMoldType nxpMoldType = new NxpMoldType();
+        nxpMoldType.setStatus(1);
+        nxpMoldType.setMoldType(2);
+        List<NxpMoldType> nxpMoldTypes = nxpMoldTypeService.selectNxpMoldTypeList(nxpMoldType);
+        mmap.put("nxpMoldTypes",nxpMoldTypes);
+        return prefix + "/nxpMoldComponent";
+    }
+
+    /**
+     * 查询模具部件管理列表
+     */
+    @RequiresPermissions("system:baNxpMoldComponent:list")
+    @PostMapping("/list")
+    @ResponseBody
+    public TableDataInfo list(NxpMoldComponent nxpMoldComponent)
+    {
+        startPage();
+        nxpMoldComponent.setMoldType(2);
+        List<NxpMoldComponent> list = nxpMoldComponentService.selectNxpMoldComponentList(nxpMoldComponent);
+        return getDataTable(list);
+    }
+
+    /**
+     * 导出模具部件管理列表
+     */
+    @RequiresPermissions("system:baNxpMoldComponent:export")
+    @Log(title = "模具部件管理", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    @ResponseBody
+    public AjaxResult export(NxpMoldComponent nxpMoldComponent)
+    {
+        List<NxpMoldComponent> list = nxpMoldComponentService.selectNxpMoldComponentList(nxpMoldComponent);
+        ExcelUtil<NxpMoldComponent> util = new ExcelUtil<NxpMoldComponent>(NxpMoldComponent.class);
+        return util.exportExcel(list, "nxpMoldComponent");
+    }
+
+    /**
+     * 新增模具部件管理
+     */
+    @GetMapping("/add")
+    public String add(ModelMap mmap)
+    {
+        NxpMold nxpMold = new NxpMold();
+        nxpMold.setMoldType(2);
+        List<NxpMold> nxpMolds = nxpMoldService.selectNxpMoldList(nxpMold);
+        mmap.put("molds",nxpMolds);
+        NxpMoldType nxpMoldType = new NxpMoldType();
+        nxpMoldType.setStatus(1);
+        nxpMoldType.setMoldType(2);
+        List<NxpMoldType> nxpMoldTypes = nxpMoldTypeService.selectNxpMoldTypeList(nxpMoldType);
+        mmap.put("nxpMoldTypes",nxpMoldTypes);
+        return prefix + "/add";
+    }
+
+    /**
+     * 新增保存模具部件管理
+     */
+    @RequiresPermissions("system:baNxpMoldComponent:add")
+    @Log(title = "模具部件管理", businessType = BusinessType.INSERT)
+    @PostMapping("/add")
+    @ResponseBody
+    public AjaxResult addSave(NxpMoldComponent nxpMoldComponent)
+    {
+        return nxpMoldComponentService.insertNxpMoldComponent(nxpMoldComponent);
+    }
+
+    /**
+     * 修改模具部件管理
+     */
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") Long id, ModelMap mmap)
+    {
+        NxpMoldComponent nxpMoldComponent = nxpMoldComponentService.selectNxpMoldComponentById(id);
+        mmap.put("nxpMoldComponent", nxpMoldComponent);
+        /*List<NxpMold> nxpMolds = nxpMoldService.selectNxpMoldListAdmin(new NxpMold());
+        mmap.put("molds",nxpMolds);
+        NxpMoldType nxpMoldType = new NxpMoldType();
+        nxpMoldType.setStatus(1);
+        List<NxpMoldType> nxpMoldTypes = nxpMoldTypeService.selectNxpMoldTypeListAdmin(nxpMoldType);
+        mmap.put("nxpMoldTypes",nxpMoldTypes);*/
+        return prefix + "/edit";
+    }
+
+    /**
+     * 修改保存模具部件管理
+     */
+    @RequiresPermissions("system:baNxpMoldComponent:edit")
+    @Log(title = "模具部件管理", businessType = BusinessType.UPDATE)
+    @PostMapping("/edit")
+    @ResponseBody
+    public AjaxResult editSave(NxpMoldComponent nxpMoldComponent)
+    {
+        return toAjax(nxpMoldComponentService.updateNxpMoldComponent(nxpMoldComponent));
+    }
+
+    /**
+     * 删除模具部件管理
+     */
+    @RequiresPermissions("system:baNxpMoldComponent:remove")
+    @Log(title = "模具部件管理", businessType = BusinessType.DELETE)
+    @PostMapping( "/remove")
+    @ResponseBody
+    public AjaxResult remove(String ids)
+    {
+        return toAjax(nxpMoldComponentService.deleteNxpMoldComponentByIds(ids));
+    }
+}

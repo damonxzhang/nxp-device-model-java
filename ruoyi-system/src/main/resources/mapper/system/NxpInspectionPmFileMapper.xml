@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionPmFileMapper">
+    
+    <resultMap type="NxpInspectionPmFile" id="NxpInspectionPmFileResult">
+        <result property="id"    column="id"    />
+        <result property="file_path"    column="file_path"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="pm_id"    column="pm_id"    />
+        <result property="pm_check_id"    column="pm_check_id"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionPmFileVo">
+        select id, file_path, create_time, pm_id, pm_check_id, type from nxp_inspection_pm_file
+    </sql>
+
+    <select id="selectNxpInspectionPmFileList" parameterType="NxpInspectionPmFile" resultMap="NxpInspectionPmFileResult">
+        <include refid="selectNxpInspectionPmFileVo"/>
+        <where>  
+            <if test="file_path != null  and file_path != ''"> and file_path = #{file_path}</if>
+            <if test="pm_id != null "> and pm_id = #{pm_id}</if>
+            <if test="pm_check_id != null "> and pm_check_id = #{pm_check_id}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpInspectionPmFileById" parameterType="Long" resultMap="NxpInspectionPmFileResult">
+        <include refid="selectNxpInspectionPmFileVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpInspectionPmFile" parameterType="NxpInspectionPmFile" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_pm_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="file_path != null">file_path,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="pm_id != null">pm_id,</if>
+            <if test="pm_check_id != null">pm_check_id,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="file_path != null">#{file_path},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="pm_id != null">#{pm_id},</if>
+            <if test="pm_check_id != null">#{pm_check_id},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionPmFile" parameterType="NxpInspectionPmFile">
+        update nxp_inspection_pm_file
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="file_path != null">file_path = #{file_path},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="pm_id != null">pm_id = #{pm_id},</if>
+            <if test="pm_check_id != null">pm_check_id = #{pm_check_id},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionPmFileById" parameterType="Long">
+        delete from nxp_inspection_pm_file where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionPmFileByIds" parameterType="String">
+        delete from nxp_inspection_pm_file where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectNxpInspectionPmFileByIds" parameterType="string" resultMap="NxpInspectionPmFileResult">
+        <include refid="selectNxpInspectionPmFileVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

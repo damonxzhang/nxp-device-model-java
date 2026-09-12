@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('待更换模具列表')" />
+    <th:block th:include="include :: bootstrap-select-css" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>模具编号：</label>
+                                <input type="text" name="moldCodeParams"/>
+                            </li>
+                            <li>
+                                <label>工序：</label>
+                                <select name="processId" id="processId">
+<!--                                    <option value="">所有</option>-->
+<!--                                    <option th:each="process:${processes}" th:text="${process.name}" th:value="${process.id}"></option>-->
+                                    <option value="6">Ball Attachment</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>设备：</label>
+                                <select name="facilityId" id="facility">
+                                    <option value="">所有</option>
+                                    <option th:each="facility:${nxpFacilities}" th:text="${facility.number}" th:value="${facility.id}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>产品类型：</label>
+                                <select name="productTypeId" class="selectpicker" data-live-search="true">
+                                    <option value="">所有</option>
+                                    <option th:each="nxpProductType:${nxpProductTypes}" th:text="${nxpProductType.productTypeName}" th:value="${nxpProductType.id}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>类型：</label>
+                                <select name="type" th:with="type=${@dict.getType('mold_replaced_type')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>状态：</label>
+                                <select name="status" th:with="type=${@dict.getType('mold_replaced_status')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>接单人：</label>
+                                <select name="executeUserId" class="selectpicker" data-live-search="true" th:with="type=${nxpUserLabels}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.chineseName}" th:value="${dict.userInfoId}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:baReplacedList:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:baReplacedList:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:baReplacedList:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+     <th:block th:include="include :: bootstrap-select-js" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:baReplacedList:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:baReplacedList:remove')}]];
+        var detailsFlag = [[${@permission.hasPermi('system:baReplacedList:details')}]];
+        var moldReplacedTypeDatas = [[${@dict.getType('mold_replaced_type')}]];
+        var moldReplacedStatusDatas = [[${@dict.getType('mold_replaced_status')}]];
+        var moldTypeDatas = [[${@dict.getType('mold_type')}]];
+        var prefix = ctx + "system/baReplacedList";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "待更换模具",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'replaceId',
+                    title: '主键id',
+                    visible: false
+                },
+                {
+                    field: 'moldCode',
+                    title: '旧模具编号'
+                },
+                {
+                    field: 'newMoldCode',
+                    title: '新模具编号'
+                },
+                {
+                    field: 'moldType',
+                    title: '模具类型',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(moldTypeDatas, value);
+                    }
+                },
+                {
+                    field: 'facilityNumber',
+                    title: '设备'
+                },
+                {
+                    field: 'process',
+                    title: '工序'
+                },
+                {
+                    field: 'productTypeName',
+                    title: '产品类型'
+                },
+                {
+                    field: 'userInfoName',
+                    title: '提交人'
+                },
+                {
+                    field: 'executeUserInfoName',
+                    title: '接单人'
+                },
+                {
+                    field: 'type',
+                    title: '类型',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(moldReplacedTypeDatas, value);
+                    }
+                },
+                {
+                    field: 'status',
+                    title: '状态',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(moldReplacedStatusDatas, value);
+                    }
+                },
+                {
+                    field: 'createTime',
+                    title: '申请时间',
+                    formatter: function(value, row, index) {
+                        return $.common.dateFormat(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                {
+                    field: 'updateTime',
+                    title: '操作时间',
+                    formatter: function(value, row, index) {
+                        return $.common.dateFormat(value, "yyyy-MM-dd HH:mm:ss");
+                    }
+                },
+                {
+                    field: 'remark',
+                    title: '备注'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + detailsFlag + '" href="javascript:void(0)" onclick="details(\'' + row.replaceId + '\')"><i class="fa fa-edit"></i>详情</a> ');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.replaceId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.replaceId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+
+        function details(id) {
+            table.set();
+            if($.common.isEmpty(id) && table.options.type == table_type.bootstrapTreeTable) {
+                var row = $("#" + table.options.id).bootstrapTreeTable('getSelections')[0];
+                if ($.common.isEmpty(row)) {
+                    $.modal.alertWarning("请至少选择一条记录");
+                    return;
+                }
+                var url = prefix + "/details/" + row[table.options.uniqueId];
+                $.modal.open(table.options.modalName + "详情", url);
+            } else {
+                var url = prefix + "/details/" + id;
+                $.modal.open(table.options.modalName + "详情", url);
+            }
+        }
+
+        // 工序
+        $("#processId").change(function () {
+            // 获取process的值
+            var processId = $("#processId").val();
+            $.ajax({
+                url: prefix + "/getFacilityByProcess",
+                type: "POST",
+                data: {"process":processId},
+                success: function (result) {
+                    let str = "";
+                    $.each(result.data, function(index, value){
+                        str += '<option value="' + value.id + '">' + value.name + '</option>';
+                    });
+                    //清空之前其他上级菜单遗留的子菜单，否则改变上级菜单后子菜单会包含多个上级菜单的全部子菜单
+                    $("#facility").empty();
+                    $("#facility").append('<option value="">---请选择设备---</option>' + str);
+                },
+                error: function(error) {
+                    $.modal.alertWarning("失败。");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

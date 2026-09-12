@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionPmGroupItemMapper">
+    
+    <resultMap type="NxpInspectionPmGroupItem" id="NxpInspectionPmGroupItemResult">
+        <result property="id"    column="id"    />
+        <result property="group_id"    column="group_id"    />
+        <result property="item_name"    column="item_name"    />
+        <result property="item_status"    column="item_status"    />
+        <result property="is_check"    column="is_check"    />
+        <result property="check_process_id"    column="check_process_id"    />
+        <result property="check_group_id"    column="check_group_id"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionPmGroupItemVo">
+        select id, group_id, item_name, item_status,is_check, check_group_id, check_process_id from nxp_inspection_pm_group_item
+    </sql>
+
+    <select id="selectNxpInspectionPmGroupItemList" parameterType="NxpInspectionPmGroupItem" resultMap="NxpInspectionPmGroupItemResult">
+        <include refid="selectNxpInspectionPmGroupItemVo"/>
+        <where>  
+            <if test="group_id != null "> and group_id = #{group_id}</if>
+            <if test="item_name != null  and name != ''"> and item_name = #{item_name}</if>
+            <if test="item_status != null "> and item_status = #{item_status}</if>
+            <if test="is_check != null and is_check != ''"> and is_check = #{is_check}</if>
+            <if test="check_process_id != null and check_process_id != ''"> and check_process_id = #{check_process_id}</if>
+            <if test="check_group_id != null and check_group_id != ''"> and check_group_id = #{check_group_id}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpInspectionPmGroupItemById" parameterType="Long" resultMap="NxpInspectionPmGroupItemResult">
+        <include refid="selectNxpInspectionPmGroupItemVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpInspectionPmGroupItem" parameterType="NxpInspectionPmGroupItem" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_pm_group_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="group_id != null">group_id,</if>
+            <if test="item_name != null">item_name,</if>
+            <if test="item_status != null">item_status,</if>
+            <if test="is_check != null">is_check,</if>
+            <if test="check_process_id != null and check_process_id != ''">check_process_id,</if>
+            <if test="check_group_id != null and check_group_id != ''">check_group_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="group_id != null">#{group_id},</if>
+            <if test="item_name != null">#{item_name},</if>
+            <if test="item_status != null">#{item_status},</if>
+            <if test="is_check != null">#{is_check},</if>
+            <if test="check_process_id != null and check_process_id != ''">#{check_process_id},</if>
+            <if test="check_group_id != null and check_group_id != ''">#{check_group_id},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionPmGroupItem" parameterType="NxpInspectionPmGroupItem">
+        update nxp_inspection_pm_group_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="group_id != null">group_id = #{group_id},</if>
+            <if test="item_name != null">item_name = #{item_name},</if>
+            <if test="item_status != null">item_status = #{item_status},</if>
+            <if test="is_check != null and is_check != ''">is_check = #{is_check},</if>
+            <if test="check_process_id != null and check_process_id != ''">check_process_id = #{check_process_id},</if>
+            <if test="check_group_id != null and check_group_id != ''">check_group_id = #{check_group_id},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionPmGroupItemById" parameterType="Long">
+        delete from nxp_inspection_pm_group_item where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionPmGroupItemByIds" parameterType="String">
+        delete from nxp_inspection_pm_group_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

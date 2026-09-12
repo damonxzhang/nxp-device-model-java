@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpSparePartProcessMapper">
+
+    <resultMap type="com.ruoyi.system.domain.NxpSparePartProcess" id="NxpSparePartProcessResult">
+        <result property="r_process"    column="r_process"    />
+        <result property="p_id"    column="p_id"    />
+    </resultMap>
+
+    <select id="selectListByNxpSparePartProcess" resultMap="NxpSparePartProcessResult" parameterType="com.ruoyi.system.domain.NxpSparePartProcess">
+        select
+            r_process,p_id
+        from
+            process
+        <where>
+            <if test="r_process != null and r_process != ''">
+                and r_process = #{r_process}
+            </if>
+            <if test="p_id != null and p_id != ''">
+                and p_id = #{p_id}
+            </if>
+        </where>
+    </select>
+
+</mapper>

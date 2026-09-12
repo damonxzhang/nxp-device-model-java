@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('待处理设备列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                </form>
+            </div>
+
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:inspection:serviceShow')}]];
+        var removeFlag = [[${@permission.hasPermi('system:inspection:remove')}]];
+        var statusDatas = [[${@dict.getType('repair_status')}]];
+        var operateDatas = [[${@dict.getType('operate')}]];
+        var isTopDatas = [[${@dict.getType('is_top')}]];
+        var prefix = ctx + "system/repairService";
+        var serviceToI_id = [[${serviceToI_id}]];
+
+        $(function() {
+            var options = {
+                url: ctx + "system/inspection/list",
+                queryParams: queryParams,
+                modalName: "报修情况",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'id',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'facilityNumber',
+                    title: '设备编号'
+                },
+                {
+                    field: 'facilityProcess',
+                    title: '设备工序'
+                },
+                {
+                    field: 'status',
+                    title: '维修状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(statusDatas, value);
+                    }
+                },
+                {
+                    field: 'head_user',
+                    title: '设备负责人'
+                },
+                {
+                    field: 'questionTypeName',
+                    title: '问题类型'
+                },
+                {
+                    field: 'explanation',
+                    title: '问题描述'
+                },
+                {
+                    field: 'user_info_name',
+                    title: '报修人'
+                },
+                {
+                    field: 'createTime',
+                    title: '报修时间'
+                },
+                {
+                    field: 'updateTime',
+                    title: '确认时间'
+                },
+                {
+                    field: 'totalTime',
+                    title: '总时长'
+                },
+                {
+                    field: 'part_no',
+                    title: '关联批号'
+                },
+                {
+                    field: 'operateName',
+                    title: '产线异常'
+                },
+                {
+                    field: 'is_top',
+                    title: '是否置顶',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(isTopDatas, value);
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="inspectionShowInfo(\'' + row.id + '\')"><i class="fa fa-edit"></i>查看</a> ');
+                        // actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+
+        function inspectionShowInfo(roleId) {
+            var url = prefix + '/inspectionShowInfo/' + roleId;
+            $.modal.openTab("报修详情", url);
+        }
+
+        function queryParams(params) {
+            var search = $.table.queryParams(params);
+            search.id = serviceToI_id;
+            console.log(serviceToI_id);
+            return search;
+        }
+    </script>
+</body>
+</html>

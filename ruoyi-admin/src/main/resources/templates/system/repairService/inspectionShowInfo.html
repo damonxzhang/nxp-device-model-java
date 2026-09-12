@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改待处理设备')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-inspection-edit" th:object="${nxpInspection}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">设备名称：</label>
+                <div class="col-sm-8">
+                    <input name="facility_id" th:field="*{facility_name}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">维修状态：</label>
+                <div class="col-sm-8">
+                    <select name="status" class="form-control m-b" th:with="type=${@dict.getType('repair_status')}" disabled>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">报修时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="repair_time" disabled th:value="${#dates.format(nxpInspection.repair_time, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">情况说明：</label>
+                <div class="col-sm-8">
+                    <textarea name="explanation" disabled class="form-control">[[*{explanation}]]</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">后续操作：</label>
+                <div class="col-sm-8">
+                    <select name="operate" class="form-control m-b" th:with="type=${@dict.getType('operate')}" disabled>
+                        <option value="0">请选择后续操作</option>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{operate}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">问题类型：</label>
+                <div class="col-sm-8">
+                    <select name="question_type" class="form-control m-b" disabled>
+                        <option th:each="questionType : ${questionTypes}" th:text="${questionType.name}" th:value="${questionType.id}" th:field="*{question_type}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">提建议人：</label>
+                <div class="col-sm-8">
+                    <input name="user_info_id" th:field="*{head_user}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">维修照片：</label>
+                <div class="col-sm-8">
+                    <a th:each="nxpInspectionFile : ${nxpInspectionFile}" th:href="${nxpInspectionFile.file_path}" th:title="${nxpInspectionFile.file_path}" target="_blank">
+                        <img style="width: 20%;height: 20%" th:each="nxpInspectionFile : ${nxpInspectionFile}" th:src="${nxpInspectionFile.file_path}" class="form-control" ></a>
+                </div>
+            </div>
+<!--            <div id='big_div' style="display:none;position: relative;">&lt;!&ndash; 弹出层 &ndash;&gt;-->
+<!--                &lt;!&ndash; <p id="close">关闭</p> &ndash;&gt;-->
+<!--                <p id="aa"><img class="big_img" th:src="*{repair_file_path}" /></p>-->
+<!--            </div>-->
+            <div class="form-group">
+                <label class="col-sm-3 control-label">关联批号：</label>
+                <div class="col-sm-8">
+                    <input name="part_no" th:field="*{part_no}" class="form-control" type="text" disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">是否置顶：</label>
+                <div class="col-sm-8">
+                    <select name="is_top" class="form-control m-b" th:with="type=${@dict.getType('is_top')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{is_top}"></option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/inspection";
+        $("#form-inspection-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-inspection-edit').serialize());
+            }
+        }
+
+        $("input[name='repair_time']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $(function() {
+            var options = {
+                data: [[${nxpInspectionServices}]],
+                pagination: false,
+                showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                sidePagination: "client",
+                columns: [{
+                    checkbox: true
+                },
+                    {
+                        field: 'index',
+                        align: 'center',
+                        title: "序号",
+                        formatter: function (value, row, index) {
+                            var columnIndex = $.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                            return columnIndex + $.table.serialNumber(index);
+                        }
+                    },
+                    {
+                        field: 'inspection_id',
+                        align: 'center',
+                        title: '报修表id',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionServiceList[%s].inspection_id' value='%s'>", index, value);
+                            return html;
+                        }
+                    },
+                    {
+                        field: 'content_id',
+                        align: 'center',
+                        title: '维修内容表id',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionServiceList[%s].content_id' value='%s'>", index, value);
+                            return html;
+                        }
+                    },
+                    {
+                        field: 'position_id',
+                        align: 'center',
+                        title: '维修位置表id',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionServiceList[%s].position_id' value='%s'>", index, value);
+                            return html;
+                        }
+                    },
+                    {
+                        field: 'user_info_id',
+                        align: 'center',
+                        title: '维修人id',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionServiceList[%s].user_info_id' value='%s'>", index, value);
+                            return html;
+                        }
+                    },
+                    {
+                        field: 'description',
+                        align: 'center',
+                        title: '维修情况说明',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionServiceList[%s].description' value='%s'>", index, value);
+                            return html;
+                        }
+                    },
+                    {
+                        field: 'created_at',
+                        align: 'center',
+                        title: '创建时间',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionServiceList[%s].created_at' value='%s'>", index, value);
+                            return html;
+                        }
+                    },
+                    {
+                        field: 'updated_at',
+                        align: 'center',
+                        title: '修改时间',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionServiceList[%s].updated_at' value='%s'>", index, value);
+                            return html;
+                        }
+                    },
+                    {
+                        field: 'service_time',
+                        align: 'center',
+                        title: '维修时间',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionServiceList[%s].service_time' value='%s'>", index, value);
+                            return html;
+                        }
+                    },
+                    {
+                        field: 'file_id',
+                        align: 'center',
+                        title: '维修拍照id',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionServiceList[%s].file_id' value='%s'>", index, value);
+                            return html;
+                        }
+                    },
+                    {
+                        field: 'status',
+                        align: 'center',
+                        title: '维修状态',
+                        formatter: function(value, row, index) {
+                            var name = $.common.sprintf("nxpInspectionServiceList[%s].status", index);
+                            return $.common.dictToSelect(statusDatas, value, name);
+                        }
+                    },
+                    {
+                        field: 'facility_id',
+                        align: 'center',
+                        title: '设备ID',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionServiceList[%s].facility_id' value='%s'>", index, value);
+                            return html;
+                        }
+                    },
+                    {
+                        field: 'end_time',
+                        align: 'center',
+                        title: '维修结束时间',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='nxpInspectionServiceList[%s].end_time' value='%s'>", index, value);
+                            return html;
+                        }
+
+                    }]
+            };
+            $.table.init(options);
+        });
+
+    </script>
+</body>
+</html>

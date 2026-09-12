@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionContentMapper">
+    
+    <resultMap type="NxpInspectionContent" id="NxpInspectionContentResult">
+        <result property="id"    column="id"    />
+        <result property="position_id"    column="position_id"    />
+        <result property="content"    column="content"    />
+        <result property="status"    column="status"    />
+        <result property="created_at"    column="created_at"    />
+        <result property="updated_at"    column="updated_at"    />
+        <result property="pic_type"    column="pic_type"    />
+        <result property="check_person"    column="check_person"    />
+        <result property="processId"    column="process_id"    />
+        <result property="is_check"    column="is_check"    />
+        <result property="check_group_id"    column="check_group_id"    />
+        <result property="check_process_id"    column="check_process_id"    />
+        <result property="is_replace_mold"    column="is_replace_mold"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionContentVo">
+        select id, position_id, content, status, created_at, updated_at, pic_type, check_person,process_id,is_check,check_group_id,check_process_id, is_replace_mold from nxp_inspection_content
+    </sql>
+
+    <select id="selectNxpInspectionContentList" parameterType="NxpInspectionContent" resultMap="NxpInspectionContentResult">
+        <include refid="selectNxpInspectionContentVo"/>
+        where id in (
+            SELECT
+            a.id
+            FROM
+            nxp_inspection_content a
+            LEFT JOIN nxp_inspection_position b ON a.position_id = b.id
+            LEFT JOIN nxp_inspection_position_model c ON b.id = c.position_id
+            LEFT JOIN nxp_machine_model_vendor d ON c.model_id = d.model_id
+            <where>
+                <if test="position_id != null "> and a.position_id = #{position_id}</if>
+                <if test="modelId != null "> and c.model_id = #{modelId}</if>
+                <if test="vendorId != null "> and d.vendor_id = #{vendorId}</if>
+                <if test="content != null  and content != ''"> and a.content = #{content}</if>
+                <if test="status != null "> and a.status = #{status}</if>
+                <if test="created_at != null "> and a.created_at = #{created_at}</if>
+                <if test="updated_at != null "> and a.updated_at = #{updated_at}</if>
+                <if test="pic_type != null "> and a.pic_type = #{pic_type}</if>
+                <if test="check_person != null  and check_person != ''"> and a.check_person = #{check_person}</if>
+                <if test="processId != null "> and a.process_id = #{processId}</if>
+                <if test="check_group_id != null "> and a.check_group_id = #{check_group_id}</if>
+                <if test="check_process_id != null "> and a.check_process_id = #{check_process_id}</if>
+                <if test="positionIds != null and positionIds.size > 0">
+                    and a.position_id in
+                    <foreach item="positionId" collection="positionIds" open="(" separator="," close=")">
+                        #{positionId}
+                    </foreach>
+                </if>
+                <if test="is_check != null and is_check != ''">
+                    and a.is_check = #{is_check}
+                </if>
+            </where>
+        )
+
+    </select>
+    
+    <select id="selectNxpInspectionContentById" parameterType="Long" resultMap="NxpInspectionContentResult">
+        <include refid="selectNxpInspectionContentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpInspectionContent" parameterType="NxpInspectionContent" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="position_id != null">position_id,</if>
+            <if test="content != null">content,</if>
+            <if test="status != null">status,</if>
+            <if test="created_at != null">created_at,</if>
+            <if test="updated_at != null">updated_at,</if>
+            <if test="pic_type != null">pic_type,</if>
+            <if test="check_person != null">check_person,</if>
+            <if test="processId != null and processId != ''">process_id,</if>
+            <if test="is_check != null">is_check,</if>
+            <if test="check_group_id != null and check_group_id != ''">check_group_id,</if>
+            <if test="check_process_id != null and check_process_id != ''">check_process_id,</if>
+            <if test="is_replace_mold != null and is_replace_mold != ''">is_replace_mold,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="position_id != null">#{position_id},</if>
+            <if test="content != null">#{content},</if>
+            <if test="status != null">#{status},</if>
+            <if test="created_at != null">#{created_at},</if>
+            <if test="updated_at != null">#{updated_at},</if>
+            <if test="pic_type != null">#{pic_type},</if>
+            <if test="check_person != null">#{check_person},</if>
+            <if test="processId != null and processId != ''">#{processId},</if>
+            <if test="is_check != null">#{is_check},</if>
+            <if test="check_group_id != null and check_group_id != ''">#{check_group_id},</if>
+            <if test="check_process_id != null and check_process_id != ''">#{check_process_id},</if>
+            <if test="is_replace_mold != null and is_replace_mold != ''">#{is_replace_mold},</if>
+        </trim>
+    </insert>
+
+    <update id="updateNxpInspectionContent" parameterType="NxpInspectionContent">
+        update nxp_inspection_content
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="position_id != null">position_id = #{position_id},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="created_at != null">created_at = #{created_at},</if>
+            <if test="updated_at != null">updated_at = #{updated_at},</if>
+            <if test="pic_type != null">pic_type = #{pic_type},</if>
+            <if test="check_person != null">check_person = #{check_person},</if>
+            <if test="processId != null and processId != ''">process_id = #{processId},</if>
+            <if test="is_check != null">is_check = #{is_check},</if>
+            <if test="is_replace_mold != null">is_replace_mold = #{is_replace_mold},</if>
+            check_group_id = #{check_group_id},
+            check_process_id = #{check_process_id},
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionContentById" parameterType="Long">
+        delete from nxp_inspection_content where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionContentByIds" parameterType="String">
+        delete from nxp_inspection_content where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

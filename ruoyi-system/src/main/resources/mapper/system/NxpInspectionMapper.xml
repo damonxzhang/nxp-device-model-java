@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionMapper">
+    
+    <resultMap type="NxpInspection" id="NxpInspectionResult">
+        <result property="id"    column="id"    />
+        <result property="facility_id"    column="facility_id"    />
+        <result property="status"    column="status"    />
+        <result property="relevant_people"    column="relevant_people"    />
+        <result property="repair_time"    column="repair_time"    />
+        <result property="explanation"    column="explanation"    />
+        <result property="repair_file_id"    column="repair_file_id"    />
+        <result property="created_at"    column="created_at"    />
+        <result property="updated_at"    column="updated_at"    />
+        <result property="operate"    column="operate"    />
+        <result property="question_type"    column="question_type"    />
+        <result property="user_info_id"    column="user_info_id"    />
+        <result property="part_no"    column="part_no"    />
+        <result property="is_top"    column="is_top"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionVo">
+        select id, facility_id, status, relevant_people, repair_time, explanation, repair_file_id, created_at, updated_at, operate, question_type, user_info_id, part_no,is_top from nxp_inspection
+    </sql>
+
+    <select id="selectNxpInspectionList" parameterType="NxpInspection" resultMap="NxpInspectionResult">
+        <include refid="selectNxpInspectionVo"/>
+        <where>  
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+            <if test="status != null and status != 4"> and status = #{status}</if>
+            <if test="relevant_people != null  and relevant_people != ''"> and relevant_people = #{relevant_people}</if>
+            <if test="repair_time != null "> and repair_time = #{repair_time}</if>
+            <if test="explanation != null  and explanation != ''"> and explanation = #{explanation}</if>
+            <if test="repair_file_id != null  and repair_file_id != ''"> and repair_file_id = #{repair_file_id}</if>
+            <if test="created_at != null "> and created_at = #{created_at}</if>
+            <if test="updated_at != null "> and updated_at = #{updated_at}</if>
+            <if test="operate != null "> and operate = #{operate}</if>
+            <if test="question_type != null "> and question_type = #{question_type}</if>
+            <if test="user_info_id != null "> and user_info_id = #{user_info_id}</if>
+            <if test="part_no != null  and part_no != ''"> and part_no = #{part_no}</if>
+            <if test="repair_start_time != null and repair_start_time != '' and repair_end_time != null and repair_end_time != ''">and repair_time between #{repair_start_time} and #{repair_end_time}</if>
+            <if test="status != null and status == 4">and status in (0,2,3)</if>
+            <if test="user_id != null">and relevant_people like concat('%', #{user_id}, '%')</if>
+            <if test="is_top != null">and is_top = #{is_top}</if>
+        </where>
+        order by is_top desc
+    </select>
+
+    <select id="selectNxpInspectionListForFacility" parameterType="NxpInspection" resultMap="NxpInspectionResult">
+<!--        <include refid="selectNxpInspectionVo"/>-->
+        select top 1 id, facility_id, status, relevant_people, repair_time, explanation, repair_file_id, created_at, updated_at, operate, question_type, user_info_id, part_no,is_top from nxp_inspection
+        <where>
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+            <if test="status != null and status != 4"> and status = #{status}</if>
+            <if test="relevant_people != null  and relevant_people != ''"> and relevant_people = #{relevant_people}</if>
+            <if test="repair_time != null "> and repair_time = #{repair_time}</if>
+            <if test="explanation != null  and explanation != ''"> and explanation = #{explanation}</if>
+            <if test="repair_file_id != null  and repair_file_id != ''"> and repair_file_id = #{repair_file_id}</if>
+            <if test="created_at != null "> and created_at = #{created_at}</if>
+            <if test="updated_at != null "> and updated_at = #{updated_at}</if>
+            <if test="operate != null "> and operate = #{operate}</if>
+            <if test="question_type != null "> and question_type = #{question_type}</if>
+            <if test="user_info_id != null "> and user_info_id = #{user_info_id}</if>
+            <if test="part_no != null  and part_no != ''"> and part_no = #{part_no}</if>
+            <if test="repair_start_time != null and repair_start_time != '' and repair_end_time != null and repair_end_time != ''">and repair_time between #{repair_start_time} and #{repair_end_time}</if>
+            <if test="status != null and status == 4">and status in (0,2,3)</if>
+            <if test="user_id != null">and relevant_people like concat('%', #{user_id}, '%')</if>
+            <if test="is_top != null">and is_top = #{is_top}</if>
+        </where>
+        order by id asc
+    </select>
+
+    <select id="selectNxpInspectionList01" parameterType="NxpInspection" resultMap="NxpInspectionResult">
+        <include refid="selectNxpInspectionVo"/>
+        <where>
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+            <if test="status != null and status != 4"> and status = #{status}</if>
+            <if test="relevant_people != null  and relevant_people != ''"> and relevant_people = #{relevant_people}</if>
+            <if test="repair_time != null "> and repair_time = #{repair_time}</if>
+            <if test="explanation != null  and explanation != ''"> and explanation = #{explanation}</if>
+            <if test="repair_file_id != null  and repair_file_id != ''"> and repair_file_id = #{repair_file_id}</if>
+            <if test="created_at != null "> and created_at = #{created_at}</if>
+            <if test="updated_at != null "> and updated_at = #{updated_at}</if>
+            <if test="operate != null "> and operate = #{operate}</if>
+            <if test="question_type != null "> and question_type = #{question_type}</if>
+            <if test="user_info_id != null "> and user_info_id = #{user_info_id}</if>
+            <if test="part_no != null  and part_no != ''"> and part_no = #{part_no}</if>
+            <if test="repair_start_time != null and repair_start_time != '' and repair_end_time != null and repair_end_time != ''">and repair_time between #{repair_start_time} and #{repair_end_time}</if>
+            <if test="status != null and status == 4">and status in (0,2,3)</if>
+            <if test="user_id != null">and relevant_people like concat('%', #{user_id}, '%')</if>
+            <if test="is_top != null">and is_top = #{is_top}</if>
+        </where>
+        order by repair_time desc
+    </select>
+
+    <select id="selectNxpInspectionListNew" parameterType="NxpInspection" resultMap="NxpInspectionResult">
+        SELECT
+            ni.*,nf.head_user
+        FROM
+            nxp_inspection ni
+        LEFT JOIN nxp_facility nf ON ni.facility_id = nf.id
+        LEFT JOIN nxp_machine_process nmp ON nf.process = nmp.id
+        <where>
+            <if test="id != null ">and ni.id = #{id}</if>
+            <if test="status != null ">and ni.status = #{status}</if>
+            <if test="facility_id != null ">and nf.id = #{facility_id}</if>
+            <if test="question_type != null ">and ni.question_type = #{question_type}</if>
+            <if test="process_id != null and process_id != ''">and nmp.id = #{process_id}</if>
+            <if test="is_top != null and is_top != ''">and ni.is_top = #{is_top}</if>
+            <if test="params.repair_start_time != null and params.repair_start_time != '' and params.repair_end_time != null and params.repair_end_time != ''">and repair_time between #{params.repair_start_time} and #{params.repair_end_time}</if>
+        </where>
+        order by ni.id desc
+    </select>
+
+    <select id="selectNxpInspectionById" parameterType="Long" resultMap="NxpInspectionResult">
+        <include refid="selectNxpInspectionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpInspection" parameterType="NxpInspection" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="facility_id != null">facility_id,</if>
+            <if test="status != null">status,</if>
+            <if test="relevant_people != null">relevant_people,</if>
+            <if test="repair_time != null">repair_time,</if>
+            <if test="explanation != null">explanation,</if>
+            <if test="repair_file_id != null">repair_file_id,</if>
+            <if test="created_at != null">created_at,</if>
+            <if test="updated_at != null">updated_at,</if>
+            <if test="operate != null">operate,</if>
+            <if test="question_type != null">question_type,</if>
+            <if test="user_info_id != null">user_info_id,</if>
+            <if test="part_no != null">part_no,</if>
+            <if test="is_top != null">is_top,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="facility_id != null">#{facility_id},</if>
+            <if test="status != null">#{status},</if>
+            <if test="relevant_people != null">#{relevant_people},</if>
+            <if test="repair_time != null">#{repair_time},</if>
+            <if test="explanation != null">#{explanation},</if>
+            <if test="repair_file_id != null">#{repair_file_id},</if>
+            <if test="created_at != null">#{created_at},</if>
+            <if test="updated_at != null">#{updated_at},</if>
+            <if test="operate != null">#{operate},</if>
+            <if test="question_type != null">#{question_type},</if>
+            <if test="user_info_id != null">#{user_info_id},</if>
+            <if test="part_no != null">#{part_no},</if>
+            <if test="is_top != null">#{is_top},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspection" parameterType="NxpInspection">
+        update nxp_inspection
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="facility_id != null">facility_id = #{facility_id},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="relevant_people != null">relevant_people = #{relevant_people},</if>
+            <if test="repair_time != null">repair_time = #{repair_time},</if>
+            <if test="explanation != null">explanation = #{explanation},</if>
+            <if test="repair_file_id != null">repair_file_id = #{repair_file_id},</if>
+            <if test="created_at != null">created_at = #{created_at},</if>
+            <if test="updated_at != null">updated_at = #{updated_at},</if>
+            <if test="operate != null">operate = #{operate},</if>
+            <if test="question_type != null">question_type = #{question_type},</if>
+            <if test="user_info_id != null">user_info_id = #{user_info_id},</if>
+            <if test="part_no != null">part_no = #{part_no},</if>
+            <if test="is_top != null">is_top = #{is_top},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionById" parameterType="Long">
+        delete from nxp_inspection where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionByIds" parameterType="String">
+        delete from nxp_inspection where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="inspectionInfo" resultType="com.ruoyi.system.domain.DTO.InspectionInfoDTO" parameterType="com.ruoyi.system.domain.NxpInspectionService">
+        SELECT
+            ni.id AS id,
+            ni.facility_id AS facility_id,
+            nf.name AS facility_name,
+            ni.part_no AS part_no,
+            ni.explanation AS explanation,
+            nui.chinese_name AS head_user,
+            nuii.chinese_name AS create_user,
+            ni.repair_time AS repair_time,
+            ni.updated_at AS submit_time,
+            ni.question_type AS question_type,
+            ni.repair_file_id AS file_ids
+        FROM
+            nxp_inspection ni
+                LEFT JOIN nxp_facility nf ON ni.facility_id = nf.id
+                LEFT JOIN nxp_user_info nui ON nui.id = nf.head_user
+                LEFT JOIN nxp_user_info nuii ON nuii.id = ni.user_info_id
+        WHERE
+            ni.id = #{inspection_id}
+    </select>
+
+    <select id="selectByStatusAndDeviceId" parameterType="NxpInspection" resultMap="NxpInspectionResult">
+         <include refid="selectNxpInspectionVo"/>
+        where
+        status in (0,2,3)
+        and facility_id = #{facility_id}
+    </select>
+
+    <select id="selectNxpInspectionListByFacilityId" parameterType="string" resultMap="NxpInspectionResult">
+        SELECT
+            *
+        FROM
+            nxp_inspection
+        WHERE
+            facility_id = #{facility_id}
+        ORDER BY
+            id DESC
+    </select>
+
+    <select id="selectNxpInspectionListByFacilityIdCount" parameterType="long" resultType="int">
+        select
+        count(*)
+        from
+            nxp_inspection
+        where
+            facility_id = #{facilityId}
+        and status in(0,2,3)
+    </select>
+
+    <select id="selectNxpInspectionListByTiming" parameterType="NxpInspection" resultMap="NxpInspectionResult">
+        <include refid="selectNxpInspectionVo"/>
+        <where>
+            <if test="facility_id != null "> and facility_id = #{facility_id}</if>
+            <if test="status != null"> and status = #{status}</if>
+            <if test="relevant_people != null  and relevant_people != ''"> and relevant_people = #{relevant_people}</if>
+            <if test="repair_time != null "> and repair_time = #{repair_time}</if>
+            <if test="explanation != null  and explanation != ''"> and explanation = #{explanation}</if>
+            <if test="repair_file_id != null  and repair_file_id != ''"> and repair_file_id = #{repair_file_id}</if>
+            <if test="created_at != null "> and created_at = #{created_at}</if>
+            <if test="updated_at != null "> and updated_at = #{updated_at}</if>
+            <if test="operate != null "> and operate = #{operate}</if>
+            <if test="question_type != null "> and question_type = #{question_type}</if>
+            <if test="user_info_id != null "> and user_info_id = #{user_info_id}</if>
+            <if test="part_no != null  and part_no != ''"> and part_no = #{part_no}</if>
+            <if test="repair_start_time != null and repair_start_time != '' and repair_end_time != null and repair_end_time != ''">and repair_time between #{repair_start_time} and #{repair_end_time}</if>
+            <if test="user_id != null">and relevant_people like concat('%', #{user_id}, '%')</if>
+            <if test="is_top != null">and is_top = #{is_top}</if>
+        </where>
+        order by is_top desc
+    </select>
+</mapper>

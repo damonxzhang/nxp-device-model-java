@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('模具维护检查项列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>分组：</label>
+                                <select name="groupId">
+                                    <option value="">所有</option>
+                                    <option th:each="group:${groups}" th:text="${group.groupName}" th:value="${group.id}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>检查项：</label>
+                                <input type="text" name="itemName"/>
+                            </li>
+                            <li>
+                                <label>状态：</label>
+                                <select name="itemStatus" th:with="type=${@dict.getType('is_enable')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>是否拍照：</label>
+                                <select name="isPhotograph" th:with="type=${@dict.getType('is_pic')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:nxpMoldMaintenanceGroupItem:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:nxpMoldMaintenanceGroupItem:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:nxpMoldMaintenanceGroupItem:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:nxpMoldMaintenanceGroupItem:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:nxpMoldMaintenanceGroupItem:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:nxpMoldMaintenanceGroupItem:remove')}]];
+        var itemStatusDatas = [[${@dict.getType('is_enable')}]];
+        var isPhotographDatas = [[${@dict.getType('is_pic')}]];
+
+        var moldTypeDatas = [[${@dict.getType('mold_type')}]];
+        var prefix = ctx + "system/nxpMoldMaintenanceGroupItem";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "模具维护检查项",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'groupItemId',
+                    title: '主键',
+                    visible: false
+                },
+                {
+                    field: 'groupName',
+                    title: '分组'
+                },
+                {
+                    field: 'itemName',
+                    title: '检查项'
+                },
+                {
+                    field: 'itemStatus',
+                    title: '状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(itemStatusDatas, value);
+                    }
+                },
+                {
+                    field: 'isPhotograph',
+                    title: '是否拍照',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(isPhotographDatas, value);
+                    }
+                },
+                {
+                    field: 'moldTypeName',
+                    title: '部件种类名称'
+                },
+                {
+                    field: 'componentName',
+                    title: '模具部件名称'
+                },
+                {
+                    field: 'moldType',
+                    title: '模具类型',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(moldTypeDatas, value);
+                    }
+                },
+                {
+                    field: 'remark',
+                    title: '备注'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.groupItemId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.groupItemId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

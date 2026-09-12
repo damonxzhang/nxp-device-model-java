@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionPmCheckMapper">
+    
+    <resultMap type="NxpInspectionPmCheck" id="NxpInspectionPmCheckResult">
+        <result property="id"    column="id"    />
+        <result property="pm_id"    column="pm_id"    />
+        <result property="group_item_id"    column="group_item_id"    />
+        <result property="check_time"    column="check_time"    />
+        <result property="review_type"    column="review_type"    />
+        <result property="user_info_id"    column="user_info_id"    />
+        <result property="type"    column="type"    />
+        <result property="group_item_result"    column="group_item_result"    />
+        <result property="file_id"    column="file_id"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionPmCheckVo">
+        select id, pm_id, group_item_id, check_time, review_type, user_info_id, type, group_item_result,file_id from nxp_inspection_pm_check
+    </sql>
+
+    <select id="selectNxpInspectionPmCheckList" parameterType="NxpInspectionPmCheck" resultMap="NxpInspectionPmCheckResult">
+        <include refid="selectNxpInspectionPmCheckVo"/>
+        <where>  
+            <if test="pm_id != null "> and pm_id = #{pm_id}</if>
+            <if test="group_item_id != null "> and group_item_id = #{group_item_id}</if>
+            <if test="check_time != null "> and check_time = #{check_time}</if>
+            <if test="review_type != null "> and review_type = #{review_type}</if>
+            <if test="user_info_id != null "> and user_info_id = #{user_info_id}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="group_item_result != null "> and group_item_result = #{group_item_result}</if>
+            <if test="file_id != null and file_id != ''"> and file_id = #{file_id}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpInspectionPmCheckById" parameterType="Long" resultMap="NxpInspectionPmCheckResult">
+        <include refid="selectNxpInspectionPmCheckVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpInspectionPmCheck" parameterType="NxpInspectionPmCheck" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_pm_check
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pm_id != null">pm_id,</if>
+            <if test="group_item_id != null">group_item_id,</if>
+            <if test="check_time != null">check_time,</if>
+            <if test="review_type != null">review_type,</if>
+            <if test="user_info_id != null">user_info_id,</if>
+            <if test="type != null">type,</if>
+            <if test="group_item_result != null">group_item_result,</if>
+            <if test="file_id != null">file_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pm_id != null">#{pm_id},</if>
+            <if test="group_item_id != null">#{group_item_id},</if>
+            <if test="check_time != null">#{check_time},</if>
+            <if test="review_type != null">#{review_type},</if>
+            <if test="user_info_id != null">#{user_info_id},</if>
+            <if test="type != null">#{type},</if>
+            <if test="group_item_result != null">#{group_item_result},</if>
+            <if test="file_id != null">#{file_id},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionPmCheck" parameterType="NxpInspectionPmCheck">
+        update nxp_inspection_pm_check
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pm_id != null">pm_id = #{pm_id},</if>
+            <if test="group_item_id != null">group_item_id = #{group_item_id},</if>
+            <if test="check_time != null">check_time = #{check_time},</if>
+            <if test="review_type != null">review_type = #{review_type},</if>
+            <if test="user_info_id != null">user_info_id = #{user_info_id},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="group_item_result != null">group_item_result = #{group_item_result},</if>
+            <if test="file_id != null and file_id != ''">file_id = #{file_id},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionPmCheckById" parameterType="Long">
+        delete from nxp_inspection_pm_check where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionPmCheckByIds" parameterType="String">
+        delete from nxp_inspection_pm_check where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectNxpInspectionPmByPmId" parameterType="long" resultMap="NxpInspectionPmCheckResult">
+        <include refid="selectNxpInspectionPmCheckVo"/>
+        where pm_id = #{id}
+    </select>
+
+    <select id="getPmCheck" parameterType="NxpInspectionPmCheck" resultType="com.ruoyi.system.domain.DTO.PmCheckDTO">
+        SELECT
+            nipc.pm_id AS pm_id,
+            nipc.check_time AS check_time,
+            nui.chinese_name AS user_info,
+            nipc.id AS check_id,
+            nipc.group_item_id AS group_item_id,
+            nipc.group_item_result AS group_item_result
+        FROM
+            nxp_inspection_pm_check nipc
+                LEFT JOIN nxp_user_info nui ON nipc.user_info_id = nui.id
+        <where>
+            <if test="pm_id != null and pm_id != ''">
+                AND nipc.pm_id = #{pm_id}
+            </if>
+            <if test="type != null and type != ''">
+                AND nipc.type = #{type}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectNxpInspectionPmByGroupItemIdAndPmId" parameterType="NxpInspectionPmCheck" resultMap="NxpInspectionPmCheckResult">
+        <include refid="selectNxpInspectionPmCheckVo"/>
+        <where>
+            <if test="pm_id != null and pm_id != ''">
+                and pm_id = #{pm_id}
+            </if>
+            <if test="group_item_id != null and group_item_id != ''">
+                and group_item_id = #{group_item_id}
+            </if>
+            <if test="type != null and type != ''">
+                and [type] = #{type}
+            </if>
+        </where>
+    </select>
+</mapper>

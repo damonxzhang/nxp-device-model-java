@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpInspectionPositionMapper">
+
+    <resultMap type="NxpInspectionPosition" id="NxpInspectionPositionResult">
+        <result property="id"    column="id"    />
+        <result property="position"    column="position"    />
+        <result property="status"    column="status"    />
+        <result property="created_at"    column="created_at"    />
+        <result property="updated_at"    column="updated_at"    />
+        <result property="model_id"    column="model_id"    />
+        <result property="processId"    column="process_id"    />
+    </resultMap>
+
+    <sql id="selectNxpInspectionPositionVo">
+        select id, position, status, created_at, updated_at,model_id,process_id from nxp_inspection_position
+    </sql>
+
+    <select id="selectNxpInspectionPositionList" parameterType="NxpInspectionPosition" resultMap="NxpInspectionPositionResult">
+        <include refid="selectNxpInspectionPositionVo"/>
+        where id in (
+            SELECT
+            a.id
+            FROM
+            nxp_inspection_position a
+            LEFT JOIN nxp_inspection_position_model c ON a.id = c.position_id
+            LEFT JOIN nxp_machine_model_vendor d ON c.model_id = d.model_id
+            <where>
+                <if test="position != null  and position != ''"> and a.position = #{position}</if>
+                <if test="modelId != null "> and c.model_id = #{modelId}</if>
+                <if test="vendorId != null "> and d.vendor_id = #{vendorId}</if>
+                <if test="status != null "> and a.status = #{status}</if>
+                <if test="created_at != null "> and a.created_at = #{created_at}</if>
+                <if test="updated_at != null "> and a.updated_at = #{updated_at}</if>
+                <if test="ids != null and ids.size > 0">
+                    and a.id in
+                    <foreach item="id" collection="ids" open="(" separator="," close=")">
+                        #{id}
+                    </foreach>
+                </if>
+            </where>
+        )
+
+    </select>
+
+    <select id="selectCheckNxpInspectionPositionList" parameterType="NxpInspectionPosition" resultMap="NxpInspectionPositionResult">
+        <include refid="selectNxpInspectionPositionVo"/>
+        <where>
+            <if test="position != null  and position != ''"> and position = #{position}</if>
+            <if test="processId != null "> and process_id = #{processId}</if>
+        </where>
+    </select>
+
+    <select id="selectNxpInspectionPositionById" parameterType="Long" resultMap="NxpInspectionPositionResult">
+        <include refid="selectNxpInspectionPositionVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectNxpInspectionPositionByPosition" parameterType="String" resultMap="NxpInspectionPositionResult">
+        select top 1 id from nxp_inspection_position where position = #{position} order by id desc
+    </select>
+
+
+    <select id="selectNxpInspectionPositionByProcessId" parameterType="Long" resultMap="NxpInspectionPositionResult">
+        <include refid="selectNxpInspectionPositionVo"/>
+        where process_id = #{processId}
+    </select>
+
+    <insert id="insertNxpInspectionPosition" parameterType="NxpInspectionPosition" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_inspection_position
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="position != null">position,</if>
+            <if test="status != null">status,</if>
+            <if test="created_at != null">created_at,</if>
+            <if test="updated_at != null">updated_at,</if>
+            <if test="model_id != null">model_id,</if>
+            <if test="processId != null">process_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="position != null">#{position},</if>
+            <if test="status != null">#{status},</if>
+            <if test="created_at != null">#{created_at},</if>
+            <if test="updated_at != null">#{updated_at},</if>
+            <if test="model_id != null">#{model_id},</if>
+            <if test="processId != null">#{processId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpInspectionPosition" parameterType="NxpInspectionPosition">
+        update nxp_inspection_position
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="position != null">position = #{position},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="created_at != null">created_at = #{created_at},</if>
+            <if test="updated_at != null">updated_at = #{updated_at},</if>
+            <if test="model_id != null">model_id = #{model_id},</if>
+            <if test="processId != null">process_id = #{processId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpInspectionPositionById" parameterType="Long">
+        delete from nxp_inspection_position where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpInspectionPositionByIds" parameterType="String">
+        delete from nxp_inspection_position where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectBatchIds" resultMap="NxpInspectionPositionResult" parameterType="string">
+        <include refid="selectNxpInspectionPositionVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+</mapper>

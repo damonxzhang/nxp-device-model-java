@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpMoldProductMapper">
+    
+    <resultMap type="NxpMoldProduct" id="NxpMoldProductResult">
+        <result property="moldId"    column="mold_id"    />
+        <result property="moldName"    column="mold_name"    />
+        <result property="productTypeId"    column="product_type_id"    />
+        <result property="productTypeName"    column="product_type_name"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectNxpMoldProductVo">
+        select mold_id, mold_name, product_type_id, product_type_name, create_time from nxp_mold_product
+    </sql>
+
+    <select id="selectNxpMoldProductList" parameterType="NxpMoldProduct" resultMap="NxpMoldProductResult">
+        <include refid="selectNxpMoldProductVo"/>
+        <where>  
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldName != null  and moldName != ''"> and mold_name like concat('%', #{moldName}, '%')</if>
+            <if test="productTypeId != null "> and product_type_id = #{productTypeId}</if>
+            <if test="productTypeName != null  and productTypeName != ''"> and product_type_name like concat('%', #{productTypeName}, '%')</if>
+            <if test="productTypeList != null and productTypeList.size > 0">
+                and product_type_id in
+                <foreach item="productTypeId" collection="productTypeList" open="(" separator="," close=")">
+                    #{productTypeId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectNxpMoldProductById" parameterType="Long" resultMap="NxpMoldProductResult">
+        <include refid="selectNxpMoldProductVo"/>
+        where mold_id = #{moldId}
+    </select>
+
+    <select id="selectByMoldIdLimit1" parameterType="Long" resultMap="NxpMoldProductResult">
+        select top 1 mold_id, mold_name, product_type_id, product_type_name, create_time from nxp_mold_product
+        where mold_id = #{moldId}
+        order by create_time desc
+    </select>
+        
+    <insert id="insertNxpMoldProduct" parameterType="NxpMoldProduct">
+        insert into nxp_mold_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">mold_id,</if>
+            <if test="moldName != null">mold_name,</if>
+            <if test="productTypeId != null">product_type_id,</if>
+            <if test="productTypeName != null">product_type_name,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="moldId != null">#{moldId},</if>
+            <if test="moldName != null">#{moldName},</if>
+            <if test="productTypeId != null">#{productTypeId},</if>
+            <if test="productTypeName != null">#{productTypeName},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpMoldProduct" parameterType="NxpMoldProduct">
+        update nxp_mold_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="moldName != null">mold_name = #{moldName},</if>
+            <if test="productTypeId != null">product_type_id = #{productTypeId},</if>
+            <if test="productTypeName != null">product_type_name = #{productTypeName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where mold_id = #{moldId}
+    </update>
+
+    <delete id="deleteNxpMoldProductById" parameterType="Long">
+        delete from nxp_mold_product where mold_id = #{moldId}
+    </delete>
+
+    <delete id="deleteNxpMoldProductByIds" parameterType="String">
+        delete from nxp_mold_product where mold_id in 
+        <foreach item="moldId" collection="array" open="(" separator="," close=")">
+            #{moldId}
+        </foreach>
+    </delete>
+
+</mapper>

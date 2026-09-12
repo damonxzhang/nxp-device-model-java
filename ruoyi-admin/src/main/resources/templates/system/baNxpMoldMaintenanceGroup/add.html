@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增模具维护分组')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-nxpMoldMaintenanceGroup-add">
+            <h4 class="form-header h4">模具维护分组信息</h4>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">分组名称：</label>
+                <div class="col-sm-8">
+                    <input name="groupName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+                    <select name="status" class="form-control m-b" th:with="type=${@dict.getType('is_enable')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">模具类型：</label>
+                <div class="col-sm-8">
+                    <select name="moldType" class="form-control m-b">
+                        <option th:text="BA" th:value="2"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea name="remark" class="form-control"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/nxpMoldMaintenanceGroup"
+        var itemStatusDatas = [[${@dict.getType('is_enable')}]];
+        var isPhotographDatas = [[${@dict.getType('is_pic')}]];
+        $("#form-nxpMoldMaintenanceGroup-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-nxpMoldMaintenanceGroup-add').serialize());
+            }
+        }
+
+        /*$(function() {
+            var options = {
+                pagination: false,
+                showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                sidePagination: "client",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'index',
+                    align: 'center',
+                    title: "序号",
+                    formatter: function (value, row, index) {
+                    	var columnIndex = $.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                    	return columnIndex + $.table.serialNumber(index);
+                    }
+                },
+                {
+                    field: 'itemName',
+                    align: 'center',
+                    title: '检查项',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='nxpMoldMaintenanceGroupItemList[%s].itemName' value='%s'>", index, value);
+                        return html;
+                    }
+                },
+                {
+                    field: 'itemStatus',
+                    align: 'center',
+                    title: '状态',
+                    formatter: function(value, row, index) {
+                        var name = $.common.sprintf("nxpMoldMaintenanceGroupItemList[%s].itemStatus", index);
+                        return $.common.dictToSelect(itemStatusDatas, value, name);
+                    }
+                },
+                {
+                    field: 'isPhotograph',
+                    align: 'center',
+                    title: '是否拍照',
+                    formatter: function(value, row, index) {
+                        var name = $.common.sprintf("nxpMoldMaintenanceGroupItemList[%s].isPhotograph", index);
+                        return $.common.dictToSelect(isPhotographDatas, value, name);
+                    }
+                },
+                /!*{
+                    field: 'createBy',
+                    align: 'center',
+                    title: '创建者',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='nxpMoldMaintenanceGroupItemList[%s].createBy' value='%s'>", index, value);
+                        return html;
+                    }
+                },
+                {
+                    field: 'createTime',
+                    align: 'center',
+                    title: '创建时间',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='nxpMoldMaintenanceGroupItemList[%s].createTime' value='%s'>", index, value);
+                        return html;
+                    }
+                },
+                {
+                    field: 'updateBy',
+                    align: 'center',
+                    title: '更新者',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='nxpMoldMaintenanceGroupItemList[%s].updateBy' value='%s'>", index, value);
+                        return html;
+                    }
+                },
+                {
+                    field: 'updateTime',
+                    align: 'center',
+                    title: '更新时间',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='nxpMoldMaintenanceGroupItemList[%s].updateTime' value='%s'>", index, value);
+                        return html;
+                    }
+                },*!/
+                {
+                    field: 'remark',
+                    align: 'center',
+                    title: '备注',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='nxpMoldMaintenanceGroupItemList[%s].remark' value='%s'>", index, value);
+                        return html;
+                    }
+                
+                }]
+            };
+            $.table.init(options);
+        });
+
+        function addColumn() {
+            var count = $("#" + table.options.id).bootstrapTable('getData').length;
+            sub.editColumn();
+        	
+            $("#" + table.options.id).bootstrapTable('insertRow', {
+                index: count,
+                row: {
+                    index: $.table.serialNumber(count),
+                    itemName: "",
+                    itemStatus: "",
+                    isPhotograph: "",
+                    createBy: "",
+                    createTime: "",
+                    updateBy: "",
+                    updateTime: "",
+                    remark: ""
+                }
+            });
+        }*/
+    </script>
+</body>
+</html>

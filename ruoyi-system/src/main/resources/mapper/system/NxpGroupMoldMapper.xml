@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpGroupMoldMapper">
+    
+    <resultMap type="NxpGroupMold" id="NxpGroupMoldResult">
+        <result property="id"    column="id"    />
+        <result property="groupId"    column="group_id"    />
+        <result property="groupName"    column="group_name"    />
+        <result property="moldIds"    column="mold_ids"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="moldType"    column="mold_type"    />
+    </resultMap>
+
+    <sql id="selectNxpGroupMoldVo">
+        select id, group_id, group_name, mold_ids, status, create_by, create_time, update_by, update_time, remark, mold_type from nxp_group_mold
+    </sql>
+
+    <select id="selectNxpGroupMoldList" parameterType="NxpGroupMold" resultMap="NxpGroupMoldResult">
+        <include refid="selectNxpGroupMoldVo"/>
+        <where>  
+            <if test="groupId != null "> and group_id = #{groupId}</if>
+            <if test="groupName != null  and groupName != ''"> and group_name like concat('%', #{groupName}, '%')</if>
+            <if test="moldIds != null  and moldIds != ''"> and mold_ids = #{moldIds}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpGroupMoldById" parameterType="Long" resultMap="NxpGroupMoldResult">
+        <include refid="selectNxpGroupMoldVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNxpGroupMold" parameterType="NxpGroupMold" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_group_mold
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupId != null">group_id,</if>
+            <if test="groupName != null">group_name,</if>
+            <if test="moldIds != null">mold_ids,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="moldType != null">mold_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="groupId != null">#{groupId},</if>
+            <if test="groupName != null">#{groupName},</if>
+            <if test="moldIds != null">#{moldIds},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="moldType != null">#{moldType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpGroupMold" parameterType="NxpGroupMold">
+        update nxp_group_mold
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="groupId != null">group_id = #{groupId},</if>
+            <if test="groupName != null">group_name = #{groupName},</if>
+            <if test="moldIds != null">mold_ids = #{moldIds},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="moldType != null">mold_type = #{moldType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpGroupMoldById" parameterType="Long">
+        delete from nxp_group_mold where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpGroupMoldByIds" parameterType="String">
+        delete from nxp_group_mold where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByMoldIds" parameterType="string" resultMap="NxpGroupMoldResult">
+        <include refid="selectNxpGroupMoldVo"/>
+        where
+        CHARINDEX(mold_ids, #{moldIds}) > 0
+    </select>
+</mapper>

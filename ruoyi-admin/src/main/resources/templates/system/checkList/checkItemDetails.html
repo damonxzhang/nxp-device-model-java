@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('检查详情')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-checkList-edit">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">检查人：</label>
+                <div class="col-sm-8">
+                    <input name="" th:value="${nxpCheckListItems[0].checkUserName}" class="form-control" type="text" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">检查时间：</label>
+                <div class="col-sm-8">
+                    <input name="" th:value="${#dates.format(nxpCheckListItems[0].updateTime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control" type="text" readonly>
+                </div>
+            </div>
+            <div th:each="detail,detailStat:${nxpCheckListItems}">
+                <h4 class="form-header h4"></h4>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">检查项：</label>
+                    <div class="col-sm-8">
+                        <input name="" th:value="${detail.checkProjectName}" class="form-control" type="text" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">反馈内容：</label>
+                    <div class="col-sm-8">
+                        <input name="" th:value="${detail.checkContent}" class="form-control" type="text" readonly>
+                    </div>
+                </div>
+                <div th:if="${detail.nxpCheckListFiles ne null}">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">照片：</label>
+                        <div class="col-sm-8">
+                            <a th:each="nxpCheckListFile : ${detail.nxpCheckListFiles}" th:href="${nxpCheckListFile.filePath}" th:title="${nxpCheckListFile.filePath}" target="_blank">
+                                <img style="width: 20%;height: 20%" th:src="${nxpCheckListFile.filePath}" class="form-control" >
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">是否异常：</label>
+                    <div class="col-sm-8">
+                        <div th:switch="${detail.isCheck}">
+                            <div th:case="'0'">
+                                <input name="" th:value="是" class="form-control" type="text" readonly>
+                            </div>
+                            <div th:case="'1'">
+                                <input name="" th:value="否" class="form-control" type="text" readonly>
+                            </div>
+                            <div th:case="*">
+                                <input name="" th:value="''" class="form-control" type="text" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/checkList";
+        $("#form-checkList-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-checkList-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改模具异常信息')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-nxpMoldComponentAbnormalLogs-edit" th:object="${nxpMoldComponentAbnormalLogs}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">模具id：</label>
+                <div class="col-sm-8">
+                    <input name="moldId" th:field="*{moldId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">模具编号：</label>
+                <div class="col-sm-8">
+                    <input name="moldCode" th:field="*{moldCode}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">部件名称：</label>
+                <div class="col-sm-8">
+                    <input name="componentName" th:field="*{componentName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">部件id：</label>
+                <div class="col-sm-8">
+                    <input name="componentId" th:field="*{componentId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea name="remark" class="form-control">[[*{remark}]]</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/nxpMoldComponentAbnormalLogs";
+        $("#form-nxpMoldComponentAbnormalLogs-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-nxpMoldComponentAbnormalLogs-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

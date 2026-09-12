@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增模具&产品类型')" />
+    <th:block th:include="include :: select2-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-product-add">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">模具：</label>
+                <div class="col-sm-8">
+                    <select name="moldId" class="form-control m-b" th:with="type=${nxpMolds}">
+                        <option value="">请选择模具</option>
+                        <option th:each="dict : ${type}" th:text="${dict.moldCode}" th:value="${dict.id}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">产品类型：</label>
+                <div class="col-sm-8">
+                    <select name="productTypeId" class="form-control m-b" th:with="type=${nxpProductTypes}">
+                        <option value="">请选择产品类型</option>
+                        <option th:each="dict : ${type}" th:text="${dict.productTypeName}" th:value="${dict.id}"></option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: select2-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/product"
+        $("#form-product-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-product-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

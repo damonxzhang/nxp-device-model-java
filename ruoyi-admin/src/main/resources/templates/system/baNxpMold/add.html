@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增模具管理')" />
+    <th:block th:include="include :: select2-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-nxpMold-add">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">模具编号：</label>
+                <div class="col-sm-8">
+                    <input name="moldCode" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">产品类型：</label>
+                <div class="col-sm-8">
+                    <select name="productTypeId" class="form-control m-b select2-multiple" th:with="type=${productTypes}" multiple>
+                        <option th:each="dict : ${type}" th:text="${dict.productTypeName}" th:value="${dict.id}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">模具状态：</label>
+                <div class="col-sm-8">
+                    <select name="status" class="form-control m-b" th:with="type=${@dict.getType('mold_state')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label select2-multiple">适用机型：</label>
+                <div class="col-sm-8">
+                    <select name="machineModel" class="form-control m-b" th:with="type=${machineModels}" multiple>
+                        <option th:each="dict : ${type}" th:text="${dict.name}" th:value="${dict.id}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">模具类型：</label>
+                <div class="col-sm-8">
+                    <select name="moldType" class="form-control m-b" th:with="type=${@dict.getType('mold_type')}">
+                        <!--<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>-->
+                        <option th:text="BA" th:value="2"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">RMS编号：</label>
+                <div class="col-sm-8">
+                    <input name="moldRmsCode" class="form-control" type="text">
+                </div>
+            </div>
+            <!--<div class="form-group">
+                <label class="col-sm-3 control-label">密码：</label>
+                <div class="col-sm-8">
+                    <input name="moldPwd" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea name="remark" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">pkgType：</label>
+                <div class="col-sm-8">
+                    <select name="pkgType" class="form-control m-b">
+                        <option value="">所有</option>
+                    </select>
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">长度：</label>
+                <div class="col-sm-8">
+                    <input name="length" class="form-control" type="text">
+                </div>
+            </div>-->
+            <!--<div class="form-group">
+                <label class="col-sm-3 control-label">thin：</label>
+                <div class="col-sm-8">
+                    <input name="thin" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">序号：</label>
+                <div class="col-sm-8">
+                    <input name="serialNumber" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">模具位置id：</label>
+                <div class="col-sm-8">
+                    <input name="moldAddressId" class="form-control" type="text">
+                </div>
+            </div>-->
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">Substrate长宽：</label>
+                <div class="col-sm-8">
+                    <input name="substrateLength" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">size：</label>
+                <div class="col-sm-8">
+                    <input name="size" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">I/O数量：</label>
+                <div class="col-sm-8">
+                    <input name="ioNumber" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">pitch：</label>
+                <div class="col-sm-8">
+                    <input name="pitch" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">球径：</label>
+                <div class="col-sm-8">
+                    <input name="sphericalDiameter" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">ID：</label>
+                <div class="col-sm-8">
+                    <input name="baId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">矩阵：</label>
+                <div class="col-sm-8">
+                    <input name="matrix" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">PIN：</label>
+                <div class="col-sm-8">
+                    <input name="pin" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">大小：</label>
+                <div class="col-sm-8">
+                    <input name="bigOrSmall" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">模具位置：</label>
+                <div class="col-sm-8">
+                    <select name="moldAddressId" class="form-control m-b" th:with="type=${nxpSmartCabinets}">
+                        <option value="">请选择模具位置</option>
+                        <option th:each="dict : ${type}" th:text="${dict.position}" th:value="${dict.id}"></option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: select2-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/baNxpMold"
+        $("#form-nxpMold-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-nxpMold-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

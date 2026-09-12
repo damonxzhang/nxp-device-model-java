@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改工序')" />
+    <th:block th:include="include :: datetimepicker-css" />
+    <th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: bootstrap-select-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-machineProcess-edit" th:object="${nxpMachineProcess}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">工序名称：</label>
+                <div class="col-sm-8">
+                    <input name="name" th:field="*{name}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">筛选条件：</label>
+                <div class="col-sm-8">
+                    <select name="area" id="area" class="form-control m-b" th:with="type=${@dict.getType('area_arr')}">
+                        <option value="">请选择区域</option>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="${userInfo.area}"></option>
+                    </select>
+
+                    <select name="shift" id="shift" style="display:none" th:with="type=${@dict.getType('shift_arr')}">
+                        <option value="">请选择班别</option>
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="${userInfo.shift}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">负责人：</label>
+                <div class="col-sm-8">
+                    <select name="owner" id="owner" class="form-control select2-multiple">
+                        <option value="">请选择负责人</option>
+                        <option th:each="userInfo:${userInfo}" th:text="${userInfo.chinese_name}" th:value="${userInfo.id}" th:field="*{owner}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+                    <select name="status" class="form-control m-b" th:with="type=${@dict.getType('is_enable')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: bootstrap-select-css" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/machineProcess";
+        $("#form-machineProcess-edit").validate({
+            focusCleanup: true
+        });
+
+
+        // 区域
+        $("#area").change(function () {
+            let area = $("#area").val();
+            let shift = $("#shift").val();
+            $.ajax({
+                url: ctx + "system/facilityUser/getUserByAreaAndShift",
+                type: "POST",
+                data: {"area":area,"shift":shift},
+                success: function (result) {
+                    let str = "";
+                    $.each(result.msg, function(index, value){
+                        str += '<option value="' + value.id + '">' + value.chinese_name + '('+ value.pid +')' + '</option>';
+                    });
+                    //清空之前其他上级菜单遗留的子菜单，否则改变上级菜单后子菜单会包含多个上级菜单的全部子菜单
+                    $("#owner").empty();
+                    $("#owner").append('<option value="">---请选择相关人---</option>' + str);
+                },
+                error: function(error) {
+                    $.modal.alertWarning("失败。");
+                }});
+        });
+        // 班别
+        $("#shift").change(function () {
+            let area = $("#area").val();
+            let shift = $("#shift").val();
+            $.ajax({
+                url: ctx + "system/facilityUser/getUserByAreaAndShift",
+                type: "POST",
+                data: {"area":area,"shift":shift},
+                success: function (result) {
+                    let str = "";
+                    $.each(result.msg, function(index, value){
+                        str += '<option value="' + value.id + '">' + value.chinese_name + '('+ value.pid +')' + '</option>';
+                    });
+                    //清空之前其他上级菜单遗留的子菜单，否则改变上级菜单后子菜单会包含多个上级菜单的全部子菜单
+                    $("#owner").empty();
+                    $("#owner").append('<option value="">---请选择相关人---</option>' + str);
+                },
+                error: function(error) {
+                    $.modal.alertWarning("失败。");
+                }});
+        });
+
+        
+        
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-machineProcess-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpMoldMaintenanceRuleMapper">
+    
+    <resultMap type="NxpMoldMaintenanceRule" id="NxpMoldMaintenanceRuleResult">
+        <result property="id"    column="id"    />
+        <result property="cycle"    column="cycle"    />
+        <result property="beginTime"    column="begin_time"    />
+        <result property="status"    column="status"    />
+        <result property="moldType"    column="mold_type"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="forCount"    column="for_count"    />
+        <result property="type"    column="type"    />
+        <result property="shouldExecuteTime"    column="should_execute_time"    />
+        <result property="practicalTime"    column="practical_time"    />
+        <result property="moldId"    column="mold_id"    />
+        <result property="moldCode"    column="mold_code"    />
+        <result property="advanceNum"    column="advance_num"    />
+    </resultMap>
+
+    <sql id="selectNxpMoldMaintenanceRuleVo">
+        select id, cycle, begin_time, status, mold_type, create_by, create_time, update_by, update_time, remark, for_count, type, should_execute_time, practical_time, mold_id, mold_code, advance_num from nxp_mold_maintenance_rule
+    </sql>
+
+    <select id="selectNxpMoldMaintenanceRuleList" parameterType="NxpMoldMaintenanceRule" resultMap="NxpMoldMaintenanceRuleResult">
+        <include refid="selectNxpMoldMaintenanceRuleVo"/>
+        <where>  
+            <if test="cycle != null "> and cycle = #{cycle}</if>
+            <if test="beginTime != null "> and begin_time = #{beginTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+            <if test="forCount != null "> and for_count = #{forCount}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="shouldExecuteTime != null "> and should_execute_time = #{shouldExecuteTime}</if>
+            <if test="practicalTime != null "> and practical_time = #{practicalTime}</if>
+            <if test="moldId != null "> and mold_id = #{moldId}</if>
+            <if test="moldCode != null "> and mold_code like concat('%', #{moldCode}, '%')</if>
+            <if test="advanceNum != null "> and advance_num = #{advanceNum}</if>
+        </where>
+        order by begin_time asc
+    </select>
+    
+    <select id="selectNxpMoldMaintenanceRuleById" parameterType="Long" resultMap="NxpMoldMaintenanceRuleResult">
+        <include refid="selectNxpMoldMaintenanceRuleVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectByMoldType" parameterType="Integer" resultMap="NxpMoldMaintenanceRuleResult">
+        <include refid="selectNxpMoldMaintenanceRuleVo"/>
+        where mold_type = #{type}
+        and status = 1
+    </select>
+        
+    <insert id="insertNxpMoldMaintenanceRule" parameterType="NxpMoldMaintenanceRule" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_mold_maintenance_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cycle != null">cycle,</if>
+            <if test="beginTime != null">begin_time,</if>
+            <if test="status != null">status,</if>
+            <if test="moldType != null">mold_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="forCount != null">for_count,</if>
+            <if test="type != null">type,</if>
+            <if test="shouldExecuteTime != null">should_execute_time,</if>
+            <if test="practicalTime != null">practical_time,</if>
+            <if test="moldId != null">mold_id,</if>
+            <if test="moldCode != null">mold_code,</if>
+            <if test="advanceNum != null">advance_num,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cycle != null">#{cycle},</if>
+            <if test="beginTime != null">#{beginTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="moldType != null">#{moldType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="forCount != null">#{forCount},</if>
+            <if test="type != null">#{type},</if>
+            <if test="shouldExecuteTime != null">#{shouldExecuteTime},</if>
+            <if test="practicalTime != null">#{practicalTime},</if>
+            <if test="moldId != null">#{moldId},</if>
+            <if test="moldCode != null">#{moldCode},</if>
+            <if test="advanceNum != null">#{advanceNum},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpMoldMaintenanceRule" parameterType="NxpMoldMaintenanceRule">
+        update nxp_mold_maintenance_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cycle != null">cycle = #{cycle},</if>
+            <if test="beginTime != null">begin_time = #{beginTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="moldType != null">mold_type = #{moldType},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="forCount != null">for_count = #{forCount},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="shouldExecuteTime != null ">should_execute_time = #{shouldExecuteTime},</if>
+            <if test="practicalTime != null ">practical_time = #{practicalTime},</if>
+            <if test="moldId != null ">mold_id = #{moldId},</if>
+            <if test="moldCode != null ">mold_code = #{moldCode},</if>
+            <if test="advanceNum != null ">advance_num = #{advanceNum},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpMoldMaintenanceRuleById" parameterType="Long">
+        delete from nxp_mold_maintenance_rule where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpMoldMaintenanceRuleByIds" parameterType="String">
+        delete from nxp_mold_maintenance_rule where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

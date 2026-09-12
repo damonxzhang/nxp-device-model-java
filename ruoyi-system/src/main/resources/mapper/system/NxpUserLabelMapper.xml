@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NxpUserLabelMapper">
+    
+    <resultMap type="NxpUserLabel" id="NxpUserLabelResult">
+        <result property="id"    column="id"    />
+        <result property="userInfoId"    column="user_info_id"    />
+        <result property="chineseName"    column="chinese_name"    />
+        <result property="isPm"    column="is_pm"    />
+        <result property="moldType"    column="mold_type"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="position"    column="position"    />
+    </resultMap>
+
+    <sql id="selectNxpUserLabelVo">
+        select id, user_info_id, chinese_name, is_pm, mold_type, create_by, create_time, update_by, update_time, remark, position from nxp_user_label
+    </sql>
+
+    <select id="selectNxpUserLabelList" parameterType="NxpUserLabel" resultMap="NxpUserLabelResult">
+        <include refid="selectNxpUserLabelVo"/>
+        <where>  
+            <if test="userInfoId != null "> and user_info_id = #{userInfoId}</if>
+            <if test="chineseName != null  and chineseName != ''"> and chinese_name like concat('%', #{chineseName}, '%')</if>
+            <if test="isPm != null "> and is_pm = #{isPm}</if>
+            <if test="moldType != null "> and mold_type = #{moldType}</if>
+            <if test="position != null "> and position = #{position}</if>
+        </where>
+    </select>
+    
+    <select id="selectNxpUserLabelById" parameterType="Long" resultMap="NxpUserLabelResult">
+        <include refid="selectNxpUserLabelVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectNxpUserLabelByUserInfoId" parameterType="Integer" resultMap="NxpUserLabelResult">
+        <include refid="selectNxpUserLabelVo"/>
+        where user_info_id = #{userInfoId}
+    </select>
+        
+    <insert id="insertNxpUserLabel" parameterType="NxpUserLabel" useGeneratedKeys="true" keyProperty="id">
+        insert into nxp_user_label
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userInfoId != null">user_info_id,</if>
+            <if test="chineseName != null">chinese_name,</if>
+            <if test="isPm != null">is_pm,</if>
+            <if test="moldType != null">mold_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="position != null">position,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userInfoId != null">#{userInfoId},</if>
+            <if test="chineseName != null">#{chineseName},</if>
+            <if test="isPm != null">#{isPm},</if>
+            <if test="moldType != null">#{moldType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="position != null">#{position},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNxpUserLabel" parameterType="NxpUserLabel">
+        update nxp_user_label
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userInfoId != null">user_info_id = #{userInfoId},</if>
+            <if test="chineseName != null">chinese_name = #{chineseName},</if>
+            <if test="isPm != null">is_pm = #{isPm},</if>
+            <if test="moldType != null">mold_type = #{moldType},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="position != null">position = #{position},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNxpUserLabelById" parameterType="Long">
+        delete from nxp_user_label where id = #{id}
+    </delete>
+
+    <delete id="deleteNxpUserLabelByIds" parameterType="String">
+        delete from nxp_user_label where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
