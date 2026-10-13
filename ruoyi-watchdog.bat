@@ -1,44 +1,49 @@
 @echo off
+rem æœ¬æ–‡ä»¶ä»¥ UTF-8 ç¼–ç ä¿å­˜ï¼šåˆ‡æ¢æŽ§åˆ¶å°ä»£ç é¡µä¸º UTF-8ï¼Œä¿è¯åŒå‡»/è®¡åˆ’ä»»åŠ¡è¿è¡Œæ—¶ä¸­æ–‡æ­£å¸¸
+rem ç´§è·Ÿä¸€ä¸ª goto é‡ç½®è§£æžä½ç½®ï¼Œå…¼å®¹æ—§ç³»ç»Ÿåœ¨ chcp åŽä»Žé”™è¯¯å­—èŠ‚åç§»ç»§ç»­æ‰§è¡Œçš„ bug
+chcp 65001 >nul
+goto :Entry
+:Entry
 rem ==================================================================
-rem  RuoYi ·þÎñ¿´ÃÅ¹·½Å±¾£¨Ãë¼¶ÊØ»¤ + ¼Æ»®ÈÎÎñ¶µµ×Ñ²²é£©
+rem  RuoYi æœåŠ¡çœ‹é—¨ç‹—è„šæœ¬ï¼ˆç§’çº§å®ˆæŠ¤ + è®¡åˆ’ä»»åŠ¡å…œåº•å·¡æŸ¥ï¼‰
 rem
-rem  ÓÃ·¨£º
-rem    Ë«»÷±¾ÎÄ¼þ                    - Æô¶¯È«²¿·þÎñ£¬¸÷¿ªÒ»¸ö×îÐ¡»¯ÊØ»¤´°¿Ú
-rem    ruoyi-watchdog.bat stop       - Í£Ö¹È«²¿·þÎñ£¨¿´ÃÅ¹·Ò²»á×Ô¶¯ÍË³ö£©
-rem    ruoyi-watchdog.bat status     - ²é¿´È«²¿·þÎñ/ÊØ»¤/¼Æ»®ÈÎÎñ×´Ì¬
-rem    ruoyi-watchdog.bat install    - °²×°¿´ÃÅ¹·¼Æ»®ÈÎÎñ£¨¿ª»ú×Ô¶¯Ñ²²é£¬·ÀÊÖ¶¯¹Ø±Õ£©
-rem    ruoyi-watchdog.bat uninstall  - Ð¶ÔØ¼Æ»®ÈÎÎñ
+rem  ç”¨æ³•ï¼š
+rem    åŒå‡»æœ¬æ–‡ä»¶                    - å¯åŠ¨å…¨éƒ¨æœåŠ¡ï¼Œå„å¼€ä¸€ä¸ªæœ€å°åŒ–å®ˆæŠ¤çª—å£
+rem    ruoyi-watchdog.bat stop       - åœæ­¢å…¨éƒ¨æœåŠ¡ï¼ˆçœ‹é—¨ç‹—ä¹Ÿä¼šè‡ªåŠ¨é€€å‡ºï¼‰
+rem    ruoyi-watchdog.bat status     - æŸ¥çœ‹å…¨éƒ¨æœåŠ¡/å®ˆæŠ¤/è®¡åˆ’ä»»åŠ¡çŠ¶æ€
+rem    ruoyi-watchdog.bat install    - å®‰è£…çœ‹é—¨ç‹—è®¡åˆ’ä»»åŠ¡ï¼ˆå¼€æœºè‡ªåŠ¨å·¡æŸ¥ï¼Œé˜²æ‰‹åŠ¨å…³é—­ï¼‰
+rem    ruoyi-watchdog.bat uninstall  - å¸è½½è®¡åˆ’ä»»åŠ¡
 rem
-rem  ÊØ»¤»úÖÆ£¨Á½²ã£©£º
-rem    ÄÚ²ã£º´°¿ÚÊØ»¤ - java ÍË³öºó RESTART_DELAY ÃëÄÚ×Ô¶¯ÖØÆô£¨Ã¿¸ö·þÎñÒ»¸öÊØ»¤´°¿Ú£©
-rem    Íâ²ã£º¼Æ»®ÈÎÎñ - Ã¿ SCAN_MINUTES ·ÖÖÓÔËÐÐÒ»´Î "task ·þÎñºÅ" Ñ²²é£¬
-rem          ·ÀÖ¹ÊØ»¤´°¿Ú±»¹Ø¡¢½Å±¾±»ÊÖ¶¯½áÊøµÈÒì³£Çé¿ö
+rem  å®ˆæŠ¤æœºåˆ¶ï¼ˆä¸¤å±‚ï¼‰ï¼š
+rem    å†…å±‚ï¼šçª—å£å®ˆæŠ¤ - java é€€å‡ºåŽ RESTART_DELAY ç§’å†…è‡ªåŠ¨é‡å¯ï¼ˆæ¯ä¸ªæœåŠ¡ä¸€ä¸ªå®ˆæŠ¤çª—å£ï¼‰
+rem    å¤–å±‚ï¼šè®¡åˆ’ä»»åŠ¡ - æ¯ SCAN_MINUTES åˆ†é’Ÿè¿è¡Œä¸€æ¬¡ "task æœåŠ¡å·" å·¡æŸ¥ï¼Œ
+rem          é˜²æ­¢å®ˆæŠ¤çª—å£è¢«å…³ã€è„šæœ¬è¢«æ‰‹åŠ¨ç»“æŸç­‰å¼‚å¸¸æƒ…å†µ
 rem
-rem  Ôö¼Ó·þÎñ·½·¨£º
-rem    ÔÚÏÂÃæ×·¼Ó set "JAR_3=..." Óë set "PORT_3=..."£¬²¢°Ñ SVC_COUNT ¸Ä³É 3
-rem    ×î¶àÖ§³Ö 9 ¸ö·þÎñ£»Ã¿¸ö·þÎñµÄÈÕÖ¾¡¢Í£Ö¹±ê¼Ç·ÅÔÚ¸÷×Ô jar ËùÔÚÄ¿Â¼Àï
+rem  å¢žåŠ æœåŠ¡æ–¹æ³•ï¼š
+rem    åœ¨ä¸‹é¢è¿½åŠ  set "JAR_3=..." ä¸Ž set "PORT_3=..."ï¼Œå¹¶æŠŠ SVC_COUNT æ”¹æˆ 3
+rem    æœ€å¤šæ”¯æŒ 9 ä¸ªæœåŠ¡ï¼›æ¯ä¸ªæœåŠ¡çš„æ—¥å¿—ã€åœæ­¢æ ‡è®°æ”¾åœ¨å„è‡ª jar æ‰€åœ¨ç›®å½•é‡Œ
 rem
-rem  ÐÞ¸´¼ÇÂ¼£º
-rem    - ÐÞ¸´"java ÒÑÔÚÔËÐÐµ«¶Ë¿ÚÎ´Æð"·ÖÖ§Î´½âÎö java Â·¾¶µÄÎÊÌâ£¬
-rem      ¸Ã·ÖÖ§Ò»µ©ÐèÒªÖØÆô½ø³Ì»áÓÃ¿ÕÂ·¾¶Æ´³öÎÞÐ§ÃüÁî£¬µ¼ÖÂÁ¬ÐøÊ§°Üºó·ÅÆú
-rem    - Ã¿´ÎÀ­ÆðÇ°ÖØÐÂÐ£Ñé java Óë jar ÊÇ·ñ´æÔÚ£¨´ò°üÆÚ¼ä jar È±Ê§¸ÄÎªµÈ´ý£©
-rem    - ÐÞ¸´ÍË³öÈë¿ÚÎóÈëÊ§°Ü¼ÆÊý×Ó³ÌÐò¡¢install ³É°ÜÅÐ¶Ï´íÎ»µÄÎÊÌâ
+rem  ä¿®å¤è®°å½•ï¼š
+rem    - ä¿®å¤"java å·²åœ¨è¿è¡Œä½†ç«¯å£æœªèµ·"åˆ†æ”¯æœªè§£æž java è·¯å¾„çš„é—®é¢˜ï¼Œ
+rem      è¯¥åˆ†æ”¯ä¸€æ—¦éœ€è¦é‡å¯è¿›ç¨‹ä¼šç”¨ç©ºè·¯å¾„æ‹¼å‡ºæ— æ•ˆå‘½ä»¤ï¼Œå¯¼è‡´è¿žç»­å¤±è´¥åŽæ”¾å¼ƒ
+rem    - æ¯æ¬¡æ‹‰èµ·å‰é‡æ–°æ ¡éªŒ java ä¸Ž jar æ˜¯å¦å­˜åœ¨ï¼ˆæ‰“åŒ…æœŸé—´ jar ç¼ºå¤±æ”¹ä¸ºç­‰å¾…ï¼‰
+rem    - ä¿®å¤é€€å‡ºå…¥å£è¯¯å…¥å¤±è´¥è®¡æ•°å­ç¨‹åºã€install æˆè´¥åˆ¤æ–­é”™ä½çš„é—®é¢˜
 rem ==================================================================
 setlocal enabledelayedexpansion
 
-rem ========================= ÅäÖÃÇø£¨°´ÐèÐÞ¸Ä£© ===========================
-rem ---- ·þÎñÁÐ±í£ºÃ¿¸ö·þÎñ¶ÔÓ¦Ò»¸ö JAR_N ºÍ PORT_N£¨N ´Ó 1 ¿ªÊ¼Á¬Ðø±àºÅ£© ----
+rem ========================= é…ç½®åŒºï¼ˆæŒ‰éœ€ä¿®æ”¹ï¼‰ ===========================
+rem ---- æœåŠ¡åˆ—è¡¨ï¼šæ¯ä¸ªæœåŠ¡å¯¹åº”ä¸€ä¸ª JAR_N å’Œ PORT_Nï¼ˆN ä»Ž 1 å¼€å§‹è¿žç»­ç¼–å·ï¼‰ ----
 set "JAR_1=F:\backstage\deviceJar\ruoyi-admin.jar"
 set "PORT_1=8686"
 set "JAR_2=F:\backstage\moldJar\ruoyi-admin.jar"
 set "PORT_2=8585"
-rem ---- ·þÎñ×ÜÊý£¬±ØÐëÓëÉÏÃæÅäÖÃµÄ×î´ó N Ò»ÖÂ ----
+rem ---- æœåŠ¡æ€»æ•°ï¼Œå¿…é¡»ä¸Žä¸Šé¢é…ç½®çš„æœ€å¤§ N ä¸€è‡´ ----
 set "SVC_COUNT=2"
-rem JVM ÄÚ´æ²ÎÊý
+rem JVM å†…å­˜å‚æ•°
 set "JAVA_OPTS=-Xms256m -Xmx1024m"
-rem ·þÎñÍË³öºó×Ô¶¯ÖØÆôµÄµÈ´ýÃëÊý
+rem æœåŠ¡é€€å‡ºåŽè‡ªåŠ¨é‡å¯çš„ç­‰å¾…ç§’æ•°
 set "RESTART_DELAY=10"
-rem ¼Æ»®ÈÎÎñÑ²²é¼ä¸ô·ÖÖÓ£¨Windows ¼Æ»®ÈÎÎñ×îÐ¡ 1 ·ÖÖÓ£©
+rem è®¡åˆ’ä»»åŠ¡å·¡æŸ¥é—´éš”åˆ†é’Ÿï¼ˆWindows è®¡åˆ’ä»»åŠ¡æœ€å° 1 åˆ†é’Ÿï¼‰
 set "SCAN_MINUTES=1"
 rem ---- fail-safe: give up after MAX_FAIL consecutive failed starts ----
 set "MAX_FAIL=3"
@@ -48,15 +53,15 @@ rem ---- boot status poll interval in seconds ----
 set "BOOT_POLL=5"
 rem ---- after give-up, pause auto restart for COOLDOWN_MIN minutes ----
 set "COOLDOWN_MIN=10"
-rem ¼Æ»®ÈÎÎñÃûÇ°×º£¬Êµ¼Ê×¢²áÎª Ç°×º-1¡¢Ç°×º-2 ...
+rem è®¡åˆ’ä»»åŠ¡åå‰ç¼€ï¼Œå®žé™…æ³¨å†Œä¸º å‰ç¼€-1ã€å‰ç¼€-2 ...
 set "TASK_NAME=RuoyiDeviceWatchdog"
 rem ==================================================================
 
-rem ½»»¥Ä£Ê½£ºË«»÷/ÊÖ¶¯ÔËÐÐ=1£»¼Æ»®ÈÎÎñÑ²²éÄ£Ê½£¨task ·þÎñºÅ£©=0£¬¾ø²»ÔÝÍ£
+rem äº¤äº’æ¨¡å¼ï¼šåŒå‡»/æ‰‹åŠ¨è¿è¡Œ=1ï¼›è®¡åˆ’ä»»åŠ¡å·¡æŸ¥æ¨¡å¼ï¼ˆtask æœåŠ¡å·ï¼‰=0ï¼Œç»ä¸æš‚åœ
 set "INTERACTIVE=1"
 if /i "%~1"=="task" set "INTERACTIVE=0"
 
-rem ---------------- ·Ö·¢ÃüÁî ----------------
+rem ---------------- åˆ†å‘å‘½ä»¤ ----------------
 if /i "%~1"=="stop" goto :DoStop
 if /i "%~1"=="status" goto :DoStatus
 if /i "%~1"=="install" goto :DoInstall
@@ -64,27 +69,27 @@ if /i "%~1"=="uninstall" goto :DoUninstall
 if /i "%~1"=="task" goto :DoGuard
 goto :StartAll
 
-rem ==================== Æô¶¯È«²¿·þÎñ ====================
+rem ==================== å¯åŠ¨å…¨éƒ¨æœåŠ¡ ====================
 :StartAll
 echo.
-echo ÕýÔÚÆô¶¯È«²¿ %SVC_COUNT% ¸ö·þÎñÊØ»¤ ...
+echo æ­£åœ¨å¯åŠ¨å…¨éƒ¨ %SVC_COUNT% ä¸ªæœåŠ¡å®ˆæŠ¤ ...
 for /l %%n in (1,1,%SVC_COUNT%) do (
     call :ResolveSvc %%n
     if not errorlevel 1 (
         if exist "!STOP_FLAG!" del /f /q "!STOP_FLAG!"
         if exist "!FAIL_CNT_FILE!" del /f /q "!FAIL_CNT_FILE!"
         if exist "!FAIL_LOCK!" del /f /q "!FAIL_LOCK!"
-        echo    [·þÎñ %%n] ¶Ë¿Ú !CUR_PORT!  -  !CUR_JAR!
+        echo    [æœåŠ¡ %%n] ç«¯å£ !CUR_PORT!  -  !CUR_JAR!
         start "RuoYi-Guard-%%n" /min cmd /c call "%~f0" task %%n
     )
 )
 echo.
-echo [³É¹¦] È«²¿ÊØ»¤½ø³ÌÒÑÀ­Æð£¨×îÐ¡»¯´°¿Ú£¬ÇëÎð¹Ø±Õ£©
-echo    - Í£Ö¹·þÎñ£º%~nx0 stop
-echo    - ²é¿´×´Ì¬£º%~nx0 status
+echo [æˆåŠŸ] å…¨éƒ¨å®ˆæŠ¤è¿›ç¨‹å·²æ‹‰èµ·ï¼ˆæœ€å°åŒ–çª—å£ï¼Œè¯·å‹¿å…³é—­ï¼‰
+echo    - åœæ­¢æœåŠ¡ï¼š%~nx0 stop
+echo    - æŸ¥çœ‹çŠ¶æ€ï¼š%~nx0 status
 goto :ExitPause
 
-rem ==================== ÊØ»¤Èë¿Ú£¨task ·þÎñºÅ£© ====================
+rem ==================== å®ˆæŠ¤å…¥å£ï¼ˆtask æœåŠ¡å·ï¼‰ ====================
 :DoGuard
 set "SVC_NO=%~2"
 if "%SVC_NO%"=="" set "SVC_NO=1"
@@ -93,40 +98,40 @@ if errorlevel 1 exit /b 1
 cd /d "%APP_DIR%" 2>nul
 if not exist "%LOG_DIR%" mkdir "%LOG_DIR%"
 
-rem ---------- ¼ì²é 1£ºÈË¹¤Í£Ö¹±ê¼Ç´æÔÚ ¡ú ±£³ÖÍ£Ö¹ ----------
+rem ---------- æ£€æŸ¥ 1ï¼šäººå·¥åœæ­¢æ ‡è®°å­˜åœ¨ â†’ ä¿æŒåœæ­¢ ----------
 if exist "%STOP_FLAG%" (
-    echo [ÐÅÏ¢] ¼ì²âµ½Í£Ö¹±ê¼Ç£¬·þÎñ %SVC_NO% ±£³ÖÍ£Ö¹×´Ì¬¡£
+    echo [ä¿¡æ¯] æ£€æµ‹åˆ°åœæ­¢æ ‡è®°ï¼ŒæœåŠ¡ %SVC_NO% ä¿æŒåœæ­¢çŠ¶æ€ã€‚
     goto :GuardExit
 )
 
-rem ---------- ¼ì²é 2£º¶Ë¿ÚÒÑ¼àÌý ¡ú ·þÎñÕýÔÚÔËÐÐ£¬ÎÞÐèÖØ¸´À­Æð ----------
+rem ---------- æ£€æŸ¥ 2ï¼šç«¯å£å·²ç›‘å¬ â†’ æœåŠ¡æ­£åœ¨è¿è¡Œï¼Œæ— éœ€é‡å¤æ‹‰èµ· ----------
 netstat -ano | findstr /c:":%CUR_PORT% " | findstr "LISTENING" >nul 2>&1
 if not errorlevel 1 (
-    echo [ÐÅÏ¢] ·þÎñ %SVC_NO% ÔËÐÐÖÐ£¨¶Ë¿Ú %CUR_PORT%£©£¬ÎÞÐèÖØ¸´Æô¶¯¡£
+    echo [ä¿¡æ¯] æœåŠ¡ %SVC_NO% è¿è¡Œä¸­ï¼ˆç«¯å£ %CUR_PORT%ï¼‰ï¼Œæ— éœ€é‡å¤å¯åŠ¨ã€‚
     goto :GuardExit
 )
 
-rem ---------- Ô¤±¸£ºÊ§°Ü¼ÆÊý¡¢java Â·¾¶ ----------
+rem ---------- é¢„å¤‡ï¼šå¤±è´¥è®¡æ•°ã€java è·¯å¾„ ----------
 set /a WAIT_TICKS=RESTART_DELAY+1
 set /a BOOT_POLL_P1=BOOT_POLL+1
 set /a FAIL_COUNT=0
 if "%INTERACTIVE%"=="0" call :LoadFailState
 if "%SKIP_RUN%"=="1" goto :GuardExit
-rem ×¢Òâ£ºÎÞÂÛ×ßÄÄ¸ö·ÖÖ§¶¼±ØÐëÏÈ½âÎö java Â·¾¶¡£
-rem Èô"½ø³ÌÔÚÅÜµ«¶Ë¿ÚÎ´Æð"·ÖÖ§Ö±½ÓÌøµ½Æô¶¯¼àÊÓ£¬Ò»µ©½ø³ÌËÀµôÐèÒªÖØÆô£¬
-rem ¾Í»áÓÃ¿ÕÂ·¾¶Æ´³öÎÞÐ§ÃüÁî£¬Á¬ÐøÊ§°Üºó³¹µ×·ÅÆú£¨ÀúÊ· bug£¬ÒÑÐÞ¸´£©¡£
+rem æ³¨æ„ï¼šæ— è®ºèµ°å“ªä¸ªåˆ†æ”¯éƒ½å¿…é¡»å…ˆè§£æž java è·¯å¾„ã€‚
+rem è‹¥"è¿›ç¨‹åœ¨è·‘ä½†ç«¯å£æœªèµ·"åˆ†æ”¯ç›´æŽ¥è·³åˆ°å¯åŠ¨ç›‘è§†ï¼Œä¸€æ—¦è¿›ç¨‹æ­»æŽ‰éœ€è¦é‡å¯ï¼Œ
+rem å°±ä¼šç”¨ç©ºè·¯å¾„æ‹¼å‡ºæ— æ•ˆå‘½ä»¤ï¼Œè¿žç»­å¤±è´¥åŽå½»åº•æ”¾å¼ƒï¼ˆåŽ†å² bugï¼Œå·²ä¿®å¤ï¼‰ã€‚
 call :ResolveJava
 call :IsSvcJavaRunning
 if "%IS_RUNNING%"=="0" goto :DoGuardNoJava
 
-rem ---- java ½ø³ÌÒÑ´æÔÚµ«¶Ë¿ÚÎ´¼àÌý£¨ÕýÔÚÆô¶¯ÖÐ£©¡ú Ö»¼àÊÓÆäÆô¶¯ ----
+rem ---- java è¿›ç¨‹å·²å­˜åœ¨ä½†ç«¯å£æœªç›‘å¬ï¼ˆæ­£åœ¨å¯åŠ¨ä¸­ï¼‰â†’ åªç›‘è§†å…¶å¯åŠ¨ ----
 call :GetDate
 set "LOG_FILE=%LOG_DIR%\ruoyi-admin_%LOG_DATE%.log"
 goto :BootPoll
 
 :DoGuardNoJava
-echo ·þÎñ %SVC_NO% ÊØ»¤ÔËÐÐÖÐ£¬ÈÕÖ¾Ä¿Â¼£º%LOG_DIR%
-echo ÊØ»¤ÆÚ¼äÇëÎðÖ±½Ó¹Ø±Õ±¾´°¿Ú£»´°¿Ú±»¹Øºó¼Æ»®ÈÎÎñ»á¶µµ×À­Æð¡£
+echo æœåŠ¡ %SVC_NO% å®ˆæŠ¤è¿è¡Œä¸­ï¼Œæ—¥å¿—ç›®å½•ï¼š%LOG_DIR%
+echo å®ˆæŠ¤æœŸé—´è¯·å‹¿ç›´æŽ¥å…³é—­æœ¬çª—å£ï¼›çª—å£è¢«å…³åŽè®¡åˆ’ä»»åŠ¡ä¼šå…œåº•æ‹‰èµ·ã€‚
 
 :RunGuard
 if exist "%STOP_FLAG%" goto :GuardStopped
@@ -134,23 +139,23 @@ netstat -ano | findstr /c:":%CUR_PORT% " | findstr "LISTENING" >nul 2>&1
 if not errorlevel 1 goto :GuardRunning
 call :GetDate
 set "LOG_FILE=%LOG_DIR%\ruoyi-admin_%LOG_DATE%.log"
-rem ---- Ã¿´ÎÀ­ÆðÇ°ÖØÐÂÐ£Ñé java Óë jar£¨ÖØÆôÑ­»·ÖÐ jar ¿ÉÄÜÕýÔÚÖØÐÂ´ò°ü£© ----
+rem ---- æ¯æ¬¡æ‹‰èµ·å‰é‡æ–°æ ¡éªŒ java ä¸Ž jarï¼ˆé‡å¯å¾ªçŽ¯ä¸­ jar å¯èƒ½æ­£åœ¨é‡æ–°æ‰“åŒ…ï¼‰ ----
 if not defined JAVA_EXE call :ResolveJava
 if not defined JAVA_EXE (
-    echo [´íÎó] Î´ÕÒµ½¿ÉÓÃµÄ java.exe£¬ÎÞ·¨Æô¶¯·þÎñ %SVC_NO%¡£
-    echo [%date% %time%] [¿´ÃÅ¹·] ·þÎñ %SVC_NO% Î´ÕÒµ½¿ÉÓÃµÄ java.exe£¬ÎÞ·¨Æô¶¯ >> "%WATCHDOG_LOG%"
+    echo [é”™è¯¯] æœªæ‰¾åˆ°å¯ç”¨çš„ java.exeï¼Œæ— æ³•å¯åŠ¨æœåŠ¡ %SVC_NO%ã€‚
+    echo [%date% %time%] [çœ‹é—¨ç‹—] æœåŠ¡ %SVC_NO% æœªæ‰¾åˆ°å¯ç”¨çš„ java.exeï¼Œæ— æ³•å¯åŠ¨ >> "%WATCHDOG_LOG%"
     goto :GuardExit
 )
 if not exist "%CUR_JAR%" (
     if not defined JAR_WARNED (
         set "JAR_WARNED=1"
-        echo [ÌáÊ¾] Î´ÕÒµ½ jar °ü£¬ÈôÕýÔÚÖØÐÂ´ò°ü»á×Ô¶¯µÈ´ý£º%CUR_JAR%
-        echo [%date% %time%] [¿´ÃÅ¹·] ·þÎñ %SVC_NO% Î´ÕÒµ½ jar °ü£¬µÈ´ýÖÐ£º%CUR_JAR% >> "%WATCHDOG_LOG%"
+        echo [æç¤º] æœªæ‰¾åˆ° jar åŒ…ï¼Œè‹¥æ­£åœ¨é‡æ–°æ‰“åŒ…ä¼šè‡ªåŠ¨ç­‰å¾…ï¼š%CUR_JAR%
+        echo [%date% %time%] [çœ‹é—¨ç‹—] æœåŠ¡ %SVC_NO% æœªæ‰¾åˆ° jar åŒ…ï¼Œç­‰å¾…ä¸­ï¼š%CUR_JAR% >> "%WATCHDOG_LOG%"
     )
     ping -n %WAIT_TICKS% 127.0.0.1 >nul
     goto :RunGuard
 )
-rem ---- probe£ºÏÈÌ½²âÈÕÖ¾ÎÄ¼þ¿ÉÐ´£¬·ñÔò java ¸ù±¾ÎÞ·¨ÂäµØÊä³ö ----
+rem ---- probeï¼šå…ˆæŽ¢æµ‹æ—¥å¿—æ–‡ä»¶å¯å†™ï¼Œå¦åˆ™ java æ ¹æœ¬æ— æ³•è½åœ°è¾“å‡º ----
 set "PROBE_MARK=GUARD_PROBE_%RANDOM%_%RANDOM%"
 echo [%date% %time%] [guard] svc %SVC_NO% probe %PROBE_MARK% 2>nul >> "%LOG_FILE%"
 findstr /c:"%PROBE_MARK%" "%LOG_FILE%" >nul 2>&1
@@ -168,18 +173,18 @@ call :IsSvcJavaRunning
 if "%IS_RUNNING%"=="0" goto :BootDead
 if %WAITED% LSS %BOOT_TIMEOUT% goto :BootPoll
 call :KillSvcJava
-set "FAIL_REASON=Æô¶¯³¬Ê±£º¶Ë¿Ú %BOOT_TIMEOUT% ÃëÄÚÎ´¼àÌý£¬ÒÑÇ¿ÖÆ½áÊø½©ËÀµÄ java ½ø³Ì"
+set "FAIL_REASON=å¯åŠ¨è¶…æ—¶ï¼šç«¯å£ %BOOT_TIMEOUT% ç§’å†…æœªç›‘å¬ï¼Œå·²å¼ºåˆ¶ç»“æŸåƒµæ­»çš„ java è¿›ç¨‹"
 goto :BootFail
 :BootDead
-set "FAIL_REASON=java ÔÚ¶Ë¿Ú¼àÌýÇ°¾ÍÍË³öÁË"
-echo [ÌáÊ¾] java Æô¶¯ºóÁ¢¼´ÍË³ö£¬Çë²é¿´ÈÕÖ¾Ä©Î²¶¨Î»Ô­Òò£º%LOG_FILE%
+set "FAIL_REASON=java åœ¨ç«¯å£ç›‘å¬å‰å°±é€€å‡ºäº†"
+echo [æç¤º] java å¯åŠ¨åŽç«‹å³é€€å‡ºï¼Œè¯·æŸ¥çœ‹æ—¥å¿—æœ«å°¾å®šä½åŽŸå› ï¼š%LOG_FILE%
 goto :BootFail
 :LogLocked
-call :FailOnce "ÈÕÖ¾ÎÄ¼þ±»ÆäËû½ø³ÌÕ¼ÓÃ£¬¿ÉÄÜÓÐ²ÐÁôµÄ java ½ø³Ì"
+call :FailOnce "æ—¥å¿—æ–‡ä»¶è¢«å…¶ä»–è¿›ç¨‹å ç”¨ï¼Œå¯èƒ½æœ‰æ®‹ç•™çš„ java è¿›ç¨‹"
 if defined GIVE_UP goto :GuardExit
-echo [¾¯¸æ] ·þÎñ %SVC_NO% ÎÞ·¨Æô¶¯£ºÈÕÖ¾ÎÄ¼þ±»Õ¼ÓÃ
-echo [¾¯¸æ] %LOG_FILE%
-echo [¾¯¸æ] %RESTART_DELAY% ÃëºóÖØÊÔ - µÚ %FAIL_COUNT%/%MAX_FAIL% ´Î
+echo [è­¦å‘Š] æœåŠ¡ %SVC_NO% æ— æ³•å¯åŠ¨ï¼šæ—¥å¿—æ–‡ä»¶è¢«å ç”¨
+echo [è­¦å‘Š] %LOG_FILE%
+echo [è­¦å‘Š] %RESTART_DELAY% ç§’åŽé‡è¯• - ç¬¬ %FAIL_COUNT%/%MAX_FAIL% æ¬¡
 ping -n %WAIT_TICKS% 127.0.0.1 >nul
 goto :RunGuard
 :BootFail
@@ -187,8 +192,8 @@ netstat -ano | findstr /c:":%CUR_PORT% " | findstr "LISTENING" >nul 2>&1
 if not errorlevel 1 goto :BootOk
 call :FailOnce "%FAIL_REASON%"
 if defined GIVE_UP goto :GuardExit
-echo [¾¯¸æ] ·þÎñ %SVC_NO% Æô¶¯Ê§°Ü£º%FAIL_REASON%
-echo [¾¯¸æ] %RESTART_DELAY% ÃëºóÖØÊÔ - µÚ %FAIL_COUNT%/%MAX_FAIL% ´Î
+echo [è­¦å‘Š] æœåŠ¡ %SVC_NO% å¯åŠ¨å¤±è´¥ï¼š%FAIL_REASON%
+echo [è­¦å‘Š] %RESTART_DELAY% ç§’åŽé‡è¯• - ç¬¬ %FAIL_COUNT%/%MAX_FAIL% æ¬¡
 ping -n %WAIT_TICKS% 127.0.0.1 >nul
 goto :RunGuard
 :BootOk
@@ -196,7 +201,7 @@ set /a FAIL_COUNT=0
 del /f /q "%FAIL_CNT_FILE%" >nul 2>&1
 del /f /q "%FAIL_LOCK%" >nul 2>&1
 echo [%date% %time%] [guard] svc %SVC_NO% service UP on port %CUR_PORT%, boot took about %WAITED%s >> "%LOG_FILE%" 2>nul
-echo [ÐÅÏ¢] ·þÎñ %SVC_NO% ÒÑÆô¶¯£¨¶Ë¿Ú %CUR_PORT%£©£¬ÊØ»¤¼àÊÓÖÐ ...
+echo [ä¿¡æ¯] æœåŠ¡ %SVC_NO% å·²å¯åŠ¨ï¼ˆç«¯å£ %CUR_PORT%ï¼‰ï¼Œå®ˆæŠ¤ç›‘è§†ä¸­ ...
 :RunWait
 if exist "%STOP_FLAG%" goto :GuardStopped
 ping -n %WAIT_TICKS% 127.0.0.1 >nul
@@ -204,37 +209,37 @@ netstat -ano | findstr /c:":%CUR_PORT% " | findstr "LISTENING" >nul 2>&1
 if not errorlevel 1 goto :RunWait
 echo [%date% %time%] [guard] svc %SVC_NO% service process exited >> "%LOG_FILE%" 2>nul
 call :KillSvcJava
-echo [¾¯¸æ] ·þÎñ %SVC_NO% ÒâÍâÍ£Ö¹£¬%RESTART_DELAY% Ãëºó×Ô¶¯ÖØÆô ...
+echo [è­¦å‘Š] æœåŠ¡ %SVC_NO% æ„å¤–åœæ­¢ï¼Œ%RESTART_DELAY% ç§’åŽè‡ªåŠ¨é‡å¯ ...
 ping -n %WAIT_TICKS% 127.0.0.1 >nul
 goto :RunGuard
 :GuardStopped
-echo [ÐÅÏ¢] ÒÑ¼ì²âµ½Í£Ö¹±ê¼Ç£¬·þÎñ %SVC_NO% ÊØ»¤ÍË³ö¡£
+echo [ä¿¡æ¯] å·²æ£€æµ‹åˆ°åœæ­¢æ ‡è®°ï¼ŒæœåŠ¡ %SVC_NO% å®ˆæŠ¤é€€å‡ºã€‚
 goto :GuardExit
 :GuardRunning
-echo [ÐÅÏ¢] ·þÎñ %SVC_NO% ÒÑÔÚÔËÐÐ£¨¶Ë¿Ú %CUR_PORT%£©£¬±¾ÊØ»¤ÍË³ö¡£
+echo [ä¿¡æ¯] æœåŠ¡ %SVC_NO% å·²åœ¨è¿è¡Œï¼ˆç«¯å£ %CUR_PORT%ï¼‰ï¼Œæœ¬å®ˆæŠ¤é€€å‡ºã€‚
 goto :GuardExit
 
 :GuardExit
 if "%INTERACTIVE%"=="1" pause
 exit /b 0
 
-rem ==================== stop£ºÍ£Ö¹È«²¿·þÎñ ====================
+rem ==================== stopï¼šåœæ­¢å…¨éƒ¨æœåŠ¡ ====================
 :DoStop
 echo.
-echo ÕýÔÚÍ£Ö¹È«²¿ %SVC_COUNT% ¸ö·þÎñ ...
+echo æ­£åœ¨åœæ­¢å…¨éƒ¨ %SVC_COUNT% ä¸ªæœåŠ¡ ...
 for /l %%n in (1,1,%SVC_COUNT%) do call :StopOne %%n
 echo.
-echo È«²¿·þÎñÒÑÍ£Ö¹£¨ÊØ»¤Ò²ÒÑÍË³ö£©¡£Ë«»÷±¾½Å±¾¿ÉÖØÐÂÆô¶¯¡£
+echo å…¨éƒ¨æœåŠ¡å·²åœæ­¢ï¼ˆå®ˆæŠ¤ä¹Ÿå·²é€€å‡ºï¼‰ã€‚åŒå‡»æœ¬è„šæœ¬å¯é‡æ–°å¯åŠ¨ã€‚
 goto :ExitPause
 
-rem ---- Í£Ö¹µ¥¸ö·þÎñ ----
+rem ---- åœæ­¢å•ä¸ªæœåŠ¡ ----
 :StopOne
 call :ResolveSvc %~1
 if errorlevel 1 exit /b 1
 echo.
-echo [·þÎñ %~1] ÕýÔÚÍ£Ö¹£¨¶Ë¿Ú %CUR_PORT%£©...
+echo [æœåŠ¡ %~1] æ­£åœ¨åœæ­¢ï¼ˆç«¯å£ %CUR_PORT%ï¼‰...
 if not exist "%LOG_DIR%" mkdir "%LOG_DIR%"
-rem ÏÈÐ´Í£Ö¹±ê¼Ç£¬·ÀÖ¹¿´ÃÅ¹·°Ñ·þÎñÔÙÀ­ÆðÀ´
+rem å…ˆå†™åœæ­¢æ ‡è®°ï¼Œé˜²æ­¢çœ‹é—¨ç‹—æŠŠæœåŠ¡å†æ‹‰èµ·æ¥
 type nul > "%STOP_FLAG%"
 del /f /q "%FAIL_CNT_FILE%" >nul 2>&1
 del /f /q "%FAIL_LOCK%" >nul 2>&1
@@ -242,28 +247,28 @@ del /f /q "%FAIL_LOCK%" >nul 2>&1
 set "FOUND=0"
 for /f "tokens=5" %%p in ('netstat -aon ^| findstr /c:":%CUR_PORT% " ^| findstr "LISTENING"') do (
     set "FOUND=1"
-    echo    ÕýÔÚ½áÊø½ø³Ì PID=%%p ...
+    echo    æ­£åœ¨ç»“æŸè¿›ç¨‹ PID=%%p ...
     taskkill /f /pid %%p >nul 2>&1
 )
 
-rem ÔÙ°´ jar ÍêÕûÂ·¾¶¶µµ×É±µô²ÐÁô java ½ø³Ì£¨·ÀÖ¹¶Ë¿ÚÎ´¼àÌýµ«½ø³Ì´æÔÚ£©
+rem å†æŒ‰ jar å®Œæ•´è·¯å¾„å…œåº•æ€æŽ‰æ®‹ç•™ java è¿›ç¨‹ï¼ˆé˜²æ­¢ç«¯å£æœªç›‘å¬ä½†è¿›ç¨‹å­˜åœ¨ï¼‰
 powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object {$_.Name -eq 'java.exe' -and $_.CommandLine -like '*%CUR_JAR%*'} | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }"
 
 if "!FOUND!"=="0" (
-    echo    Î´·¢ÏÖÔËÐÐÖÐµÄ·þÎñ£¨¶Ë¿Ú %CUR_PORT% ÎÞ¼àÌý½ø³Ì£©¡£
+    echo    æœªå‘çŽ°è¿è¡Œä¸­çš„æœåŠ¡ï¼ˆç«¯å£ %CUR_PORT% æ— ç›‘å¬è¿›ç¨‹ï¼‰ã€‚
 ) else (
     ping -n 3 127.0.0.1 >nul
-    echo [·þÎñ %~1] ÒÑÍ£Ö¹£¬¿´ÃÅ¹·²»»áÔÙ×Ô¶¯À­Æð¡£
+    echo [æœåŠ¡ %~1] å·²åœæ­¢ï¼Œçœ‹é—¨ç‹—ä¸ä¼šå†è‡ªåŠ¨æ‹‰èµ·ã€‚
 )
 exit /b 0
 
-rem ==================== status£º²é¿´È«²¿·þÎñ×´Ì¬ ====================
+rem ==================== statusï¼šæŸ¥çœ‹å…¨éƒ¨æœåŠ¡çŠ¶æ€ ====================
 :DoStatus
 echo.
-echo ==================== RuoYi ·þÎñ×´Ì¬£¨¹² %SVC_COUNT% ¸ö·þÎñ£© ====================
+echo ==================== RuoYi æœåŠ¡çŠ¶æ€ï¼ˆå…± %SVC_COUNT% ä¸ªæœåŠ¡ï¼‰ ====================
 for /l %%n in (1,1,%SVC_COUNT%) do call :StatusOne %%n
 echo.
-echo   ËµÃ÷£ºÈÕÖ¾¡¢Í£Ö¹±ê¼Ç´æ·ÅÔÚ¸÷×Ô jar ËùÔÚÄ¿Â¼µÄ logs ÄÚ
+echo   è¯´æ˜Žï¼šæ—¥å¿—ã€åœæ­¢æ ‡è®°å­˜æ”¾åœ¨å„è‡ª jar æ‰€åœ¨ç›®å½•çš„ logs å†…
 echo ========================================================
 goto :ExitPause
 
@@ -271,7 +276,7 @@ goto :ExitPause
 call :ResolveSvc %~1
 if errorlevel 1 exit /b 1
 echo.
-echo -------- [·þÎñ %~1] %CUR_JAR% --------
+echo -------- [æœåŠ¡ %~1] %CUR_JAR% --------
 set "LISTEN=0"
 set "LISTEN_PID="
 for /f "tokens=5" %%p in ('netstat -aon ^| findstr /c:":%CUR_PORT% " ^| findstr "LISTENING"') do (
@@ -279,9 +284,9 @@ for /f "tokens=5" %%p in ('netstat -aon ^| findstr /c:":%CUR_PORT% " ^| findstr 
     set "LISTEN_PID=%%p"
 )
 if "!LISTEN!"=="1" (
-    echo   ¶Ë¿Ú×´Ì¬    ÔËÐÐÖÐ£¨¶Ë¿Ú %CUR_PORT% ¼àÌýÖÐ£¬PID !LISTEN_PID!£©
+    echo   ç«¯å£çŠ¶æ€    è¿è¡Œä¸­ï¼ˆç«¯å£ %CUR_PORT% ç›‘å¬ä¸­ï¼ŒPID !LISTEN_PID!ï¼‰
 ) else (
-    echo   ¶Ë¿Ú×´Ì¬    Î´ÔËÐÐ
+    echo   ç«¯å£çŠ¶æ€    æœªè¿è¡Œ
 )
 set "JAVA_FLAG="
 if not "!LISTEN_PID!"=="" (
@@ -290,87 +295,87 @@ if not "!LISTEN_PID!"=="" (
 )
 powershell -NoProfile -Command "if (Get-CimInstance Win32_Process | Where-Object {$_.Name -eq 'java.exe' -and $_.CommandLine -like '*%CUR_JAR%*'}) { exit 1 }"
 if not defined JAVA_FLAG if errorlevel 1 set "JAVA_FLAG=1"
-if defined JAVA_FLAG (echo   java ½ø³Ì    ´æÔÚ) else (echo   java ½ø³Ì    ²»´æÔÚ)
-if exist "%STOP_FLAG%" (echo   Í£Ö¹±ê¼Ç    ´æÔÚ£¨ÈË¹¤Í£Ö¹£¬Ë«»÷½Å±¾¿É»Ö¸´Æô¶¯£©) else (echo   Í£Ö¹±ê¼Ç    ÎÞ)
+if defined JAVA_FLAG (echo   java è¿›ç¨‹    å­˜åœ¨) else (echo   java è¿›ç¨‹    ä¸å­˜åœ¨)
+if exist "%STOP_FLAG%" (echo   åœæ­¢æ ‡è®°    å­˜åœ¨ï¼ˆäººå·¥åœæ­¢ï¼ŒåŒå‡»è„šæœ¬å¯æ¢å¤å¯åŠ¨ï¼‰) else (echo   åœæ­¢æ ‡è®°    æ— )
 schtasks /query /tn "\%TASK_NAME%-%~1" >nul 2>&1
 if not errorlevel 1 (
-    echo   ¿´ÃÅ¹·¼Æ»®ÈÎÎñ    ÒÑ°²×°£¬Ã¿ %SCAN_MINUTES% ·ÖÖÓÑ²²é
+    echo   çœ‹é—¨ç‹—è®¡åˆ’ä»»åŠ¡    å·²å®‰è£…ï¼Œæ¯ %SCAN_MINUTES% åˆ†é’Ÿå·¡æŸ¥
 ) else (
-    echo   ¿´ÃÅ¹·¼Æ»®ÈÎÎñ    Î´°²×°£¬ÒÔ¹ÜÀíÔ±ÔËÐÐ install ¿É°²×°
+    echo   çœ‹é—¨ç‹—è®¡åˆ’ä»»åŠ¡    æœªå®‰è£…ï¼Œä»¥ç®¡ç†å‘˜è¿è¡Œ install å¯å®‰è£…
 )
-if exist "%FAIL_LOCK%" (echo   ·ÅÆúÖØÊÔËø    ´æÔÚ£¨×Ô¶¯ÖØÆôÒÑÔÝÍ££¬É¾³ý¸ÃÎÄ¼þ¿ÉÁ¢¼´ÖØÊÔ£©) else (echo   ·ÅÆúÖØÊÔËø    ÎÞ)
+if exist "%FAIL_LOCK%" (echo   æ”¾å¼ƒé‡è¯•é”    å­˜åœ¨ï¼ˆè‡ªåŠ¨é‡å¯å·²æš‚åœï¼Œåˆ é™¤è¯¥æ–‡ä»¶å¯ç«‹å³é‡è¯•ï¼‰) else (echo   æ”¾å¼ƒé‡è¯•é”    æ— )
 exit /b 0
 
-rem ==================== install£º°²×°¿´ÃÅ¹·¼Æ»®ÈÎÎñ ====================
+rem ==================== installï¼šå®‰è£…çœ‹é—¨ç‹—è®¡åˆ’ä»»åŠ¡ ====================
 :DoInstall
 net session >nul 2>&1
 if errorlevel 1 (
-    echo [ÌáÊ¾] °²×°¼Æ»®ÈÎÎñÐèÒª¹ÜÀíÔ±È¨ÏÞ£¬ÕýÔÚµ¯³öÊÚÈ¨´°¿Ú£¨Çëµã"ÊÇ"£©...
-    powershell -NoProfile -Command "try { Start-Process -FilePath '%~f0' -ArgumentList 'install' -Verb RunAs } catch { Write-Host ('ÊÚÈ¨Ê§°Ü£º' + $_.Exception.Message) }"
+    echo [æç¤º] å®‰è£…è®¡åˆ’ä»»åŠ¡éœ€è¦ç®¡ç†å‘˜æƒé™ï¼Œæ­£åœ¨å¼¹å‡ºæŽˆæƒçª—å£ï¼ˆè¯·ç‚¹"æ˜¯"ï¼‰...
+    powershell -NoProfile -Command "try { Start-Process -FilePath '%~f0' -ArgumentList 'install' -Verb RunAs } catch { Write-Host ('æŽˆæƒå¤±è´¥ï¼š' + $_.Exception.Message) }"
     exit /b 0
 )
 for /l %%n in (1,1,%SVC_COUNT%) do call :InstallOne %%n
 echo.
-echo [Íê³É] È«²¿¿´ÃÅ¹·¼Æ»®ÈÎÎñÒÑ¾ÍÐ÷¡£
+echo [å®Œæˆ] å…¨éƒ¨çœ‹é—¨ç‹—è®¡åˆ’ä»»åŠ¡å·²å°±ç»ªã€‚
 goto :ExitPause
 
 :InstallOne
 call :ResolveSvc %~1
 if errorlevel 1 exit /b 1
 echo.
-echo ÕýÔÚ´´½¨¼Æ»®ÈÎÎñ %TASK_NAME%-%~1£¨·þÎñ %~1£¬¶Ë¿Ú %CUR_PORT%£¬SYSTEM ÕË»§ºóÌ¨ÔËÐÐ£©...
+echo æ­£åœ¨åˆ›å»ºè®¡åˆ’ä»»åŠ¡ %TASK_NAME%-%~1ï¼ˆæœåŠ¡ %~1ï¼Œç«¯å£ %CUR_PORT%ï¼ŒSYSTEM è´¦æˆ·åŽå°è¿è¡Œï¼‰...
 schtasks /delete /tn "\%TASK_NAME%-%~1" /f >nul 2>&1
 powershell -NoProfile -ExecutionPolicy Bypass -Command "try { $action = New-ScheduledTaskAction -Execute '\"%~f0\"' -Argument 'task %~1'; $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes %SCAN_MINUTES%) -RepetitionDuration (New-TimeSpan -Days 3650); $principal = New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount -RunLevel Highest; $settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit ([TimeSpan]::Zero) -MultipleInstances IgnoreNew -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable; Register-ScheduledTask -TaskName '%TASK_NAME%-%~1' -Action $action -Trigger $trigger -Principal $principal -Settings $settings -ErrorAction Stop | Out-Null; exit 0 } catch { Write-Host $_.Exception.Message; exit 1 }"
-rem ±ØÐë½ô¸úÔÚ×¢²áÃüÁîÖ®ºóÅÐ¶Ï³É°Ü£¬·ñÔò¼ì²éµÄÊÇºóÒ»ÌõÃüÁîµÄ·µ»ØÖµ£¨ÀúÊ· bug£¬ÒÑÐÞ¸´£©
+rem å¿…é¡»ç´§è·Ÿåœ¨æ³¨å†Œå‘½ä»¤ä¹‹åŽåˆ¤æ–­æˆè´¥ï¼Œå¦åˆ™æ£€æŸ¥çš„æ˜¯åŽä¸€æ¡å‘½ä»¤çš„è¿”å›žå€¼ï¼ˆåŽ†å² bugï¼Œå·²ä¿®å¤ï¼‰
 if errorlevel 1 (
-    echo [Ê§°Ü] ¼Æ»®ÈÎÎñ %TASK_NAME%-%~1 ´´½¨Ê§°Ü£¬Çë¿´ÉÏ·½´íÎóÐÅÏ¢¡£
+    echo [å¤±è´¥] è®¡åˆ’ä»»åŠ¡ %TASK_NAME%-%~1 åˆ›å»ºå¤±è´¥ï¼Œè¯·çœ‹ä¸Šæ–¹é”™è¯¯ä¿¡æ¯ã€‚
     exit /b 1
 )
-rem ·Å¿ª ACL£ºÆÕÍ¨ÓÃ»§£¨·Ç¹ÜÀíÔ±£©Ò²ÄÜ²éÑ¯ SYSTEM ¼Æ»®ÈÎÎñµÄ×´Ì¬
+rem æ”¾å¼€ ACLï¼šæ™®é€šç”¨æˆ·ï¼ˆéžç®¡ç†å‘˜ï¼‰ä¹Ÿèƒ½æŸ¥è¯¢ SYSTEM è®¡åˆ’ä»»åŠ¡çš„çŠ¶æ€
 powershell -NoProfile -Command "try { $sd = New-Object -ComObject Schedule.Service; $sd.Connect(); $tk = $sd.GetFolder('\').GetTask('%TASK_NAME%-%~1'); $tk.SetSecurityDescriptor('D:P(A;;FA;;;BA)(A;;FA;;;SY)(A;;FRFX;;;AU)', 0) } catch {}"
-echo [³É¹¦] ¼Æ»®ÈÎÎñ %TASK_NAME%-%~1 ÒÑ°²×°¡£
+echo [æˆåŠŸ] è®¡åˆ’ä»»åŠ¡ %TASK_NAME%-%~1 å·²å®‰è£…ã€‚
 exit /b 0
 
-rem ==================== uninstall£ºÐ¶ÔØ¼Æ»®ÈÎÎñ ====================
+rem ==================== uninstallï¼šå¸è½½è®¡åˆ’ä»»åŠ¡ ====================
 :DoUninstall
 net session >nul 2>&1
 if errorlevel 1 (
-    echo [ÌáÊ¾] Ð¶ÔØ¼Æ»®ÈÎÎñÐèÒª¹ÜÀíÔ±È¨ÏÞ£¬ÕýÔÚµ¯³öÊÚÈ¨´°¿Ú...
-    powershell -NoProfile -Command "try { Start-Process -FilePath '%~f0' -ArgumentList 'uninstall' -Verb RunAs } catch { Write-Host ('ÊÚÈ¨Ê§°Ü£º' + $_.Exception.Message) }"
+    echo [æç¤º] å¸è½½è®¡åˆ’ä»»åŠ¡éœ€è¦ç®¡ç†å‘˜æƒé™ï¼Œæ­£åœ¨å¼¹å‡ºæŽˆæƒçª—å£...
+    powershell -NoProfile -Command "try { Start-Process -FilePath '%~f0' -ArgumentList 'uninstall' -Verb RunAs } catch { Write-Host ('æŽˆæƒå¤±è´¥ï¼š' + $_.Exception.Message) }"
     exit /b 0
 )
 for /l %%n in (1,1,%SVC_COUNT%) do call :UninstallOne %%n
 echo.
-echo [Íê³É] ¼Æ»®ÈÎÎñÐ¶ÔØÍê±Ï£¬²»Ó°ÏìÔËÐÐÖÐµÄ·þÎñ¡£³¹µ×Í£Ö¹ÇëÔËÐÐ stop¡£
+echo [å®Œæˆ] è®¡åˆ’ä»»åŠ¡å¸è½½å®Œæ¯•ï¼Œä¸å½±å“è¿è¡Œä¸­çš„æœåŠ¡ã€‚å½»åº•åœæ­¢è¯·è¿è¡Œ stopã€‚
 goto :ExitPause
 
 :UninstallOne
 schtasks /query /tn "\%TASK_NAME%-%~1" >nul 2>&1
 if errorlevel 1 (
-    echo [ÐÅÏ¢] ¼Æ»®ÈÎÎñ %TASK_NAME%-%~1 ²»´æÔÚ£¬Ìø¹ý
+    echo [ä¿¡æ¯] è®¡åˆ’ä»»åŠ¡ %TASK_NAME%-%~1 ä¸å­˜åœ¨ï¼Œè·³è¿‡
 ) else (
     schtasks /delete /tn "\%TASK_NAME%-%~1" /f
-    echo [³É¹¦] ¼Æ»®ÈÎÎñ %TASK_NAME%-%~1 ÒÑÐ¶ÔØ¡£
+    echo [æˆåŠŸ] è®¡åˆ’ä»»åŠ¡ %TASK_NAME%-%~1 å·²å¸è½½ã€‚
 )
 exit /b 0
 
-rem ==================== ×Ó³ÌÐò ====================
+rem ==================== å­ç¨‹åº ====================
 :GetDate
 for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyyMMdd"') do set "LOG_DATE=%%i"
 goto :eof
 
-rem ---- °´·þÎñºÅ½âÎö jar/¶Ë¿Ú/ÈÕÖ¾/Í£Ö¹±ê¼ÇÂ·¾¶ ----
+rem ---- æŒ‰æœåŠ¡å·è§£æž jar/ç«¯å£/æ—¥å¿—/åœæ­¢æ ‡è®°è·¯å¾„ ----
 :ResolveSvc
 set "CUR_JAR="
 set "CUR_PORT="
 call set "CUR_JAR=%%JAR_%~1%%"
 call set "CUR_PORT=%%PORT_%~1%%"
 if not defined CUR_JAR (
-    echo [´íÎó] ·þÎñ %~1 Î´ÅäÖÃ£¬Çë¼ì²é JAR_%~1
+    echo [é”™è¯¯] æœåŠ¡ %~1 æœªé…ç½®ï¼Œè¯·æ£€æŸ¥ JAR_%~1
     exit /b 1
 )
 if not defined CUR_PORT (
-    echo [´íÎó] ·þÎñ %~1 Î´ÅäÖÃ¶Ë¿Ú£¬Çë¼ì²é PORT_%~1
+    echo [é”™è¯¯] æœåŠ¡ %~1 æœªé…ç½®ç«¯å£ï¼Œè¯·æ£€æŸ¥ PORT_%~1
     exit /b 1
 )
 for %%i in ("%CUR_JAR%") do set "APP_DIR=%%~dpi"
@@ -381,7 +386,7 @@ set "FAIL_CNT_FILE=%APP_DIR%fail-%~1.count"
 set "FAIL_LOCK=%APP_DIR%fail-%~1.lock"
 exit /b 0
 
-rem ---- ×Ó³ÌÐò£º¶¨Î»¿ÉÓÃµÄ 1.8 °æ java.exe£¬½á¹û´æ JAVA_EXE ----
+rem ---- å­ç¨‹åºï¼šå®šä½å¯ç”¨çš„ 1.8 ç‰ˆ java.exeï¼Œç»“æžœå­˜ JAVA_EXE ----
 :ResolveJava
 if defined JAVA_EXE goto :eof
 set "JAVA_EXE="
@@ -397,7 +402,7 @@ if not defined JAVA_EXE for /f "delims=" %%i in ('where java 2^>nul') do if not 
 if not defined JAVA_EXE if defined JAVA_HOME if exist "%JAVA_HOME%\bin\java.exe" set "JAVA_EXE=%JAVA_HOME%\bin\java.exe"
 goto :eof
 
-rem ---- ×Ó³ÌÐò£ºtask Ä£Ê½×¨ÓÃ - ¶ÁÈ¡Ê§°Ü¼ÆÊý¡¢¼ì²é·ÅÆúËøÊÇ·ñ¹ýÆÚ ----
+rem ---- å­ç¨‹åºï¼štask æ¨¡å¼ä¸“ç”¨ - è¯»å–å¤±è´¥è®¡æ•°ã€æ£€æŸ¥æ”¾å¼ƒé”æ˜¯å¦è¿‡æœŸ ----
 :LoadFailState
 set "SKIP_RUN=0"
 if not exist "%FAIL_LOCK%" goto :LFailSkip
@@ -419,7 +424,7 @@ powershell -NoProfile -Command "if (Get-CimInstance Win32_Process | Where-Object
 if errorlevel 1 set "IS_RUNNING=1"
 goto :eof
 
-rem ---- ×Ó³ÌÐò£º°´ jar ÍêÕûÂ·¾¶É±µô±¾·þÎñµÄ java ½ø³Ì£¨¾¡Á¦¶øÎª£© ----
+rem ---- å­ç¨‹åºï¼šæŒ‰ jar å®Œæ•´è·¯å¾„æ€æŽ‰æœ¬æœåŠ¡çš„ java è¿›ç¨‹ï¼ˆå°½åŠ›è€Œä¸ºï¼‰ ----
 :KillSvcJava
 powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object {$_.Name -eq 'java.exe' -and $_.CommandLine -like '*%CUR_JAR%*'} | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }"
 goto :eof
@@ -428,15 +433,15 @@ goto :eof
 if "%INTERACTIVE%"=="1" pause
 exit /b 0
 
-rem ---- ×Ó³ÌÐò£º¼ÇÒ»´ÎÆô¶¯Ê§°Ü£¬Á¬Ðø MAX_FAIL ´Îºó·ÅÆú¡£%1 = Ô­Òò ----
+rem ---- å­ç¨‹åºï¼šè®°ä¸€æ¬¡å¯åŠ¨å¤±è´¥ï¼Œè¿žç»­ MAX_FAIL æ¬¡åŽæ”¾å¼ƒã€‚%1 = åŽŸå›  ----
 :FailOnce
 set /a FAIL_COUNT+=1
 set "GIVE_UP="
->> "%WATCHDOG_LOG%" echo [%date% %time%] [watchdog] ·þÎñ %SVC_NO%£¨¶Ë¿Ú %CUR_PORT%£©Æô¶¯Ê§°Ü£º%~1 £¬Á¬ÐøÊ§°Ü %FAIL_COUNT%/%MAX_FAIL% ´Î
+>> "%WATCHDOG_LOG%" echo [%date% %time%] [watchdog] æœåŠ¡ %SVC_NO%ï¼ˆç«¯å£ %CUR_PORT%ï¼‰å¯åŠ¨å¤±è´¥ï¼š%~1 ï¼Œè¿žç»­å¤±è´¥ %FAIL_COUNT%/%MAX_FAIL% æ¬¡
 if "%INTERACTIVE%"=="0" >> "%FAIL_CNT_FILE%" echo %FAIL_COUNT%
 if %FAIL_COUNT% GEQ %MAX_FAIL% (
     set "GIVE_UP=1"
-    >> "%WATCHDOG_LOG%" echo [%date% %time%] [watchdog] ·þÎñ %SVC_NO% Á¬ÐøÊ§°Ü %FAIL_COUNT% ´Îºó·ÅÆú£¬ÊØ»¤ÍË³ö¡£Çë½â¾öÎÊÌâºóÖØÐÂË«»÷½Å±¾Æô¶¯¡£
+    >> "%WATCHDOG_LOG%" echo [%date% %time%] [watchdog] æœåŠ¡ %SVC_NO% è¿žç»­å¤±è´¥ %FAIL_COUNT% æ¬¡åŽæ”¾å¼ƒï¼Œå®ˆæŠ¤é€€å‡ºã€‚è¯·è§£å†³é—®é¢˜åŽé‡æ–°åŒå‡»è„šæœ¬å¯åŠ¨ã€‚
     if "%INTERACTIVE%"=="0" type nul > "%FAIL_LOCK%"
 )
 goto :eof
